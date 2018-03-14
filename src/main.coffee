@@ -2,6 +2,7 @@ require "babel-core/register"
 require "babel-polyfill"
 import * as basegl from 'basegl'
 
+import {Breadcrumbs}     from 'view/Breadcrumbs'
 import {Connection}      from 'view/Connection'
 import {ExpressionNode}  from 'view/ExpressionNode'
 import {InputNode}       from 'view/InputNode'
@@ -28,6 +29,9 @@ main = (f) -> install 'basegl-root', 'rsc/', f
 window.run = main
 
 runExample = -> main (nodeEditor) ->
+    nodeEditor.setBreadcrumbs new Breadcrumbs
+        moduleName: null
+
     nodeEditor.setNodes [
         new ExpressionNode
             key: 1
