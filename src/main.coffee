@@ -30,7 +30,8 @@ window.run = main
 
 runExample = -> main (nodeEditor) ->
     nodeEditor.setBreadcrumbs new Breadcrumbs
-        moduleName: null
+        moduleName: 'Foo'
+        items: ['bar', 'baz']
 
     nodeEditor.setNodes [
         new ExpressionNode

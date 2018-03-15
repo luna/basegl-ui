@@ -9,27 +9,37 @@ nullModuleNameError = 'No file selected'
 export class Breadcrumbs extends Component
     updateModel: ({ moduleName: @moduleName = @moduleName
                   , items:      @items      = @items or []
+                  , position:   @position   = @position or [0,0]
                   }) =>
-    unless @def?
-        root = document.createElement 'div'
-        root.className = 'foo bar'
-        root.id = breadcrumbsId
-        root.style.width = 100 + 'px'
-        root.style.height = 200 + 'px'
-        @def = basegl.symbol root
+        unless @def?
+            root = document.createElement 'div'
+            root.className = 'foo bar'
+            root.id = breadcrumbsId
+            @def = basegl.symbol root
 
     updateView: =>
+        @view.position.xy = @position.slice()
         @view.domElement.innerHTML = ''
         container = document.createElement 'div'
         container.className = style.luna ['breadcrumbs', 'noselect']
-        if @items.length == 0
-            container.appendChild @renderEmpty (@moduleName or nullModuleNameError)
-        else items.forEach (item) =>
+        container.appendChild @renderItem (@moduleName or nullModuleNameError)
+        @items.forEach (item) =>
             container.appendChild @renderItem item
         @view.domElement.appendChild container
 
     renderItem: (item) =>
         div = document.createElement 'div'
-        div.className = style.luna ['breadcrumbs__item']
+        div.className = style.luna ['breadcrumbs__item', 'breadcrumbs__item--home']
         div.innerHTML = item
         return div
+
+
+    getPosition: (scene) =>
+        campos = scene.camera.position
+        return [ scene.width/2 + campos.x - scene.width/2*campos.z
+               , scene.height + campos.y]
+
+    registerEvents: =>
+        @withScene (scene) =>
+            scene.domElement.addEventListener 'mousemove', (e) =>
+                @set position: @getPosition scene
