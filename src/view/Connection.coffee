@@ -66,8 +66,8 @@ export class Connection extends Component
         @group.position.xy = [srcPos[0], srcPos[1]]
         @view.src.rotation.z = rotation
         @view.dst.rotation.z = rotation
-        srcPort.set follow: rotation - Math.PI/2
-        dstPort.set follow: rotation + Math.PI/2
+        srcPort.follow @key, rotation - Math.PI/2
+        dstPort.follow @key, rotation + Math.PI/2
 
         @view.src.variables.color_r = srcPort.color[0]
         @view.src.variables.color_g = srcPort.color[1]
@@ -79,11 +79,11 @@ export class Connection extends Component
     connectSources: (srcPort, dstPort) =>
         unless @srcConnected
             @addDisposableListener srcPort, 'position', => @updateView()
-            @onDispose => srcPort.set follow: null
+            @onDispose => srcPort.unfollow @key
             @srcConnected = true
         unless @dstConnected
             @addDisposableListener dstPort, 'position', => @updateView()
-            @onDispose => dstPort.set follow: null
+            @onDispose => dstPort.unfollow @key
             @dstConnected = true
 
     registerEvents: =>

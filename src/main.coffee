@@ -214,6 +214,12 @@ runExample = -> main (nodeEditor) ->
             srcPort: 2
             dstNode: 3
             dstPort: 0
+        new Connection
+            key: 6
+            srcNode: 1
+            srcPort: 1
+            dstNode: 4
+            dstPort: 1
         ]
     nodeEditor.setSearcher new Searcher
         key: 4
