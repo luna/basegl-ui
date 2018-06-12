@@ -46,14 +46,17 @@ export class Component extends PropertyEmitter
     attach: => @withScene (scene) =>
         if @def?
             if @def instanceof Array
+                @element = {}
                 @view = {}
-                views = []
+                views  = []
                 for def in @def
-                    @view[def.name] = scene.add def.def
+                    @element[def.name] = scene.add def.def
+                    @view[def.name] = group [@element[def.name]]
                     views.push @view[def.name]
                 @group = group views
             else
-                @view = scene.add @def
+                @element = scene.add @def
+                @view  = @element
                 @group = group [@view]
             @updateView()
         @registerEvents?()

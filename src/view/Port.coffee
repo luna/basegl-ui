@@ -142,15 +142,15 @@ class InArrow extends Port
                 [@parent.position[0] + shape.length, @parent.position[1]]
             else
                 @parent.position
-        @view.port.position.xy = [-shape.width/2, @parent.radius]
-        @view.port.variables.color_r = @parent.color[0]
-        @view.port.variables.color_g = @parent.color[1]
-        @view.port.variables.color_b = @parent.color[2]
+        @element.port.position.xy = [-shape.width/2, @parent.radius]
+        @element.port.variables.color_r = @parent.color[0]
+        @element.port.variables.color_g = @parent.color[1]
+        @element.port.variables.color_b = @parent.color[2]
         rotation = @angle
-        @view.port.rotation.z = rotation
-        nameSize = util.textSize @view.name
-        @view.name.rotation.z = rotation - Math.PI/2
-        @view.name.position.xy = [- nameSize[0] - nameOffset - shape.length - @radius, -nameSize[1]/2]
+        @element.port.rotation.z = rotation
+        nameSize = util.textSize @element.name
+        @element.name.rotation.z = rotation - Math.PI/2
+        @element.name.position.xy = [- nameSize[0] - nameOffset - shape.length - @radius, -nameSize[1]/2]
 
 
 outPortShape = basegl.symbol shape.outPortShape
@@ -208,8 +208,8 @@ export class FlatPort extends Subports
     updateView: =>
         x = if @output then @position[0] else @position[0] - shape.length
         @group.position.xy = [x, @position[1] - shape.width/2]
-        nameHeight = util.textHeight @view.name
+        nameHeight = util.textHeight @element.name
         @view.name.position.xy = [2* shape.length, nameHeight/2]
-        @view.port.variables.color_r = @color[0]
-        @view.port.variables.color_g = @color[1]
-        @view.port.variables.color_b = @color[2]
+        @element.port.variables.color_r = @color[0]
+        @element.port.variables.color_g = @color[1]
+        @element.port.variables.color_b = @color[2]

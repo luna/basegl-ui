@@ -100,7 +100,7 @@ export class ExpressionNode extends Component
         if selected != @selected
             @selected = selected
             if @view?
-                applySelectAnimation @view.node, not @selected
+                applySelectAnimation @element.node, not @selected
         @widgets ?= {}
         @setInPorts inPorts
         @setOutPorts outPorts
@@ -184,30 +184,32 @@ export class ExpressionNode extends Component
         valueSize     = [0,0]
         valuePosition = @view.node.position
         if @view.value?
-            valueSize = util.textSize @view.value
+            valueSize = util.textSize @element.value
             @view.value.position.y = @view.node.position.y - valueSize[1]/2
             unless @expanded
                 @view.value.position.x = -valueSize[0]/2
             valuePosition = @view.value.position
 
-        @view.valueToggler.position.x = -shape.togglerSize/2
-        @view.valueToggler.position.y =
-            @view.node.position.y - valueSize[1] - shape.togglerSize/2
+        @element.valueToggler.position.x = -shape.togglerSize/2
         if @value?.contents?.tag == 'Visualization'
-            @view.valueToggler.variables.isFolded = 0.0
+            @element.valueToggler.rotation.z = 0
         else
-            @view.valueToggler.variables.isFolded = 1.0
-        
+            @element.valueToggler.rotation.z = Math.PI
+            @element.valueToggler.position.y = -shape.togglerSize
+
+        @view.valueToggler.position.y =
+            @view.node.position.y - valueSize[1] - shape.togglerSize
+
     updateView: =>
         if @expanded
-            @view.node.variables.bodyHeight = @bodyHeight
-            @view.node.variables.bodyWidth  = @bodyWidth
+            @element.node.variables.bodyHeight = @bodyHeight
+            @element.node.variables.bodyWidth  = @bodyWidth
             nodePosition = [-shape.width/2, -@bodyHeight - shape.height/2 - shape.slope]
-            @view.node.position.xy = nodePosition
+            @element.node.position.xy = nodePosition
             if @error()
-                @view.errorFrame.variables.bodyHeight = @bodyHeight
-                @view.errorFrame.variables.bodyWidth  = @bodyWidth
-                @view.errorFrame.position.xy = nodePosition
+                @element.errorFrame.variables.bodyHeight = @bodyHeight
+                @element.errorFrame.variables.bodyWidth  = @bodyWidth
+                @element.errorFrame.position.xy = nodePosition
             for own inPortKey, inPort of @inPorts
                 widgets = @widgets[inPortKey]
                 if widgets?
@@ -220,12 +222,12 @@ export class ExpressionNode extends Component
             if @error()
                 @view.errorFrame.position.xy = [-shape.width/2, -shape.height/2]
         @updateValueView()
-        nameSize = util.textSize @view.name
-        exprWidth = util.textWidth @view.expression
+        nameSize = util.textSize @element.name
+        exprWidth = util.textWidth @element.expression
         @view.name.position.xy = [-nameSize[0]/2, nodeNameYOffset + nameSize[1]]
         @view.expression.position.xy = [-exprWidth/2, nodeExprYOffset]
         @group.position.xy = @position.slice()
-        @view.node.variables.selected = if @selected then 1 else 0
+        @element.node.variables.selected = if @selected then 1 else 0
 
     updateInPorts: =>
         @selfPort = undefined

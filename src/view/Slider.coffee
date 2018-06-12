@@ -46,13 +46,13 @@ export class Slider extends Widget
                , {name: 'value',  def: valueShape} ]
 
     updateView: =>
-        @view.slider.variables.level = (@value - @min)/(@max - @min)
-        @view.slider.variables.topLeft     = Number not (@siblings.top or @siblings.left)
-        @view.slider.variables.topRight    = Number not (@siblings.top or @siblings.right)
-        @view.slider.variables.bottomLeft  = Number not (@siblings.bottom or @siblings.left)
-        @view.slider.variables.bottomRight = Number not (@siblings.bottom or @siblings.right)
-        @view.slider.bbox.xy = [@width, @height]
-        textSize = util.textSize @view.value
+        @element.slider.variables.level = (@value - @min)/(@max - @min)
+        @element.slider.variables.topLeft     = Number not (@siblings.top or @siblings.left)
+        @element.slider.variables.topRight    = Number not (@siblings.top or @siblings.right)
+        @element.slider.variables.bottomLeft  = Number not (@siblings.bottom or @siblings.left)
+        @element.slider.variables.bottomRight = Number not (@siblings.bottom or @siblings.right)
+        @element.slider.bbox.xy = [@width, @height]
+        textSize = util.textSize @element.value
         @view.value.position.xy = [@width/2 - textSize[0]/2 , @height/2 - textSize[1]/2]
         @group.position.xy = [@position[0], @position[1] - @height/2]
 

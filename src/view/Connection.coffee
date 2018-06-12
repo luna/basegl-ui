@@ -61,22 +61,22 @@ export class Connection extends Component
         rotation = Math.atan2 y, x
         @view.src.position.x = leftOffset
         @view.src.position.y = -shape.width/2
-        @view.src.bbox.x = length/2
+        @element.src.bbox.x = length/2
         @view.dst.position.x = leftOffset + length/2
         @view.dst.position.y = -shape.width/2
-        @view.dst.bbox.x = length/2
+        @element.dst.bbox.x = length/2
         @group.position.xy = [srcPos[0], srcPos[1]]
         @view.src.rotation.z = rotation
         @view.dst.rotation.z = rotation
         srcPort.follow @key, rotation - Math.PI/2
         dstPort.follow @key, rotation + Math.PI/2
 
-        @view.src.variables.color_r = srcPort.color[0]
-        @view.src.variables.color_g = srcPort.color[1]
-        @view.src.variables.color_b = srcPort.color[2]
-        @view.dst.variables.color_r = srcPort.color[0]
-        @view.dst.variables.color_g = srcPort.color[1]
-        @view.dst.variables.color_b = srcPort.color[2]
+        @element.src.variables.color_r = srcPort.color[0]
+        @element.src.variables.color_g = srcPort.color[1]
+        @element.src.variables.color_b = srcPort.color[2]
+        @element.dst.variables.color_r = srcPort.color[0]
+        @element.dst.variables.color_g = srcPort.color[1]
+        @element.dst.variables.color_b = srcPort.color[2]
 
     connectSources: (srcPort, dstPort) =>
         unless @srcConnected

@@ -27,13 +27,9 @@ export slope = 20
 
 export togglerSize = 10 
 export togglerButtonShape = basegl.expr ->
-    isFolded = 'isFolded'
     triangle(togglerSize, togglerSize)
         .fill white
-        .rotate(isFolded * Math.PI)
-        .moveX togglerSize/2
-        .moveY(isFolded * togglerSize)
-        
+        .moveX togglerSize/2        
 
 basicNodeShape = -> basegl.expr ->
     border = 0
