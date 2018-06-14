@@ -108,8 +108,7 @@ runExample = -> main (nodeEditor) ->
             value:
                 tag: 'Value'
                 contents:
-                    tag: 'ShortValue'
-                    contents: 'A sample text'
+                    tag: 'Visualization'
         new ExpressionNode
             key: 3
             name: 'baz'

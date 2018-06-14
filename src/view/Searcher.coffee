@@ -5,7 +5,7 @@ import * as shape  from 'shape/Node'
 
 
 searcherRoot    = 'searcher-root'
-searcherWidth   = 400  # this sadly needs to be in sync with `_searcher.less`
+searcherWidth   = 400  # same as `@searcherWidth` in `_searcher.less`
 
 
 export class Searcher extends Component
@@ -23,8 +23,7 @@ export class Searcher extends Component
         unless @def?
             root = document.createElement 'div'
             root.id = searcherRoot
-            root.style.width  = 0
-            root.style.height = 0
+            root.className = style.luna ['searcher__root']
             @def = basegl.symbol root
 
     updateView: =>
@@ -107,17 +106,17 @@ export class Searcher extends Component
             @inputSelection = null
         return @dom.input
 
+    offsetFromNode: => [-searcherWidth / 8 * @scale, shape.height / 8 * @scale]
+
     align: (scale) =>
         if @scale != scale
             @scale = scale
-            console.log("Scale: #{@scale}")
             node = @parent.node @key
             if node?
                 [posx, posy] = node.position.slice()
-                exprPosY = node.view.expression.position.y
-                offsetX  = - searcherWidth / 8 * @scale
-                offsetY  = exprPosY + shape.height / 8 * @scale
-                @group.position.xy = [posx + offsetX, posy + offsetY]
+                exprPosY     = node.view.expression.position.y
+                [offX, offY] = @offsetFromNode()
+                @group.position.xy = [offX + posx, offY + exprPosY + posy]
                 @view.scale.xy     = [@scale, @scale]
 
     registerEvents: =>
