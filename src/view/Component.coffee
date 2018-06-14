@@ -1,39 +1,13 @@
-import {eventDispatcherMixin}   from 'basegl/event/EventDispatcher'
 import {group}                  from 'basegl/display/Symbol'
-import {fieldMixin}             from "basegl/object/Property"
-import {Disposable}             from "view/Disposable"
+import {EventEmitter}           from "view/EventEmitter"
 
-eventListeners = []
 
-export subscribeEvents = (listener) =>
-    eventListeners.push listener
-
-export pushEvent = (path, base, key) =>
-    unless base.tag? then base.tag = base.constructor.name
-    for listener in eventListeners
-        listener path, base, key
-
-export class Component extends Disposable
-    cons: (values, @parent) ->
+export class Component extends EventEmitter
+    cons: (values, @parent) =>
         super()
-        @mixin eventDispatcherMixin, @
         @set values
 
     withScene: (fun) => @parent.withScene fun if @parent?
-
-    eventPath: =>
-        path = if @parent?
-                    @parent.eventPath?() or [@parent.constructor.name]
-               else []
-        path.push @constructor.name
-        path
-
-    eventKey: =>
-        key = @parent?.eventKey?() or []
-        key.push @key if @key?
-        key
-
-    pushEvent: (e) => pushEvent @eventPath(), e, @eventKey()
 
     redraw: => @set @
 
@@ -64,16 +38,11 @@ export class Component extends Disposable
                 @view.dispose()
             else for own k,v of @view
                 v.dispose()
-            @view = null
+            @view  = null
+            @group = null
 
     reattach: =>
         @_detach()
         @attach()
-
-    emitProperty: (name, property) =>
-        unless @[name] == property
-            @[name] = property
-            propertyEvent = new CustomEvent name, value: property
-            @dispatchEvent propertyEvent if @dispatchEvent?
 
     destruct: => @_detach()

@@ -30,7 +30,7 @@
     "webpack": "^3.9.1"
   },
   "dependencies": {
-    "basegl": "0.2.10",
+    "basegl": "0.2.13",
     "bluebird": "^3.5.1",
     "glslify-loader": "^1.0.2",
     "raw-loader": "^0.5.1",

@@ -39,7 +39,8 @@ class Subports extends Component
 
 export class InPort extends Subports
     updateModel: ({ key:      @key      = @key
-                  , name:      name     = @name
+                  , name:     @name     = @name or ''
+                  , typeName: @typeName = @typeName or ''
                   , angle:    @angle    = @angle
                   , mode:     @mode     = @mode or 'in'
                   , locked:   @locked   = @locked or false
@@ -49,13 +50,8 @@ export class InPort extends Subports
                   , widgets:  @widgets  = @widgets or []
                   }) =>
         @emitProperty 'position', position
-        if @mode == 'self'
-            if @subport?
-                @subport.redraw()
-            else
-                @subport = new Self {}, @
-                @subport.attach()
-        else if not @locked and @subports? and (Object.keys @subports).length
+        cons = if @mode == 'self' then Self else InArrow
+        if not @locked and @subports? and (Object.keys @subports).length
             if @subport?
                 @subport.dispose()
                 delete @subport
@@ -63,7 +59,7 @@ export class InPort extends Subports
                 if subport.component?
                     subport.component.set angle: subport.angle
                 else
-                    inArrow = new InArrow angle: subport.angle, @
+                    inArrow = new cons angle: subport.angle, @
                     inArrow.set angle: subport.angle
                     subport.component = inArrow
                     inArrow.attach()
@@ -71,15 +67,16 @@ export class InPort extends Subports
             if @subport?
                 @subport.redraw()
             else
-                @subport = new InArrow angle: @angle, @
+                @subport = new cons angle: @angle, @
                 @subport.attach()
 
 export class OutPort extends Subports
-    updateModel: ({ key:     @key      = @key
-                  , angle:   @angle    = @angle
-                  , position: position = @position or [0,0]
-                  , radius:  @radius   = @radius or 0
-                  , color:   @color    = @color or [0, 1, 0]
+    updateModel: ({ key:      @key      = @key
+                  , typeName: @typeName = @typeName or ''
+                  , angle:    @angle    = @angle
+                  , position:  position = @position or [0,0]
+                  , radius:   @radius   = @radius or 0
+                  , color:    @color    = @color or [0, 1, 0]
                   }) =>
         @emitProperty 'position', position
         if @subports? and (Object.keys @subports).length
@@ -105,16 +102,30 @@ selfPortShape.variables.color_b = 0
 selfPortShape.defaultZIndex = layers.selfPort
 
 class Self extends Port
-    updateModel: =>
-        unless @def?
-            @def = selfPortShape
+    updateModel: ({ angle: @angle = @angle }) =>
+        unless @def? and @typeName == @parent.typeName and @hovered == @parent.parent.hovered
+            @typeName = @parent.typeName
+            @hovered  = @parent.parent.hovered
+            @def = [{ name: 'port', def: selfPortShape}]
+            if @hovered
+                @def.push
+                    name: 'typeName'
+                    def: util.text str: @typeName
+            if @view?
+                @reattach()
 
     updateView: =>
         @group.position.xy = @parent.position
-        @view.position.xy = [-shape.selfPortWidth/2, -shape.selfPortHeight/2]
-        @view.variables.color_r = @parent.color[0]
-        @view.variables.color_g = @parent.color[1]
-        @view.variables.color_b = @parent.color[2]
+        @view.port.position.xy = [-shape.selfPortWidth/2, -shape.selfPortHeight/2]
+        @view.port.variables.color_r = @parent.color[0]
+        @view.port.variables.color_g = @parent.color[1]
+        @view.port.variables.color_b = @parent.color[2]
+        if @view.typeName?
+            rotation = @angle
+            @view.typeName.rotation.z = rotation - Math.PI/2
+            typeNameSize = util.textSize @view.typeName
+            typeNamePosition = [- typeNameSize[0] - typeNameXOffset - @parent.radius, - typeNameSize[1]/2]
+            @view.typeName.position.xy = typeNamePosition
 
 inPortShape = basegl.symbol shape.inPortShape
 inPortShape.bbox.xy = [shape.width,shape.length]
@@ -122,17 +133,26 @@ inPortShape.variables.color_r = 1
 inPortShape.variables.color_g = 0
 inPortShape.variables.color_b = 0
 inPortShape.defaultZIndex = layers.inPort
-nameOffset = shape.width
+
+nameXOffset = shape.length * 2
+typeNameXOffset = nameXOffset
+typeNameYOffset = nameXOffset
 
 class InArrow extends Port
     updateModel: ({ angle: @angle = @angle
                   }) =>
-        unless @def? and @name == @parent.name
-            @name = @parent.name
+        unless @def? and @name == @parent.name and @hovered == @parent.parent.hovered and @typeName == @parent.typeName
+            @name     = @parent.name
+            @hovered  = @parent.parent.hovered
+            @typeName = @parent.typeName
             nameDef = util.text str: @name
             @def = [{ name: 'port', def: inPortShape }
                    ,{ name: 'name', def: nameDef }
                    ]
+            if @hovered
+                @def.push
+                    name: 'typeName'
+                    def: util.text str: @typeName
             if @view?
                 @reattach()
 
@@ -150,7 +170,13 @@ class InArrow extends Port
         @view.port.rotation.z = rotation
         nameSize = util.textSize @view.name
         @view.name.rotation.z = rotation - Math.PI/2
-        @view.name.position.xy = [- nameSize[0] - nameOffset - shape.length - @radius, -nameSize[1]/2]
+        namePosition = [- nameSize[0] - nameXOffset - @parent.radius, -nameSize[1]/2]
+        @view.name.position.xy = namePosition
+        if @view.typeName?
+            @view.typeName.rotation.z = rotation - Math.PI/2
+            typeNameSize = util.textSize @view.typeName
+            typeNamePosition = [- typeNameSize[0] - typeNameXOffset - @parent.radius, - typeNameSize[1] - typeNameYOffset]
+            @view.typeName.position.xy = typeNamePosition
 
 
 outPortShape = basegl.symbol shape.outPortShape
@@ -163,17 +189,29 @@ outPortShape.defaultZIndex = layers.outPort
 class OutArrow extends Port
     updateModel: ({ angle: @angle = @angle
                   }) =>
-        unless @def?
-            @def = outPortShape
+        unless @def? and @hovered == @parent.parent.hovered
+            @hovered = @parent.parent.hovered
+            @def = [{name: 'port', def: outPortShape}]
+            if @hovered
+                @def.push
+                    name: 'typeName'
+                    def: util.text str: @parent.typeName
+        if @view?
+            @reattach()
 
     updateView: =>
         @group.position.xy = @parent.position
-        @view.position.xy = [-shape.width/2, @parent.radius]
+        @view.port.position.xy = [-shape.width/2, @parent.radius]
         rotation = @angle
-        @view.rotation.z = rotation
-        @view.variables.color_r = @parent.color[0]
-        @view.variables.color_g = @parent.color[1]
-        @view.variables.color_b = @parent.color[2]
+        @view.port.rotation.z = rotation
+        @view.port.variables.color_r = @parent.color[0]
+        @view.port.variables.color_g = @parent.color[1]
+        @view.port.variables.color_b = @parent.color[2]
+        if @view.typeName?
+            @view.typeName.rotation.z = rotation + Math.PI/2
+            typeNameSize = util.textSize @view.typeName
+            typeNamePosition = [typeNameSize[0] + nameXOffset + @parent.radius, -typeNameSize[1]/2]
+            @view.typeName.position.xy = typeNamePosition
 
 
 flatPortShape = basegl.symbol shape.flatPortShape
@@ -185,7 +223,7 @@ flatPortShape.defaultZIndex = layers.flatPort
 
 export class FlatPort extends Subports
     constructor: (args...) ->
-        super(args...)
+        super args...
         @output ?= false
 
     updateModel: ({ key:      @key      = @key

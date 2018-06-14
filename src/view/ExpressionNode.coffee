@@ -3,6 +3,7 @@ import * as Animation from 'basegl/animation/Animation'
 import * as Easing    from 'basegl/animation/Easing'
 import * as Color     from 'basegl/display/Color'
 import {world}        from 'basegl/display/World'
+import {group}        from 'basegl/display/Symbol'
 import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path} from 'basegl/display/Shape'
 import {Composable, fieldMixin} from "basegl/object/Property"
 
@@ -12,6 +13,10 @@ import * as shape        from 'shape/Node'
 import * as layers       from 'view/layers'
 import * as util         from 'shape/util'
 import * as _            from 'underscore'
+
+visualizationTogglerButton         = basegl.symbol shape.togglerButtonShape
+visualizationTogglerButton.bbox.xy = [shape.togglerSize, shape.togglerSize]
+visualizationTogglerButton.variables.isFolded = 0
 
 ### Utils ###
 selectedNode = null
@@ -67,7 +72,8 @@ export class ExpressionNode extends Component
                   , outPorts:    outPorts   = @outPorts
                   , position:    position   = @position
                   , selected:    selected   = @selected
-                  , expanded:    expanded   = @expanded}) =>
+                  , expanded:    expanded   = @expanded
+                  , hovered:    @hovered    = @hovered}) =>
 
         @emitProperty 'position', position
         if @expanded != expanded or @name != name or @expression != expression or not _.isEqual(@value, value)
@@ -87,6 +93,9 @@ export class ExpressionNode extends Component
             if @shortValue()?
                 value = util.text str: @shortValue()
                 @def.splice 0, 0, {name: 'value', def: value}
+            @def.splice 0, 0,
+                name: 'valueToggler'
+                def: visualizationTogglerButton
             @emitProperty 'expanded', expanded
             if @view?
                 @reattach()
@@ -101,7 +110,7 @@ export class ExpressionNode extends Component
         @updateOutPorts()
 
     error: =>
-        @value? and @value.tag == "Error"
+        @value? and @value.tag == 'Error'
 
     shortValue: =>
         if @value? and @value.contents?
@@ -173,6 +182,24 @@ export class ExpressionNode extends Component
             widgets[w.index].configure width: w.width
             startPoint[0] += w.width + offset
 
+    updateValueView: =>
+        valueSize     = [0,0]
+        valuePosition = @view.node.position
+        if @view.value?
+            valueSize = util.textSize @view.value
+            @view.value.position.y = @view.node.position.y - valueSize[1]/2
+            unless @expanded
+                @view.value.position.x = -valueSize[0]/2
+            valuePosition = @view.value.position
+
+        @view.valueToggler.position.x = -shape.togglerSize/2
+        @view.valueToggler.position.y =
+            @view.node.position.y - valueSize[1] - shape.togglerSize/2
+        if @value?.contents?.tag == 'Visualization'
+            @view.valueToggler.variables.isFolded = 0.0
+        else
+            @view.valueToggler.variables.isFolded = 1.0
+        
     updateView: =>
         if @expanded
             @view.node.variables.bodyHeight = @bodyHeight
@@ -183,9 +210,6 @@ export class ExpressionNode extends Component
                 @view.errorFrame.variables.bodyHeight = @bodyHeight
                 @view.errorFrame.variables.bodyWidth  = @bodyWidth
                 @view.errorFrame.position.xy = nodePosition
-            if @shortValue()?
-                errorSize = util.textSize @view.value
-                @view.value.position.y = nodePosition[1] - errorSize[1]/2
             for own inPortKey, inPort of @inPorts
                 widgets = @widgets[inPortKey]
                 if widgets?
@@ -197,9 +221,7 @@ export class ExpressionNode extends Component
             @view.node.position.xy = [-shape.width/2, -shape.height/2]
             if @error()
                 @view.errorFrame.position.xy = [-shape.width/2, -shape.height/2]
-            if @shortValue()?
-                errorSize = util.textSize @view.value
-                @view.value.position.xy = [- errorSize[0]/2, nodeValYOffset - errorSize[1]/2]
+        @updateValueView()
         nameSize = util.textSize @view.name
         exprWidth = util.textWidth @view.expression
         @view.name.position.xy = [-nameSize[0]/2, nodeNameYOffset + nameSize[1]]
@@ -273,10 +295,15 @@ export class ExpressionNode extends Component
 
     registerEvents: =>
         @group.addEventListener 'dblclick',  @pushEvent
-        @group.addEventListener 'mouseenter', @pushEvent
-        @group.addEventListener 'mouseleave',  @pushEvent
+        @view.valueToggler?.addEventListener 'mouseup', => @pushEvent
+            tag: 'ToggleVisualizationsEvent'
+        @makeHoverable()
         @makeDraggable()
         @makeSelectable()
+
+    makeHoverable: =>
+        @group.addEventListener 'mouseenter', => @set hovered: true
+        @group.addEventListener 'mouseleave', => @set hovered: false
 
     makeSelectable: =>
         @withScene (scene) =>
@@ -319,4 +346,4 @@ export class ExpressionNode extends Component
             window.addEventListener 'mouseup', dragFinish
             window.addEventListener 'mousemove', moveNodes
         @group.addEventListener 'mousedown', dragHandler
-        @selfPort?.subport.group.addEventListener 'mousedown', dragHandler
+        @selfPort?.subport?.group.addEventListener 'mousedown', dragHandler

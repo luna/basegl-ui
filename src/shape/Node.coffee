@@ -4,11 +4,17 @@ import * as Easing    from 'basegl/animation/Easing'
 import * as Color     from 'basegl/display/Color'
 import {world}        from 'basegl/display/World'
 import {Component}    from 'view/Component'
-import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path} from 'basegl/display/Shape'
+import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path
+    , plane, triangle} from 'basegl/display/Shape'
 import {vector}       from 'basegl/math/Vector'
 
 
 #### basic shapes ####
+
+white          = Color.rgb [1,1,1]
+bg             = (Color.hsl [40,0.08,0.09]).toRGB()
+selectionColor = bg.mix (Color.hsl [50, 1, 0.6]), 0.8
+nodeBg         = bg.mix white, 0.04
 
 nodeRadius     = 30
 gridElemOffset = 18
@@ -18,6 +24,16 @@ export nodeSelectionBorderMaxSize = 40
 export width = nodeRadius * 2 + nodeSelectionBorderMaxSize * 2
 export height = nodeRadius * 2 + nodeSelectionBorderMaxSize * 2
 export slope = 20
+
+export togglerSize = 10 
+export togglerButtonShape = basegl.expr ->
+    isFolded = 'isFolded'
+    triangle(togglerSize, togglerSize)
+        .fill white
+        .rotate(isFolded * Math.PI)
+        .moveX togglerSize/2
+        .moveY(isFolded * togglerSize)
+        
 
 basicNodeShape = -> basegl.expr ->
     border = 0
@@ -47,11 +63,6 @@ basicExpandedNodeShape = -> basegl.expr ->
     node          = (header + body).move(nodeSelectionBorderMaxSize,nodeSelectionBorderMaxSize)
 
 #### shapes with frames and selections ####
-
-white          = Color.rgb [1,1,1]
-bg             = (Color.hsl [40,0.08,0.09]).toRGB()
-selectionColor = bg.mix (Color.hsl [50, 1, 0.6]), 0.8
-nodeBg         = bg.mix white, 0.04
 
 export compactNodeShape = basegl.expr ->
     node = basicNodeShape()

@@ -2,19 +2,19 @@ require 'babel-core/register'
 require 'babel-polyfill'
 import * as basegl from 'basegl'
 
-import {Breadcrumb}      from 'view/Breadcrumb'
-import {Connection}      from 'view/Connection'
-import {HalfConnection}  from 'view/HalfConnection'
-import {ExpressionNode}  from 'view/ExpressionNode'
-import {InputNode}       from 'view/InputNode'
-import {NodeEditor}      from 'view/NodeEditor'
-import {OutputNode}      from 'view/OutputNode'
-import {Searcher}        from 'view/Searcher'
-import {Slider}          from 'view/Slider'
-import {subscribeEvents} from 'view/Component'
-import {runPerformance}  from './performance'
-import * as layers       from 'view/layers'
-import * as test         from './test'
+import {Breadcrumb}         from 'view/Breadcrumb'
+import {Connection}         from 'view/Connection'
+import {HalfConnection}     from 'view/HalfConnection'
+import {ExpressionNode}     from 'view/ExpressionNode'
+import {subscribeEvents}    from 'view/EventEmitter'
+import {InputNode}          from 'view/InputNode'
+import {NodeEditor}         from 'view/NodeEditor'
+import {OutputNode}         from 'view/OutputNode'
+import {Searcher}           from 'view/Searcher'
+import {Slider}             from 'view/Slider'
+import {runPerformance}     from './performance'
+import * as layers          from 'view/layers'
+import * as test            from './test'
 
 removeChildren = (name) =>
     element = document.getElementById(name).innerHTML = ''
@@ -57,36 +57,51 @@ runExample = -> main (nodeEditor) ->
             key: 1
             name: 'number1'
             expression: '12'
-            inPorts: [{key: 1, name: 'onlyPort'}]
-            outPorts: [{key: 1}
-                      ,{key: 2}]
+            inPorts: [{key: 1, name: 'onlyPort', typeName: 'Int'}]
+            outPorts: [{key: 1, typeName: 'A'}
+                      ,{key: 2, typeName: 'B'}]
             position: [200, 300]
             expanded: false
             selected: false
             error: true
-            value: 'Another error description'
+            value:
+                tag: 'Error'
+                contents:
+                    tag: 'ShortValue'
+                    contents: 'Another error description'
+            hovered: true
         new ExpressionNode
             key: 2
             name: 'bar'
+            expression: '54'
             inPorts:
                 [
                     key: 0
                     name: 'self'
                     mode: 'self'
+                    typeName: 'A'
                 ,
                     key: 1
                     name: 'port1'
+                    typeName: 'A'
                 ,
                     key: 2
                     name: 'port2'
+                    typeName: 'A'
                 ,
                     key: 3
                     name: 'port3'
+                    typeName: 'A'
                 ,
                     key: 4
                     name: 'port4'
+                    typeName: 'B'
                 ]
-            outPorts: [{key: 1}]
+            outPorts:
+                [
+                    key: 1
+                    typeName: 'A'
+                ]
             position: [200, 600]
             expanded: false
             selected: false
@@ -104,9 +119,11 @@ runExample = -> main (nodeEditor) ->
                     key: 0
                     name: 'self'
                     mode: 'self'
+                    typeName: 'A'
                 ,
                     key: 1
                     name: 'port1'
+                    typeName: 'B'
                     widgets:
                         [
                             mkWidget Slider,
@@ -122,6 +139,7 @@ runExample = -> main (nodeEditor) ->
                 ,
                     key: 2
                     name: 'port2'
+                    typeName: 'C'
                     widgets:
                         [
                             mkWidget Slider,
@@ -132,6 +150,7 @@ runExample = -> main (nodeEditor) ->
                 ,
                     key: 3
                     name: 'port3'
+                    typeName: 'D'
                     widgets:
                         [
                             mkWidget Slider,
@@ -154,12 +173,19 @@ runExample = -> main (nodeEditor) ->
             position: [500, 300]
             expanded: true
             error: true
-            value: 'Error description'
+            value:
+                tag: 'Error'
+                contents:
+                    tag: 'Visualization'
             selected: false
         new ExpressionNode
             key: 4
             name: 'node1'
-            inPorts: [{key: 1, name: 'onlyPort'}]
+            inPorts: [
+                key: 1
+                name: 'onlyPort'
+                typeName: 'A'
+                ]
             outPorts: [{key: 1}]
             position: [500, 600]
             expanded: false
@@ -254,6 +280,52 @@ runExample = -> main (nodeEditor) ->
                     end: 3
                 ]
         ]
+
+    nodeEditor.setVisualizerLibraries
+        internalVisualizersPath: ''
+        lunaVisualizersPath:     ''
+        projectVisualizersPath:  ''
+
+
+    nodeEditor.setVisualization new Object
+        nodeKey: 2
+        visualizers: [
+            visualizerName: 'base: json'
+            visualizerType: 'LunaVisualizer', 
+            visualizerName: 'base: yaml'
+            visualizerType: 'LunaVisualizer'
+        ]
+        visualizations: [
+            key: 900
+            currentVisualizer:
+                visualizerId:
+                    visualizerName: 'base: json'
+                    visualizerType: 'LunaVisualizer'
+                visualizerPath: 'base/json/json.html'
+            iframeId: 'f650f692-2452-4f8f-b1bf-1721ccaebbd2'
+            mode: 'Default'
+            selectedVisualizer:
+                visualizerName: 'base: json'
+                visualizerType: 'LunaVisualizer'
+        ]
+    
+    nodeEditor.setVisualization new Object
+        nodeKey: 3
+        visualizers: []
+        visualizations: [
+            key: 900
+            currentVisualizer:
+                visualizerId:
+                    visualizerName: 'internal: error'
+                    visualizerType: '"InternalVisualizer"'
+                visualizerPath: '"internal/error/error.html"'
+            iframeId: 'f650f692-2452-4f8f-b1bf-1721ccaebbd2'
+            mode: 'Default'
+            selectedVisualizer:
+                visualizerName: 'base: json'
+                visualizerType: 'LunaVisualizer'
+        ]
+
     # nodeEditor.setHalfConnections [
     #         new HalfConnection
     #             srcNode: 1

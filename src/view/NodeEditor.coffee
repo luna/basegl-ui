@@ -1,19 +1,22 @@
-import {Navigator}           from 'basegl/navigation/Navigator'
+import {Navigator}          from 'basegl/navigation/Navigator'
 
-import {Breadcrumb}              from 'view/Breadcrumb'
-import {pushEvent}               from 'view/Component'
-import {Connection}              from 'view/Connection'
-import {Disposable}              from 'view/Disposable'
-import {ExpressionNode}          from 'view/ExpressionNode'
-import {HalfConnection}          from 'view/HalfConnection'
-import {InputNode}               from 'view/InputNode'
-import {OutputNode}              from 'view/OutputNode'
-import {Port}                    from 'view/Port'
-import {Searcher}                from 'view/Searcher'
-import {NodeVisualizations}  from 'view/Visualization'
+import {Breadcrumb}         from 'view/Breadcrumb'
+import {Connection}         from 'view/Connection'
+import {Disposable}         from 'view/Disposable'
+import {ExpressionNode}     from 'view/ExpressionNode'
+import {EventEmitter}       from 'view/EventEmitter'
+import {HalfConnection}     from 'view/HalfConnection'
+import {InputNode}          from 'view/InputNode'
+import {OutputNode}         from 'view/OutputNode'
+import {Port}               from 'view/Port'
+import {Searcher}           from 'view/Searcher'
+import {NodeVisualizations} from 'view/Visualization'
+import {visualizationCover} from 'view/Visualization'
+
+import * as _ from 'underscore'
 
 
-export class NodeEditor extends Disposable
+export class NodeEditor extends EventEmitter
     constructor: (@_scene) ->
         super()
         @nodes               ?= {}
@@ -22,6 +25,12 @@ export class NodeEditor extends Disposable
         @visualizerLibraries ?= {}
         @inTransaction        = false
         @pending              = []
+        @topDomScene          = @_scene.addDOMScene()
+        topDomLayer           = @_scene.addLayer 'dom-top'
+        topDomLayer.style.pointerEvents = 'none'
+        topDomLayer.appendChild @topDomScene.renderer.domElement
+        visCoverFamily = @_scene.register visualizationCover
+        visCoverFamily.zIndex = -1
 
     withScene: (fun) =>
         action = => fun @_scene if @_scene?
@@ -94,7 +103,8 @@ export class NodeEditor extends Disposable
         @genericSetComponent 'searcher', Searcher, searcher
     
     setVisualizerLibraries: (visLib) =>
-        @visualizerLibraries = visLib
+        unless _.isEqual(@visualizerLibraries, visLib)
+            @emitProperty 'visualizerLibraries', visLib
     
     setVisualization: (nodeVis) =>
         key = nodeVis.nodeKey
@@ -184,5 +194,3 @@ export class NodeEditor extends Disposable
             @connections[connectionKey].dispose()
         for nodeKey in Object.keys @nodes
             @nodes[nodeKey].dispose()
-
-    pushEvent: (base) => pushEvent [@constructor.name], base, []
