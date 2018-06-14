@@ -90,7 +90,11 @@ runExample = -> main (nodeEditor) ->
             position: [200, 600]
             expanded: false
             selected: false
-            value: '54'
+            value:
+                tag: 'Value'
+                contents:
+                    tag: 'ShortValue'
+                    contents: 'A sample text'
         new ExpressionNode
             key: 3
             name: 'baz'

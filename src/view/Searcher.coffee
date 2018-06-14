@@ -1,9 +1,12 @@
 import {Component} from 'view/Component'
 import * as basegl from 'basegl'
 import * as style  from 'style'
+import * as shape  from 'shape/Node'
 
 
-searcherRoot = 'searcher-root'
+searcherRoot    = 'searcher-root'
+searcherWidth   = 400  # this sadly needs to be in sync with `_searcher.less`
+
 
 export class Searcher extends Component
     cons: (args...) =>
@@ -20,9 +23,8 @@ export class Searcher extends Component
         unless @def?
             root = document.createElement 'div'
             root.id = searcherRoot
-            root.style.width = 100 + 'px'
-            root.style.height = 150 + 'px'
-            # root.style.backgroundColor = '#FF0000'
+            root.style.width  = 0
+            root.style.height = 0
             @def = basegl.symbol root
 
     updateView: =>
@@ -108,10 +110,15 @@ export class Searcher extends Component
     align: (scale) =>
         if @scale != scale
             @scale = scale
+            console.log("Scale: #{@scale}")
             node = @parent.node @key
             if node?
-                @group.position.xy = node.position.slice()
-                @view.scale.xy = [@scale, @scale]
+                [posx, posy] = node.position.slice()
+                exprPosY = node.view.expression.position.y
+                offsetX  = - searcherWidth / 8 * @scale
+                offsetY  = exprPosY + shape.height / 8 * @scale
+                @group.position.xy = [posx + offsetX, posy + offsetY]
+                @view.scale.xy     = [@scale, @scale]
 
     registerEvents: =>
         @withScene (scene) =>

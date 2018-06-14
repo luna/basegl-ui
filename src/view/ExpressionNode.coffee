@@ -52,8 +52,9 @@ compactNodeErrorShape.defaultZIndex = layers.compactNodeError
 compactNodeErrorShape.variables.selected = 0
 compactNodeErrorShape.bbox.xy = [shape.errorWidth, shape.errorHeight]
 
-nodeNameYOffset = shape.width / 3 + 5
-nodeExprYOffset = shape.width / 3
+nodeExprYOffset = shape.height / 3
+nodeNameYOffset = nodeExprYOffset + 5
+nodeValYOffset  = -nodeNameYOffset
 
 portDistance = shape.height / 3
 
@@ -198,7 +199,7 @@ export class ExpressionNode extends Component
                 @view.errorFrame.position.xy = [-shape.width/2, -shape.height/2]
             if @shortValue()?
                 errorSize = util.textSize @view.value
-                @view.value.position.xy = [- errorSize[0]/2, -shape.height/2 - errorSize[1]/2]
+                @view.value.position.xy = [- errorSize[0]/2, nodeValYOffset - errorSize[1]/2]
         nameSize = util.textSize @view.name
         exprWidth = util.textWidth @view.expression
         @view.name.position.xy = [-nameSize[0]/2, nodeNameYOffset + nameSize[1]]
