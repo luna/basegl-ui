@@ -6,7 +6,8 @@ import * as shape  from 'shape/Node'
 
 searcherRoot    = 'searcher-root'
 searcherWidth   = 400  # same as `@searcherWidth` in `_searcher.less`
-
+searcherBaseOffsetX = -searcherWidth / 8
+searcherBaseOffsetY = shape.height   / 8
 
 export class Searcher extends Component
     cons: (args...) =>
@@ -106,7 +107,7 @@ export class Searcher extends Component
             @inputSelection = null
         return @dom.input
 
-    offsetFromNode: => [-searcherWidth / 8 * @scale, shape.height / 8 * @scale]
+    offsetFromNode: => [searcherBaseOffsetX * @scale, searcherBaseOffsetY * @scale]
 
     align: (scale) =>
         if @scale != scale
