@@ -15,20 +15,6 @@
     }
 }
 
-.luna-port-sidebar {
-    @p: 10px; //calc(@ui ~'*' unit(@luna-grid-size, px) / 1.6);
-    .luna-searcher__input {
-        padding:  0 @p; 
-        position: relative;
-        left:    -@p;
-    }
-}
-
-.luna-node__name,
-.luna-node__expression {
-    min-height: calc(@ui ~'*' @luna-line-height);
-}
-
 .luna-searcher {
     z-index:  @luna-zindex-searcher;
     position: absolute;
@@ -39,36 +25,9 @@
     height: 0;
 }
 
-.luna-searcher__body {
-    width: 0;
-}
-
-.luna-searcher--node ~ .luna-node--selected {
-    .luna-node__expression {
-        display: none;
-    }
-}
-
-.luna-searcher--node-name {
-    &+.luna-ctrl-icon {
-        display: none;
-    }
-    .luna-searcher__input {
-        .background(@a); //@luna-syntax-background-color;
-        border:   calc(@ui ~'*'  2px) solid @luna-graph-background-color;
-        top:      calc(@ui ~'*' -7px);
-        position: relative;
-    }
-}
-
-.luna-searcher__preview {
-    display: none;
-}
-
-.luna-searcher__input,
-.luna-node__name--input {
+.luna-searcher__input {
     background:     #1d1d19;
-    border-radius: 0px 0px (@luna-searcher-border-radius + @luna-connection-width) * 1px (@luna-searcher-border-radius + @luna-connection-width) * 1px;;
+    border-radius:  0px 0px (@luna-searcher-border-radius + @luna-connection-width) * 1px (@luna-searcher-border-radius + @luna-connection-width) * 1px;;
     color:          @luna-syntax-text-color;
     font-family:    @fontDefault;
     font-size:      calc(@ui ~'*' 12px);
@@ -78,7 +37,7 @@
     letter-spacing: 0.5px; // Matching Atom styles. TODO: Apply to the whole graph?
     overflow:       inherit;
     text-align:     center;
-    transform:      translateX(-37.5%);
+    transform:      translateX(-37%);
     width:          calc(@ui ~'*' @searcherWidth);
     &:focus {
         outline: 0;
@@ -89,16 +48,6 @@
     border-radius: (@luna-searcher-border-radius + @luna-connection-width) * 1px;
 }
 
-.luna-node__expression {
-    .luna-searcher__input {
-        .outlineStroke;
-        .background(@a);
-        @padding:  6px;
-        padding:   0 @padding;
-        transform: translate(-37.5%, calc(@ui ~'*' -4px));
-        width:     calc(@ui ~'*' @searcherWidth - 2*@padding);
-    }
-}
 .luna-searcher__input--selected {
     .background(@a+1) !important;
 }
@@ -111,53 +60,51 @@
     left:           calc(@ui ~'*' (-@searcherWidth/4));
     width:          calc(@ui ~'*' @searcherWidth + 2px);
     border:         calc(@ui ~'*' @luna-connection-width * 1px) solid transparent; //TODO: add this border to children instead (with proper color)
-    transform:      translate(@searcherWidth * -0.125px, @luna-connection-width * 1px);
+    transform:      translate(@searcherWidth * -0.125px, @luna-connection-width * 2px);
     height:         calc(@ui ~'*' @luna-superline-height * 10px);
     overflow:       hidden;
-    // & ~ .luna-searcher__input {
-    //     border-radius: 0 0 unit(@luna-searcher-border-radius,px) unit(@luna-searcher-border-radius,px);
-    // }
 }
-    .luna-searcher__results__list {
-        .background(@a);
-        overflow:       hidden;
-        display:        flex;
-        flex-direction: column-reverse;
-        text-align:     center;
-        border-radius:  unit(@luna-searcher-border-radius,px) unit(@luna-searcher-border-radius,px) 0 0;
-        padding:        0;
-        width:          calc(@ui ~'*' @searcherWidth);
-        max-height:     calc(@ui ~'*' @luna-superline-height * 10px);  
-    }
 
-    .luna-searcher__doc {
-        @y: calc(@ui ~'*' @luna-superline-height * 10px);
-        .background(@a);
-        font-size:     calc(@ui ~'*' 10px);
-        border-radius: unit(@luna-searcher-border-radius, px) 
-                       unit(@luna-searcher-border-radius, px) 
-                       unit(@luna-searcher-border-radius, px) 0 !important;
-        box-sizing:    border-box;
-        position:      absolute;
-        bottom:        30px;
-        left:          calc(@ui ~'*' @searcherWidth/4 + 2px);
-        height:        @y;
-        width:         calc(@ui ~'*' @searcherWidth/2);
-        white-space:   normal;
-        &.luna-visualization--active {
-            .luna-visualization-container {
-                .background(@a + 1);
-            }
-        }
+.luna-searcher__results__list {
+    .background(@a);
+    overflow:       hidden;
+    display:        flex;
+    flex-direction: column-reverse;
+    text-align:     center;
+    border-radius:  unit(@luna-searcher-border-radius,px) unit(@luna-searcher-border-radius,px) 0 0;
+    padding:        0;
+    width:          calc(@ui ~'*' @searcherWidth);
+    max-height:     calc(@ui ~'*' @luna-superline-height * 10px);  
+}
+
+.luna-searcher__doc {
+    @y: calc(@ui ~'*' @luna-superline-height * 10px);
+    .background(@a);
+    font-size:     calc(@ui ~'*' 10px);
+    border-radius: unit(@luna-searcher-border-radius, px) 
+                    unit(@luna-searcher-border-radius, px) 
+                    unit(@luna-searcher-border-radius, px) 0 !important;
+    box-sizing:    border-box;
+    position:      absolute;
+    bottom:        30px;
+    left:          calc(@ui ~'*' @searcherWidth/4 + 2px);
+    height:        @y;
+    width:         calc(@ui ~'*' @searcherWidth/2);
+    white-space:   normal;
+    &.luna-visualization--active {
         .luna-visualization-container {
-            background: inherit !important;
-            width:      200px;
-        }
-        iframe {
-            width: 100%;
-            height: @y;
+            .background(@a + 1);
         }
     }
+    .luna-visualization-container {
+        background: inherit !important;
+        width:      200px;
+    }
+    iframe {
+        width: 100%;
+        height: @y;
+    }
+}
 
 .luna-searcher__results__item {
     line-height: calc(@ui ~'*' @luna-superline-height * 1px);
@@ -171,6 +118,7 @@
         opacity: 1;
     }
 }
+
 .luna-searcher__results__item::before {
     position: absolute;
     left:     calc(@ui ~'*' 7px);
