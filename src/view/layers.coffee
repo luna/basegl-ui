@@ -13,7 +13,7 @@ export outPort  = port
 export selfPort = port
 export valueToggler = port
 
-export connection = port
+export connection = port - 1
 
 export widget = 300
 export slider = widget

@@ -1,19 +1,24 @@
+import {BasicComponent} from 'abstract/BasicComponent'
 import * as basegl      from 'basegl'
 import * as Color       from 'basegl/display/Color'
 import {rect}           from 'basegl/display/Shape'
-import {BasicComponent} from 'abstract/BasicComponent'
+import * as color       from 'shape/Color'
 import * as layers      from 'view/layers'
 
-export width     = 20
+export width     = 30
 
 lineWidth = 2
 
 export connectionExpr = basegl.expr ->
     eye         = 'scaledEye.z'
     scaledWidth = lineWidth * Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.85) / 10
-    r = rect 'bbox.x', scaledWidth
-    r = r.move 'bbox.x'/2, 'bbox.y'/2
-    r.fill Color.rgb ['color_r', 'color_g', 'color_b']
+    activeArea = rect 'bbox.x', 'bbox.y'
+        .move 'bbox.x'/2, 'bbox.y'/2
+        .fill color.activeArea
+    connection = rect 'bbox.x', scaledWidth
+       .move 'bbox.x'/2, 'bbox.y'/2
+       .fill Color.rgb ['color_r', 'color_g', 'color_b']
+    activeArea + connection
 
 connectionSymbol = basegl.symbol connectionExpr
 connectionSymbol.defaultZIndex = layers.connection

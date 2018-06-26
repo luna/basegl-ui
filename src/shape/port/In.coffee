@@ -3,25 +3,33 @@ import * as Animation from 'basegl/animation/Animation'
 import * as Easing    from 'basegl/animation/Easing'
 import * as Color     from 'basegl/display/Color'
 import {circle, pie, rect}  from 'basegl/display/Shape'
+import {BasicComponent}             from 'abstract/BasicComponent'
+import * as color                   from 'shape/Color'
 import {nodeSelectionBorderMaxSize} from 'shape/node/Base'
-import {BasicComponent}  from 'abstract/BasicComponent'
-import * as layers       from 'view/layers'
+import * as layers                  from 'view/layers'
 import {width, length, angle, inArrowRadius, distanceFromCenter}  from 'shape/port/Base'
 
+areaAngle = Math.PI / 5
+bboxWidth = distanceFromCenter * 2
+bboxHeight = 2 *  bboxWidth * Math.tan areaAngle
 
 export inPortExpr = basegl.expr ->
     r = inArrowRadius
     c = circle r
-       .move width/2, -distanceFromCenter
+       .move bboxHeight/2-width, 0
     p = pie angle
        .rotate Math.PI
-       .move width/2, 0
+       .move bboxHeight/2-width, distanceFromCenter
     port = c * p
-    port.fill Color.rgb ['color_r', 'color_g', 'color_b']
-
+    port = port.fill Color.rgb ['color_r', 'color_g', 'color_b']
+    activeArea = pie areaAngle
+        .rotate Math.PI
+        .move bboxWidth/2, 0
+        .fill color.activeArea
+    activeArea + port
 
 inPortSymbol = basegl.symbol inPortExpr
-inPortSymbol.bbox.xy = [width,length]
+inPortSymbol.bbox.xy = [bboxWidth,bboxHeight]
 inPortSymbol.variables.color_r = 1
 inPortSymbol.variables.color_g = 0
 inPortSymbol.variables.color_b = 0
@@ -35,5 +43,5 @@ export class InPortShape extends BasicComponent
             element.variables.color_r = @model.color[0]
             element.variables.color_g = @model.color[1]
             element.variables.color_b = @model.color[2]
-        element.position.xy = [-width/2, -length/2]
+        element.position.xy = [-bboxWidth/2, length - bboxHeight/2]
 

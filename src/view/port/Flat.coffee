@@ -15,7 +15,7 @@ export class FlatPort extends Port
         color: [1,0,0]
 
     prepare: =>
-        @addDef 'port', new FlatPortShape null, @
+        @addDef 'port', new FlatPortShape output: @model.output, @
         @addDef 'name', new TextShape
                 align: 'left'
                 text: @model.name
@@ -27,11 +27,12 @@ export class FlatPort extends Port
                 color: @model.color
         if @changed.output
             @updateDef 'name', align: if @model.output then 'right' else 'left'
+            @updateDef 'port',
+                output: @model.output
 
     adjust: (view) =>
         if @changed.output or @changed.position
-            x = if @model.output then @model.position[0] - shape.length else @model.position[0]
-            view.position.xy = [x, @model.position[1]]
+            view.position.xy = @model.position.slice()
         if @changed.output
             @view('name').position.x = if @model.output then -shape.length else  2* shape.length
 
