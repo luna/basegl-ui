@@ -10,14 +10,17 @@ export width     = 30
 lineWidth = 2
 
 export connectionExpr = basegl.expr ->
+    connectionColor = Color.rgb ['color_r', 'color_g', 'color_b']
+        .mix color.white, 'hovered'*0.7
     eye         = 'scaledEye.z'
     scaledWidth = lineWidth * Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.85) / 10
+    scaledWidth = scaledWidth + scaledWidth * 'hovered'
     activeArea = rect 'bbox.x', 'bbox.y'
         .move 'bbox.x'/2, 'bbox.y'/2
         .fill color.activeArea
     connection = rect 'bbox.x', scaledWidth
        .move 'bbox.x'/2, 'bbox.y'/2
-       .fill Color.rgb ['color_r', 'color_g', 'color_b']
+       .fill connectionColor
     activeArea + connection
 
 connectionSymbol = basegl.symbol connectionExpr
@@ -26,6 +29,7 @@ connectionSymbol.bbox.y = width
 connectionSymbol.variables.color_r = 1
 connectionSymbol.variables.color_g = 0
 connectionSymbol.variables.color_b = 0
+connectionSymbol.variables.hovered = 0
 
 export class ConnectionShape extends BasicComponent
     initModel: =>
@@ -50,3 +54,6 @@ export class ConnectionShape extends BasicComponent
             element.variables.color_g = @model.color[1]
             element.variables.color_b = @model.color[2]
 
+    registerEvents: (view) =>
+        view.addEventListener 'mouseover', => @__element.variables.hovered = 1
+        view.addEventListener 'mouseout',  => @__element.variables.hovered = 0

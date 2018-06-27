@@ -10,3 +10,4 @@ export valueTogglerColor = white
 
 export transparent = Color.rgb [0, 0, 0, 0]
 export activeArea = transparent
+export hoverAspect = 0.7

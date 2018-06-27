@@ -24,8 +24,8 @@ export class NodeEditor extends EventEmitter
         @visualizerLibraries ?= {}
         @inTransaction        = false
         @pending              = []
-        @topDomScene          = @_scene.addDOMScene('dom-top')
-        @topDomSceneNoScale   = @_scene.addDOMSceneWithNewCamera('dom-top-no-scale')
+        @topDomScene          = @_scene.addDomModel('dom-top')
+        @topDomSceneNoScale   = @_scene.addDomModelWithNewCamera('dom-top-no-scale')
 
         visCoverFamily = @_scene.register visualizationCover
         visCoverFamily.zIndex = -1

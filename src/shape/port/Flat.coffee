@@ -14,6 +14,8 @@ bboxHeight = width*2
 bboxWidth = length*5
 
 export flatPortExpr = basegl.expr ->
+    portColor = Color.rgb ['color_r', 'color_g', 'color_b']
+        .mix color.white, 'hovered' * color.hoverAspect
     activeArea = rect 'bbox.x', 'bbox.y'
         .move 'bbox.x'/2, 'bbox.y'/2
         .fill color.activeArea
@@ -25,7 +27,7 @@ export flatPortExpr = basegl.expr ->
         .rotate -Math.PI /2
         .move (bboxWidth*'is_output' + length*(1-'is_output')), bboxHeight/2
     port = port - cutter
-    port = port.fill Color.rgb ['color_r', 'color_g', 'color_b']
+    port = port.fill portColor
     activeArea + port
 
 flatPortSymbol = basegl.symbol flatPortExpr
@@ -33,6 +35,7 @@ flatPortSymbol.bbox.xy = [bboxWidth, bboxHeight]
 flatPortSymbol.variables.color_r = 1
 flatPortSymbol.variables.color_g = 0
 flatPortSymbol.variables.color_b = 0
+flatPortSymbol.variables.hovered = 0
 flatPortSymbol.variables.is_output = 0
 flatPortSymbol.defaultZIndex = layers.flatPort
 
@@ -50,3 +53,7 @@ export class FlatPortShape extends BasicComponent
             x = if @model.output then (- bboxWidth) else 0
             element.variables.is_output = Number @model.output
             element.position.xy = [x, -bboxHeight/2]
+
+    registerEvents: (view) =>
+        view.addEventListener 'mouseover', => @__element.variables.hovered = 1
+        view.addEventListener 'mouseout',  => @__element.variables.hovered = 0

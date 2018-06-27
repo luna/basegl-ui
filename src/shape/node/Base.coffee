@@ -4,7 +4,7 @@ import {circle, glslShape, rect} from 'basegl/display/Shape'
 
 #### basic shapes ####
 
-nodeRadius     = 30
+export nodeRadius     = 30
 gridElemOffset = 18
 arrowOffset    = gridElemOffset + 2
 export nodeSelectionBorderMaxSize = 40
