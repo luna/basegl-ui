@@ -12,8 +12,6 @@ bboxWidth = distanceFromCenter * 1.5
 bboxHeight = 2 *  bboxWidth * Math.tan areaAngle
 
 export outPortExpr = basegl.expr ->
-    portColor = Color.rgb ['color_r', 'color_g', 'color_b']
-        .mix color.white, 'hovered' * color.hoverAspect
     r = outArrowRadius
     c = circle r
        .move bboxWidth/2, 0
@@ -22,7 +20,7 @@ export outPortExpr = basegl.expr ->
        .move bboxWidth/2, h2 + r
     port = p - c
     port = port.move 0, - r + length - h2 + distanceFromCenter
-        .fill portColor
+        .fill color.varHover()
     activeCutter = circle nodeRadius
         .move bboxWidth/2, 0
     activeArea = pie areaAngle

@@ -12,11 +12,9 @@ export width = 2 * radius
 export height = 2 * radius
 
 export selfPortExpr = basegl.expr ->
-    portColor = Color.rgb ['color_r', 'color_g', 'color_b']
-        .mix color.white, 'hovered' * color.hoverAspect
     c = circle radius
        .move radius, radius
-       .fill portColor
+       .fill color.varHover()
 
 selfPortSymbol = basegl.symbol selfPortExpr
 selfPortSymbol.bbox.xy = [width, height]

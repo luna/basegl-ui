@@ -10,8 +10,6 @@ export width     = 30
 lineWidth = 2
 
 export connectionExpr = basegl.expr ->
-    connectionColor = Color.rgb ['color_r', 'color_g', 'color_b']
-        .mix color.white, 'hovered' * color.hoverAspect
     eye         = 'scaledEye.z'
     scaledWidth = lineWidth * Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.85) / 10
     scaledWidth = scaledWidth + scaledWidth * 'hovered'
@@ -20,7 +18,7 @@ export connectionExpr = basegl.expr ->
         .fill color.activeArea
     connection = rect 'bbox.x', scaledWidth
        .move 'bbox.x'/2, 'bbox.y'/2
-       .fill connectionColor
+       .fill color.varHover()
     activeArea + connection
 
 connectionSymbol = basegl.symbol connectionExpr

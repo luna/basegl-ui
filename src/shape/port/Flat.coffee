@@ -14,8 +14,6 @@ bboxHeight = width*2
 bboxWidth = length*5
 
 export flatPortExpr = basegl.expr ->
-    portColor = Color.rgb ['color_r', 'color_g', 'color_b']
-        .mix color.white, 'hovered' * color.hoverAspect
     activeArea = rect 'bbox.x', 'bbox.y'
         .move 'bbox.x'/2, 'bbox.y'/2
         .fill color.activeArea
@@ -27,7 +25,7 @@ export flatPortExpr = basegl.expr ->
         .rotate -Math.PI /2
         .move (bboxWidth*'is_output' + length*(1-'is_output')), bboxHeight/2
     port = port - cutter
-    port = port.fill portColor
+    port = port.fill color.varHover()
     activeArea + port
 
 flatPortSymbol = basegl.symbol flatPortExpr
