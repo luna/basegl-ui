@@ -5,7 +5,7 @@ import {nodeRadius}     from 'shape/node/Base'
 import * as color       from 'shape/Color'
 import {BasicComponent} from 'abstract/BasicComponent'
 import * as layers      from 'view/layers'
-import {width, length, angle, outArrowRadius, distanceFromCenter}  from 'shape/port/Base'
+import {width, length, angle, outArrowRadius, distanceFromCenter, PortShape}  from 'shape/port/Base'
 
 areaAngle = Math.PI / 5
 bboxWidth = distanceFromCenter * 1.5
@@ -38,16 +38,8 @@ outPortSymbol.variables.color_b = 0
 outPortSymbol.variables.hovered = 0
 outPortSymbol.defaultZIndex = layers.outPort
 
-export class OutPortShape extends BasicComponent
-    initModel: => color: [1,0,0]
+export class OutPortShape extends PortShape
     define: => outPortSymbol
     adjust: (element) =>
-        if @changed.color
-            element.variables.color_r = @model.color[0]
-            element.variables.color_g = @model.color[1]
-            element.variables.color_b = @model.color[2]
+        super element
         element.position.xy = [-bboxWidth/2, -distanceFromCenter]
-
-    registerEvents: (view) =>
-        view.addEventListener 'mouseover', => @__element.variables.hovered = 1
-        view.addEventListener 'mouseout',  => @__element.variables.hovered = 0

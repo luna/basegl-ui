@@ -1,10 +1,10 @@
-import * as basegl      from 'basegl'
-import * as Color       from 'basegl/display/Color'
-import {circle}         from 'basegl/display/Shape'
-import {BasicComponent} from 'abstract/BasicComponent'
-import * as color       from 'shape/Color'
-import {length}         from 'shape/port/Base'
-import * as layers      from 'view/layers'
+import * as basegl         from 'basegl'
+import * as Color          from 'basegl/display/Color'
+import {circle}            from 'basegl/display/Shape'
+import {BasicComponent}    from 'abstract/BasicComponent'
+import * as color          from 'shape/Color'
+import {length, PortShape} from 'shape/port/Base'
+import * as layers         from 'view/layers'
 
 
 radius = length
@@ -24,16 +24,8 @@ selfPortSymbol.variables.color_b = 0
 selfPortSymbol.variables.hovered = 0
 selfPortSymbol.defaultZIndex = layers.selfPort
 
-export class SelfPortShape extends BasicComponent
-    initModel: => color: [1,0,0]
+export class SelfPortShape extends PortShape
     define: => selfPortSymbol
     adjust: (element) =>
-        if @changed.color
-            element.variables.color_r = @model.color[0]
-            element.variables.color_g = @model.color[1]
-            element.variables.color_b = @model.color[2]
+        super element
         element.position.xy = [-width/2, -height/2]
-
-    registerEvents: (view) =>
-        view.addEventListener 'mouseover', => @__element.variables.hovered = 1
-        view.addEventListener 'mouseout',  => @__element.variables.hovered = 0

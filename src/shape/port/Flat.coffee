@@ -5,6 +5,7 @@ import * as Color       from 'basegl/display/Color'
 import {pie, rect}      from 'basegl/display/Shape'
 import * as color       from 'shape/Color'
 import * as layers      from 'view/layers'
+import {PortShape}      from 'shape/port/Base'
 
 angle = Math.PI/3
 export length    = 10
@@ -37,21 +38,15 @@ flatPortSymbol.variables.hovered = 0
 flatPortSymbol.variables.is_output = 0
 flatPortSymbol.defaultZIndex = layers.flatPort
 
-export class FlatPortShape extends BasicComponent
+export class FlatPortShape extends PortShape
     initModel: =>
-        color: [1,0,0]
-        output: null
+        model = super()
+        model.output = null
+        model
     define: => flatPortSymbol
     adjust: (element) =>
-        if @changed.color
-            element.variables.color_r = @model.color[0]
-            element.variables.color_g = @model.color[1]
-            element.variables.color_b = @model.color[2]
+        super element
         if @changed.output
             x = if @model.output then (- bboxWidth) else 0
             element.variables.is_output = Number @model.output
             element.position.xy = [x, -bboxHeight/2]
-
-    registerEvents: (view) =>
-        view.addEventListener 'mouseover', => @__element.variables.hovered = 1
-        view.addEventListener 'mouseout',  => @__element.variables.hovered = 0
