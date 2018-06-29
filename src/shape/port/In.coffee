@@ -1,13 +1,14 @@
-import * as basegl    from 'basegl'
-import * as Animation from 'basegl/animation/Animation'
-import * as Easing    from 'basegl/animation/Easing'
-import * as Color     from 'basegl/display/Color'
-import {circle, pie, rect}  from 'basegl/display/Shape'
-import {BasicComponent}             from 'abstract/BasicComponent'
-import * as color                   from 'shape/Color'
-import {nodeRadius}                 from 'shape/node/Base'
-import * as layers                  from 'view/layers'
+import * as basegl         from 'basegl'
+import * as Animation      from 'basegl/animation/Animation'
+import * as Easing         from 'basegl/animation/Easing'
+import * as Color          from 'basegl/display/Color'
+import {circle, pie, rect} from 'basegl/display/Shape'
+import {BasicComponent}    from 'abstract/BasicComponent'
+import * as color          from 'shape/Color'
+import {nodeRadius}        from 'shape/node/Base'
+import * as layers         from 'view/layers'
 import {width, length, angle, inArrowRadius, distanceFromCenter}  from 'shape/port/Base'
+
 
 areaAngle = Math.PI / 5
 bboxWidth = distanceFromCenter * 1.5

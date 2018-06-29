@@ -11,7 +11,7 @@ lineWidth = 2
 
 export connectionExpr = basegl.expr ->
     connectionColor = Color.rgb ['color_r', 'color_g', 'color_b']
-        .mix color.white, 'hovered'*0.7
+        .mix color.white, 'hovered' * color.hoverAspect
     eye         = 'scaledEye.z'
     scaledWidth = lineWidth * Math.pow(Math.clamp(eye*20.0, 0.0, 400.0),0.85) / 10
     scaledWidth = scaledWidth + scaledWidth * 'hovered'
