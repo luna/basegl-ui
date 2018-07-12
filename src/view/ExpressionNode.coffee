@@ -9,6 +9,7 @@ import {Composable, fieldMixin} from "basegl/object/Property"
 
 import {InPort}             from 'view/port/In'
 import {OutPort}            from 'view/port/Out'
+import {EditableText}       from 'view/EditableText'
 import * as shape           from 'shape/node/Base'
 import * as togglerShape    from 'shape/node/ValueToggler'
 import * as _               from 'underscore'
@@ -36,6 +37,12 @@ widgetHeight = 20
 inportVDistance = widgetOffset + widgetHeight
 minimalBodyHeight = 60
 
+testEntries = [
+    { name: 'bar', doc: 'bar description', className: 'Bar', highlights: [ { start: 1, end: 2 } ] },
+    { name: 'foo', doc: 'foo multiline\ndescription', className: 'Foo', highlights: [] },
+    { name: 'baz', doc:  'baz description', className: 'Test', highlights: [ { start: 1, end: 3 } ] }
+]
+
 export class ExpressionNode extends ContainerComponent
     initModel: =>
         key:        null
@@ -51,8 +58,13 @@ export class ExpressionNode extends ContainerComponent
 
     prepare: =>
         @addDef 'node', new NodeShape expanded: @model.expanded, @
-        @addDef 'name', new TextContainer text: @model.name, @
         @addDef 'expression', new TextContainer text: @model.expression, @
+        @addDef 'name', new EditableText
+                text:     @model.name
+                entries:  testEntries
+                position: @model.position
+            , @
+        @addDef 'expression', new TextShape text: @model.expression, @
         @addDef 'valueToggler', new ValueTogglerShape null, @
 
     update: =>

@@ -1,5 +1,6 @@
 import * as basegl from 'basegl'
 import {BasicComponent}  from 'abstract/BasicComponent'
+import {ContainerComponent}  from 'abstract/ContainerComponent'
 
 
 export class TextShape extends BasicComponent

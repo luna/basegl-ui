@@ -19,14 +19,17 @@ export class Searcher extends ContainerComponent
     ################################
 
     initModel: =>
+        console.log "Searcher: init model"
         key: null
         input: null
         inputSelection: null
         selected: 0
         entries: []
         position: [0, 0]
+        parent: null
 
     prepare: =>
+        console.log "===== Searcher: prepare ======"
         @dom = {}
         @addDef 'root', new HtmlShape
                 element: 'div'
@@ -39,6 +42,7 @@ export class Searcher extends ContainerComponent
     #############################
 
     update: =>
+        console.log "Searcher: update"
         @__createDom() unless @dom.container?
         @__updateResults() if @changed.entries
         @__updateInput() if @changed.input
@@ -132,15 +136,19 @@ export class Searcher extends ContainerComponent
     #######################
 
     adjust: (view) =>
+        console.log "Searcher : adjust"
         if @changed.position
             @__withParentNode (parentNode) =>
                 [posx, posy] = @model.position.slice()
-                exprPosY = parentNode.view('expression').position.y
-                view.position.xy = [searcherBaseOffsetX + posx, searcherBaseOffsetY + exprPosY + posy]
+                exprPosY = parentNode.view('text').position.y
+                # view.position.xy = [searcherBaseOffsetX + posx, searcherBaseOffsetY + exprPosY + posy]
 
     __withParentNode: (f) =>
         unless @parentNode?
-            @parentNode = @parent.node @model.key
+            if @parent.node?
+                @parentNode = @parent.node @model.key
+            else
+                @parentNode = @parent
 
         unless @parentNode?
             @warn "Trying to perform an action on an unknown parent"
