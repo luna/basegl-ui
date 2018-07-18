@@ -8,6 +8,7 @@ import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path} from
 import {Composable, fieldMixin} from "basegl/object/Property"
 
 import {InPort}             from 'view/port/In'
+import {PhantomPort}        from 'view/port/Phantom'
 import {OutPort}            from 'view/port/Out'
 import {EditableText}       from 'view/EditableText'
 import * as shape           from 'shape/node/Base'
@@ -69,6 +70,7 @@ export class ExpressionNode extends ContainerComponent
                 kind:    EditableText.EXPRESSION
             , @
         @addDef 'valueToggler', new ValueTogglerShape null, @
+        @addDef 'phantomPort', new PhantomPort null, @
 
     update: =>
         @updateDef 'name', text: @model.name
