@@ -102,13 +102,11 @@ export class NodeEditor extends EventEmitter
         @genericSetComponent 'inputNode', InputNode, inputNode
     setOutputNode: (outputNode) =>
         @genericSetComponent 'outputNode', OutputNode, outputNode
-    setSearcher: (searcher) =>
-        @genericSetComponent 'searcher', Searcher, searcher
-    
+
     setVisualizerLibraries: (visLib) =>
         unless _.isEqual(@visualizerLibraries, visLib)
             @emitProperty 'visualizerLibraries', visLib
-    
+
     setVisualization: (nodeVis) =>
         key = nodeVis.nodeKey
         if @visualizations[key]?
@@ -120,7 +118,7 @@ export class NodeEditor extends EventEmitter
             if @visualizations[key]?
                 @visualizations[key].dispose()
                 delete @visualizations[key]
-        
+
     unsetVisualization: (nodeVis) =>
         if @visualizations[nodeVis.nodeKey]?
             @visualizations[nodeVis.nodeKey].dispose()
@@ -193,3 +191,28 @@ export class NodeEditor extends EventEmitter
             @connections[connectionKey].dispose()
         for nodeKey in Object.keys @nodes
             @nodes[nodeKey].dispose()
+
+    setSearcher: (searcherModel) =>
+        unless searcherModel?
+            @unregisterSearcher()
+            return
+
+        node = @node(searcherModel.key)
+        unless node?
+            @warn "No node to attatch the Searcher to."
+            return
+
+        node.setSearcher searcherModel
+
+    unregisterSearcher: =>
+        if @openSearcher?
+            closingSearcher = @openSearcher
+            @openSearcher = null
+            closingSearcher.hideSearcher()
+
+    registerSearcher: (searcher) =>
+        if @openSearcher? and searcher.key != @openSearcher.key
+            @openSearcher.hideSearcher()
+        @openSearcher = searcher
+
+    log: (msg) => console.log "[NodeEditor]", msg

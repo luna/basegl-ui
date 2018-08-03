@@ -53,5 +53,5 @@ export class ConnectionShape extends BasicComponent
 
     registerEvents: (view) =>
         vars = @getElement().variables
-        view.addEventListener 'mouseover', => console.log "Dupa";  vars.hovered = 1
-        view.addEventListener 'mouseout',  => console.log "Sraka"; vars.hovered = 0
+        view.addEventListener 'mouseover', => vars.hovered = 1
+        view.addEventListener 'mouseout',  => vars.hovered = 0

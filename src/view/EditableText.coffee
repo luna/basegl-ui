@@ -1,13 +1,20 @@
 import {ContainerComponent} from 'abstract/ContainerComponent'
 import {Searcher}           from 'view/Searcher'
-import {TextShape}          from 'shape/Text'
+import {TextContainer}      from 'view/Text'
 
 import * as basegl from 'basegl'
 import * as style  from 'style'
 import * as shape  from 'shape/node/Base'
 
 
+searcherWidth   = 400  # same as `@searcherWidth` in `_searcher.less`
+searcherBaseOffsetX = -searcherWidth / 8
+searcherBaseOffsetY = shape.height  / 8
+
 export class EditableText extends ContainerComponent
+
+    @NAME:       'editable-name'
+    @EXPRESSION: 'editable-expr'
 
     ################################
     ### Initialize the component ###
@@ -22,22 +29,11 @@ export class EditableText extends ContainerComponent
         entries: []
         position: [0, 0]
         edited: false
+        kind: EditableText.NAME
 
     prepare: =>
-        console.log "EditableText::prepare"
-        # console.log "@model: ", @model
-
-        @addDef 'text', new TextShape
+        @addDef 'text', new TextContainer
                 text: @model.text
-            , @
-        @addDef 'searcher', new Searcher
-                key:            @model.key
-                input:          @model.input
-                text:           @model.text
-                inputSelection: @model.inputSelection
-                selected:       @model.selected
-                entries:        @model.entries
-                position:       @model.position
             , @
 
     #############################
@@ -45,32 +41,80 @@ export class EditableText extends ContainerComponent
     #############################
 
     update: =>
-        console.log "EditableText::update"
-        console.log "@model: ", @model
-        @updateDef 'searcher', entries: @model.entries
+        if @changed.edited
+            if @model.edited
+                @autoUpdateDef 'searcher', Searcher,
+                        key:            @model.key
+                        input:          @model.input || @model.text
+                        inputSelection: @model.inputSelection
+                        selected:       @model.selected
+                        entries:        @model.entries
+                @autoUpdateDef 'text', null
+            else
+                @autoUpdateDef 'searcher', Searcher, null
+                @autoUpdateDef 'text', TextContainer,
+                        text: @model.text
+
+        if (@changed.entries or @changed.input or @changed.selected or @changed.inputSelection) and @model.edited
+            @updateDef 'searcher',
+                    entries:        @model.entries
+                    input:          @model.input
+                    inputSelection: @model.inputSelection
+                    selected:       @model.selected
+                    entries:        @model.entries
+
+        if @changed.text and not @model.edited
+            @updateDef 'text', text: @model.text
+
+    __nodeEditor: =>
+        @parent?.parent
+
+    hideSearcher: =>
+        @set edited: false
+        @__nodeEditor()?.unregisterSearcher()
+
+    showSearcher: (notify = true) =>
+        @set edited: true
+        @__nodeEditor()?.registerSearcher @
+        tag = if (@model.kind == EditableText.NAME) then 'EditNodeNameEvent' else 'EditNodeExpressionEvent'
+        if notify
+            @pushEvent tag: tag
+
+    setSearcher: (searcherModel) =>
+        @set
+            key:            searcherModel.key
+            input:          searcherModel.input
+            inputSelection: searcherModel.inputSelection
+            selected:       searcherModel.selected
+            entries:        searcherModel.entries
+            edited:         true
+        @showSearcher false
 
     #######################
     ### Adjust the view ###
     #######################
 
     adjust: (view) =>
-        console.log "EditableText::adjust"
-    
-    __onPositionChanged: (parentNode) =>
-        console.log "Changing position along with the parent"
-        @set position: parentNode.model.position
+        @__align view
+
+    __align: (view) =>
+        if @model.edited
+            @view('searcher').position.xy = [searcherBaseOffsetX, searcherBaseOffsetY]
+        else
+            @view('text').position.xy = [0, 0]
 
     ###################################
     ### Register the event handlers ###
     ###################################
 
     registerEvents: (view) =>
-        console.log "EditableText::registerEvents"
-        @view('text').addEventListener 'dblclick', (e) => console.log "Doubleclick on #{@model.text}"
-        view.addEventListener 'mouseenter', => console.log "Siup"
-        
-        parentNode = @model.parent
-        if parentNode?
-            @__onPositionChanged parentNode
-            @addDisposableListener parentNode, 'position', =>
-                @__onPositionChanged parentNode
+        __makeEdited = (e) =>
+            window.addEventListener 'keyup', __makeUnedited
+            @showSearcher()
+
+        __makeUnedited = (e) =>
+            if e.code == 'Escape'
+                window.removeEventListener 'keyup', __makeUnedited
+                @hideSearcher()
+
+        view.addEventListener 'dblclick', __makeEdited

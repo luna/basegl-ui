@@ -59,4 +59,5 @@ export class HasModel extends EventEmitter
         @__view.removeChild view
         @__view.updateChildrenOrigin()
 
-    warn: (msg) => console.warn "[#{@constructor.name}] #{msg}"
+    log:  (msg) => console.log  "[#{@constructor.name}]", msg
+    warn: (msg) => console.warn "[#{@constructor.name}]", msg

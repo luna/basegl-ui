@@ -58,13 +58,16 @@ export class ExpressionNode extends ContainerComponent
 
     prepare: =>
         @addDef 'node', new NodeShape expanded: @model.expanded, @
-        @addDef 'expression', new TextContainer text: @model.expression, @
         @addDef 'name', new EditableText
                 text:     @model.name
-                entries:  testEntries
-                position: @model.position
+                entries:  []
+                kind:     EditableText.NAME
             , @
-        @addDef 'expression', new TextShape text: @model.expression, @
+        @addDef 'expression', new EditableText
+                text:    @model.expression
+                entries: []
+                kind:    EditableText.EXPRESSION
+            , @
         @addDef 'valueToggler', new ValueTogglerShape null, @
 
     update: =>
@@ -123,14 +126,9 @@ export class ExpressionNode extends ContainerComponent
         if @model.value? and @model.value.contents?
             @model.value.contents.contents
 
-    # updateValueView: =>
-    #     valueSize     = [0,0]
-    #     valuePosition = @view('node').position
-    #     if @__shortValue()?
-    #         @view('value').position.y = @view('node').position.y
-    #         valuePosition = @view('value').position
-    #     @view('valueToggler').position.y = @view('node').position.y
-        
+    setSearcher: (searcherModel) =>
+        @def(searcherModel.targetField)?.setSearcher searcherModel
+
     adjust: (view) =>
         if @model.expanded
             for own inPortKey, inPortModel of @model.inPorts
@@ -139,7 +137,7 @@ export class ExpressionNode extends ContainerComponent
                     leftOffset = 50
                     startPoint = [inPort.model.position[0] + leftOffset, inPort.model.position[1]]
                     @view('widget' + inPortKey).position.xy = startPoint
-        # @updateValueView()
+
         if @__shortValue()?
             @view('value').position.xy =
                 if @model.expanded

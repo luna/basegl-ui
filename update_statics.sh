@@ -1,8 +1,8 @@
 #!/bin/bash
 
-echo "Installing the package..."
-npm install
-echo "Done."
+# echo "Installing the package..."
+# npm install
+# echo "Done."
 
 echo "Running webpack..."
 npm run build

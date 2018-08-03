@@ -41,12 +41,13 @@ export class InputNode extends ContainerComponent
             @set position: [x, y]
 
     connectSources: =>
-        @withScene (scene) =>
-            @addDisposableListener scene.camera, 'move', =>
-                campos = scene.camera.position
-                x = scene.width/2 + campos.x - scene.width/2*campos.z
-                y = scene.height/2 + campos.y - height/2
-                @align x, y
+        # @log "CONNECT SOURCES"
+        # @withScene (scene) =>
+        #     @addDisposableListener scene.camera, 'move', =>
+        #         campos = scene.camera.position
+        #         x = scene.width/2 + campos.x - scene.width/2*campos.z
+        #         y = scene.height/2 + campos.y - height/2
+        #         @align x, y
 
     outPort: (key) => @def ('out' + key)
 

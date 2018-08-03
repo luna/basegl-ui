@@ -7,9 +7,6 @@ import * as shape  from 'shape/node/Base'
 
 
 searcherRoot    = 'searcher-root'
-searcherWidth   = 400  # same as `@searcherWidth` in `_searcher.less`
-searcherBaseOffsetX = -searcherWidth / 8
-searcherBaseOffsetY = shape.height   / 8
 
 
 export class Searcher extends ContainerComponent
@@ -19,7 +16,6 @@ export class Searcher extends ContainerComponent
     ################################
 
     initModel: =>
-        console.log "Searcher: init model"
         key: null
         input: null
         inputSelection: null
@@ -29,7 +25,6 @@ export class Searcher extends ContainerComponent
         parent: null
 
     prepare: =>
-        console.log "===== Searcher: prepare ======"
         @dom = {}
         @addDef 'root', new HtmlShape
                 element: 'div'
@@ -41,11 +36,14 @@ export class Searcher extends ContainerComponent
     ### Create/update the DOM ###
     #############################
 
+    __anyChanged: =>
+        @changed.entries or @changed.input or @changed.inputSelection or @changed.selected
+
     update: =>
-        console.log "Searcher: update"
         @__createDom() unless @dom.container?
-        @__updateResults() if @changed.entries
-        @__updateInput() if @changed.input
+        if @__anyChanged()
+            @__updateResults()
+            @__updateInput()
         @dom.input.focus()
 
     __createDom: =>
@@ -70,14 +68,16 @@ export class Searcher extends ContainerComponent
     __createInput: =>
         @dom.input = document.createElement 'input'
         @dom.input.type = 'text'
+        @dom.input.value = @model.input
         @dom.input.className = style.luna ['searcher__input']
 
     __updateResults: =>
         @dom.resultsList.innerText = ''
-        omit = Math.max(0, @model.selected - 1)
-        i = omit + 1
-        @model.entries.slice(omit).forEach (entry) =>
-            @dom.resultsList.appendChild @__renderResult entry, i == @model.selected
+        # omit = Math.max(0, @model.selected - 1)
+        # i = omit + 1
+        i = 0
+        @model.entries.forEach (entry) =>
+            @dom.resultsList.appendChild @__renderResult entry, i == 0
             i++
 
     __updateInput: =>
@@ -85,6 +85,7 @@ export class Searcher extends ContainerComponent
         inputClasses.push ['searcher__input-selected'] if @model.selected == 0
         inputClasses.push ['searcher__no-results'] if @model.entries.length == 0
         @dom.input.className = style.luna inputClasses
+        @dom.input.value = @model.input
         if @model.inputSelection?.length == 2
             @dom.input.selectionStart = @model.inputSelection[0]
             @dom.input.selectionEnd   = @model.inputSelection[1]
@@ -131,45 +132,11 @@ export class Searcher extends ContainerComponent
         nameSpan.appendChild normSpan
         return nameSpan
 
-    #######################
-    ### Adjust the view ###
-    #######################
-
-    adjust: (view) =>
-        console.log "Searcher : adjust"
-        if @changed.position
-            @__withParentNode (parentNode) =>
-                [posx, posy] = @model.position.slice()
-                exprPosY = parentNode.view('text').position.y
-                # view.position.xy = [searcherBaseOffsetX + posx, searcherBaseOffsetY + exprPosY + posy]
-
-    __withParentNode: (f) =>
-        unless @parentNode?
-            if @parent.node?
-                @parentNode = @parent.node @model.key
-            else
-                @parentNode = @parent
-
-        unless @parentNode?
-            @warn "Trying to perform an action on an unknown parent"
-
-        f @parentNode
-
-    __offsetFromNode: => [searcherBaseOffsetX, searcherBaseOffsetY]
-
-    __onPositionChanged: (parentNode) =>
-        @set position: parentNode.model.position
-
     ###################################
     ### Register the event handlers ###
     ###################################
 
     registerEvents: =>
-        @__withParentNode (parentNode) =>
-            @__onPositionChanged parentNode
-            @addDisposableListener parentNode, 'position', =>
-                @__onPositionChanged parentNode
-
         @dom.input.addEventListener 'input', (e) =>
             @pushEvent
                 tag: 'SearcherEditEvent'
@@ -183,3 +150,11 @@ export class Searcher extends ContainerComponent
                     acceptSelectionStart: @dom.input.selectionStart
                     acceptSelectionEnd:   @dom.input.selectionEnd
                     acceptValue:          @dom.input.value
+            else if e.code == 'Tab'
+                @pushEvent tag: 'SeacherTabPressedEvent'
+
+        @dom.input.addEventListener 'keydown', (e) =>
+            if e.code == 'ArrowUp'
+                @pushEvent tag: 'SearcherMoveUpEvent'
+            else if e.code == 'ArrowDown'
+                @pushEvent tag: 'SearcherMoveDownEvent'
