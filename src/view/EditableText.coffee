@@ -50,7 +50,8 @@ export class EditableText extends ContainerComponent
         else
             @autoUpdateDef 'searcher', Searcher, null
             @autoUpdateDef 'text', TextContainer,
-                    text: @model.text
+                    text:  @model.text
+                    align: 'center'
 
     hideSearcher: =>
         @set edited: false
