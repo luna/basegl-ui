@@ -28,7 +28,7 @@ selectedNode = null
 
 
 nodeExprYOffset = shape.height / 3
-nodeNameYOffset = nodeExprYOffset + 15
+nodeNameYOffset = nodeExprYOffset + 25
 nodeValYOffset  = -nodeNameYOffset
 
 portDistance = shape.height / 3

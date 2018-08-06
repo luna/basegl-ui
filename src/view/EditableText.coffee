@@ -31,52 +31,36 @@ export class EditableText extends ContainerComponent
         edited: false
         kind: EditableText.NAME
 
-    prepare: =>
-        @addDef 'text', new TextContainer
-                text: @model.text
-            , @
-
     #############################
     ### Create/update the DOM ###
     #############################
 
     update: =>
-        if @changed.edited
-            if @model.edited
-                @autoUpdateDef 'searcher', Searcher,
-                        key:            @model.key
-                        input:          @model.input || @model.text
-                        inputSelection: @model.inputSelection
-                        selected:       @model.selected
-                        entries:        @model.entries
-                @autoUpdateDef 'text', null
-            else
-                @autoUpdateDef 'searcher', Searcher, null
-                @autoUpdateDef 'text', TextContainer,
-                        text: @model.text
+        anyChanged = Object.values(@changed).some((v) -> v)
+        return unless anyChanged
 
-        if (@changed.entries or @changed.input or @changed.selected or @changed.inputSelection) and @model.edited
-            @updateDef 'searcher',
-                    entries:        @model.entries
-                    input:          @model.input
+        if @model.edited
+            @autoUpdateDef 'searcher', Searcher,
+                    key:            @model.key
+                    input:          @model.input || @model.text
                     inputSelection: @model.inputSelection
                     selected:       @model.selected
                     entries:        @model.entries
-
-        if @changed.text and not @model.edited
-            @updateDef 'text', text: @model.text
-
-    __nodeEditor: =>
-        @parent?.parent
+            @autoUpdateDef 'text', TextContainer, null
+        else
+            @autoUpdateDef 'searcher', Searcher, null
+            @autoUpdateDef 'text', TextContainer,
+                    text: @model.text
 
     hideSearcher: =>
         @set edited: false
-        @__nodeEditor()?.unregisterSearcher()
+        @root.unregisterSearcher()
 
     showSearcher: (notify = true) =>
         @set edited: true
-        @__nodeEditor()?.registerSearcher @
-        tag = if (@model.kind == EditableText.NAME) then 'EditNodeNameEvent' else 'EditNodeExpressionEvent'
+        @root.registerSearcher @
+        tag = if (@model.kind == EditableText.NAME)
+        then 'EditNodeNameEvent' else 'EditNodeExpressionEvent'
         if notify
             @pushEvent tag: tag
 
@@ -95,13 +79,9 @@ export class EditableText extends ContainerComponent
     #######################
 
     adjust: (view) =>
-        @__align view
-
-    __align: (view) =>
-        if @model.edited
-            @view('searcher').position.xy = [searcherBaseOffsetX, searcherBaseOffsetY]
-        else
-            @view('text').position.xy = [0, 0]
+        if @changed.edited
+            @view('searcher')?.position.xy = [searcherBaseOffsetX, searcherBaseOffsetY]
+            @view('text')?.position.xy = [0, 0]
 
     ###################################
     ### Register the event handlers ###
@@ -109,7 +89,7 @@ export class EditableText extends ContainerComponent
 
     registerEvents: (view) =>
         __makeEdited = (e) =>
-            window.addEventListener 'keyup', __makeUnedited
+            @addDisposableListener window, 'keyup', __makeUnedited
             @showSearcher()
 
         __makeUnedited = (e) =>
@@ -117,4 +97,4 @@ export class EditableText extends ContainerComponent
                 window.removeEventListener 'keyup', __makeUnedited
                 @hideSearcher()
 
-        view.addEventListener 'dblclick', __makeEdited
+        @addDisposableListener view, 'dblclick', __makeEdited
