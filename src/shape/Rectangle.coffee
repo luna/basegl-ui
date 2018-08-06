@@ -23,7 +23,8 @@ rectangleSymbol.variables.color_a = 0
 
 export class RectangleShape extends BasicComponent
     initModel: =>
-        size: [0,0]
+        width: 0
+        height: 0
         visible: null
         color: [1,0,0]
 
@@ -31,8 +32,10 @@ export class RectangleShape extends BasicComponent
         rectangleSymbol
 
     adjust: (element, view) =>
-        if @changed.size
-            element.bbox.xy = @model.size
+        if @changed.width
+            element.bbox.x = @model.width
+        if @changed.height
+            element.bbox.y = @model.height
         if @changed.visible
             element.variables.color_a = Number @model.visible
         if @changed.color

@@ -58,6 +58,7 @@ export class ExpressionNode extends ContainerComponent
 
     prepare: =>
         @addDef 'node', new NodeShape expanded: @model.expanded, @
+<<<<<<< HEAD
         @addDef 'name', new EditableText
                 text:     @model.name
                 entries:  []
@@ -85,7 +86,7 @@ export class ExpressionNode extends ContainerComponent
             setWidget = (k) =>
                 @autoUpdateDef ('widget' + k), HorizontalLayout,
                     key: k
-                    widgets: inPort.controls
+                    children: inPort.controls
                     width: @bodyWidth - widgetOffset
                     height: widgetHeight
             for own k, inPort of @model.inPorts
@@ -108,6 +109,7 @@ export class ExpressionNode extends ContainerComponent
                 body: [@bodyWidth, @bodyHeight]
         if @changed.value
             @autoUpdateDef 'value', TextContainer, if @__shortValue()?
+                align: 'center'
                 text: @__shortValue()
                 body: [@bodyWidth, @bodyHeight]
 

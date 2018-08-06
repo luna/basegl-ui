@@ -6,10 +6,6 @@ import {Component}  from 'abstract/Component'
 
 export class Widget extends ContainerComponent
     initModel: =>
-        minWidth:  0
-        minHeight: 0
-        maxWidth:  Infinity
-        maxHeight: Infinity
         width:     null
         height:    null
         inline:    false
@@ -18,6 +14,14 @@ export class Widget extends ContainerComponent
             bottom: false
             left:   false
             right:  false
+
+    minWidth: => @__minWidth or 0
+    optWidth: => @__optWidth or 100
+    maxWidth: => @__maxWidth or Infinity
+
+    minHeight: => @__minHeight or 0
+    optHeight: => @__optHeight or 100
+    maxHeight: => @__maxHeight or Infinity
 
 export class WidgetOld extends Component
     configure: ({ minWidth:  @minWidth  = @minWidth or 0

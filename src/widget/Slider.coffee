@@ -10,14 +10,14 @@ import {Widget}      from 'widget/Widget'
 class Slider extends Widget
     initModel: ->
         model = super()
-        model.minWidth = 40
-        model.minHeight = 20
         model.value = 0
         model.min = 0
         model.max = 1000
         model
 
     prepare: =>
+        @__minWidth = 40
+        @__minHeight = 20
         @addDef 'value', new TextShape
                 fontFamily: 'DejaVuSansMono'
                 size: 14

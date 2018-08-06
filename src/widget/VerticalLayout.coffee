@@ -2,12 +2,12 @@ import {ContainerComponent} from 'abstract/ContainerComponent'
 import {lookupWidget}       from 'widget/WidgetDirectory'
 
 
-export class HorizontalLayout extends ContainerComponent
+export class VerticalLayout extends ContainerComponent
     initModel: =>
         key: null
         children: []
-        width: null
         height: null
+        width: null
         offset: 3
 
     update: =>
@@ -19,47 +19,47 @@ export class HorizontalLayout extends ContainerComponent
 
         return unless @model.children.length > 0
         children = []
-        @__minWidth = 0
-        @__maxWidth = 0
         @__minHeight = 0
-        @__maxHeight = Infinity
+        @__maxHeight = 0
+        @__minWidth = 0
+        @__maxWidth = Infinity
         for i in [0..@model.children.length - 1]
             children.push
                 index  : i
                 widget : @def(i)
-                width : @def(i).minWidth()
-            @__minWidth += @def(i).minWidth() or 0
-            @__maxWidth += @def(i).maxWidth() or 0
-            @__minHeight = Math.min @def(i).minHeight(), @__minHeight
-            @__maxHeight = Math.max @def(i).maxHeight(), @__maxHeight
+                height : @def(i).minHeight()
+            @__minHeight += @def(i).minHeight() or 0
+            @__maxHeight += @def(i).maxHeight() or 0
+            @__minWidth = Math.min @def(i).minWidth(), @__minWidth
+            @__maxWidth = Math.max @def(i).maxWidth(), @__maxWidth
             @updateDef i, siblings:
                 left:  ! (i == 0)
                 right: ! (i == @model.children.length - 1)
-        if @model.width?
-            free = @model.width - @__minWidth - @model.offset * (@model.children.length - 1)
-            children.sort (a, b) -> a.widget.maxWidth() - b.widget.maxWidth()
+        if @model.height?
+            free = @model.height - @__minHeight - @model.offset * (@model.children.length - 1)
+            children.sort (a, b) -> a.widget.maxHeight() - b.widget.maxHeight()
             for i in [0..children.length - 1]
                 w = children[i]
                 wfree = free / (children.length - i)
-                if (! w.widget.maxWidth()?) or w.widget.maxWidth() > w.width + wfree
+                if (! w.widget.maxHeight()?) or w.widget.maxHeight() > w.height + wfree
                     free -= wfree
-                    w.width += wfree
+                    w.height += wfree
                 else
-                    free -= w.widget.maxWidth() - w.width
-                    w.width = w.widget.maxWidth()
+                    free -= w.widget.maxHeight() - w.height
+                    w.height = w.widget.maxHeight()
             children.sort (a, b) -> a.index - b.index
 
         startPoint = [0,0]
         children.forEach (w) =>
             @view(w.index).position.xy = startPoint.slice()
             @updateDef w.index,
-                width: w.width
-                height: @__computeHeight w.widget
-            startPoint[0] += w.width + @model.offset
+                height: w.height
+                width: @__computeWidth w.widget
+            startPoint[1] += w.height + @model.offset
 
-    __computeHeight: (widget) =>
-        height = @model.height
-        if height < widget.maxHeight()
-            height
+    __computeWidth: (widget) =>
+        width = @model.width
+        if width < widget.maxWidth()
+            width
         else
-            widget.maxHeight()
+            widget.maxWidth()

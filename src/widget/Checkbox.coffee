@@ -6,16 +6,16 @@ import {Widget}      from 'widget/Widget'
 export class Checkbox extends Widget
     initModel: ->
         model = super()
-        model.minHeight = 20
-        model.minWidth = 20
-        model.maxHeight = 20
-        model.maxWidth = 50
         model.value = false
         model
 
     prepare: =>
         @addDef 'checkbox', new CheckboxShape null, @
 
+    minHeight: => 20
+    minWidth: => 20
+    maxHeight: => 20
+    maxWidth: => 50
     update: =>
         @updateDef 'checkbox',
             checked:     @model.value

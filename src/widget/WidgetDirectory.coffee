@@ -10,4 +10,4 @@ widgetMap =
     'Text' : TextInput
 
 export lookupWidget = (widget) =>
-    widgetMap[widget.cls] or Widget
+    widget.cons or widgetMap[widget.cls] or Widget

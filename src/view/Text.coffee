@@ -2,19 +2,22 @@ import {ContainerComponent} from 'abstract/ContainerComponent'
 import {TextShape}          from 'shape/Text'
 import {RectangleShape}     from 'shape/Rectangle'
 import * as color           from 'shape/Color'
+import {Widget}             from 'widget/Widget'
 
-
-export class TextContainer extends ContainerComponent
+export class TextContainer extends Widget
     initModel: =>
-        text: ''
-        align: 'center'
-        frameColor: [0,0,0]
-        frameVisible: false
+        s = super()
+        s.text = ''
+        s.align = 'left'
+        s.textAlign = 'left'
+        s.frameColor = [0,0,0]
+        s.frameVisible = false
+        s
 
     prepare: =>
         @addDef 'text', new TextShape
                 text: @model.text
-                align: @model.align
+                align: 'left'
             , @
         @addDef 'box', new RectangleShape
                 visible: @model.frameVisible
@@ -25,23 +28,39 @@ export class TextContainer extends ContainerComponent
         if @changed.text
             @updateDef 'text',
                 text: @model.text
-        if @changed.align
-            @updateDef 'text',
-                align: @model.align
         if @changed.text
-            @size = @def('text').size()
-            @updateDef 'box', size: @size.slice()
+            size = @def('text').size()
+            @__minWidth = size[0]
+            @__minHeight = size[1]
+            unless @model.height
+                @updateDef 'box', height: @__minHeight
+            unless @model.width
+                @updateDef 'box', width: @__minWidth
+        if @changed.height
+            @updateDef 'box', height: @model.height
+        if @changed.width
+            @updateDef 'box', width: @model.width
         if @changed.frameVisible
             @updateDef 'box', visible: @model.frameVisible
         if @changed.frameColor
             @updateDef 'box', color: @model.frameColor
 
     adjust: =>
-        if @changed.text or @changed.align
+        if @changed.text or @changed.align or @changed.width or @changed.height
+            height = @model.height or @__minHeight
+            width  = @model.width or @__minWidth
             x = if @model.align == 'right'
-                    -@size[0]
+                    -width
                 else if @model.align == 'center'
-                    -@size[0]/2
+                    -width/2
                 else
                     0
-            @view('box').position.xy = [x, -@size[1]/2]
+            textX = if @model.textAlign == 'right'
+                    x + width - @__minWidth
+                else if @model.textAlign == 'center'
+                    x + (width - @__minWidth)/2
+                else
+                    x
+
+            @view('text').position.x = textX
+            @view('box').position.xy = [x, -height/2]
