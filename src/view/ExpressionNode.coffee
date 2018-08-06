@@ -58,7 +58,6 @@ export class ExpressionNode extends ContainerComponent
 
     prepare: =>
         @addDef 'node', new NodeShape expanded: @model.expanded, @
-<<<<<<< HEAD
         @addDef 'name', new EditableText
                 text:     @model.name
                 entries:  []

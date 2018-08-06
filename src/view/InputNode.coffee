@@ -41,7 +41,7 @@ export class InputNode extends ContainerComponent
             @set position: [x, y]
 
     connectSources: =>
-        # @log "CONNECT SOURCES"
+        # NOTE[piotrMocz] this is what impacts the performance HARD.
         # @withScene (scene) =>
         #     @addDisposableListener scene.camera, 'move', =>
         #         campos = scene.camera.position

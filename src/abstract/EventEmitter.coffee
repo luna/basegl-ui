@@ -17,7 +17,8 @@ export class EventEmitter extends PropertyEmitter
 
     eventKey: =>
         key = @parent?.eventKey?() or []
-        key.push @model.key if @model?.key?
+        if @model?.key? and (not (@model.key in key))
+            key.push @model.key
         key
 
     pushEvent: (e) =>

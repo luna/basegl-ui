@@ -73,8 +73,6 @@ export class Searcher extends ContainerComponent
 
     __updateResults: =>
         @dom.resultsList.innerText = ''
-        # omit = Math.max(0, @model.selected - 1)
-        # i = omit + 1
         i = 0
         @model.entries.forEach (entry) =>
             @dom.resultsList.appendChild @__renderResult entry, i == 0
