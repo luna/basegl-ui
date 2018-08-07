@@ -39,19 +39,15 @@ export class EditableText extends ContainerComponent
         anyChanged = Object.values(@changed).some((v) -> v)
         return unless anyChanged
 
-        if @model.edited
-            @autoUpdateDef 'searcher', Searcher,
-                    key:            @model.key
-                    input:          @model.input || @model.text
-                    inputSelection: @model.inputSelection
-                    selected:       @model.selected
-                    entries:        @model.entries
-            @autoUpdateDef 'text', TextContainer, null
-        else
-            @autoUpdateDef 'searcher', Searcher, null
-            @autoUpdateDef 'text', TextContainer,
-                    text:  @model.text
-                    align: 'center'
+        @autoUpdateDef 'searcher', Searcher, if @model.edited
+            key:            @model.key
+            input:          @model.input || ""
+            inputSelection: @model.inputSelection
+            selected:       @model.selected
+            entries:        @model.entries
+        @autoUpdateDef 'text', TextContainer, unless @model.edited
+            text:  @model.text
+            align: 'center'
 
     hideSearcher: =>
         @set edited: false
@@ -61,7 +57,9 @@ export class EditableText extends ContainerComponent
         @set edited: true
         @root.registerSearcher @
         tag = if (@model.kind == EditableText.NAME)
-        then 'EditNodeNameEvent' else 'EditNodeExpressionEvent'
+                'EditNodeNameEvent'
+            else
+                'EditNodeExpressionEvent'
         if notify
             @pushEvent tag: tag
 

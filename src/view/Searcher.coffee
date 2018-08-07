@@ -75,7 +75,8 @@ export class Searcher extends ContainerComponent
         @dom.resultsList.innerText = ''
         i = 0
         @model.entries.forEach (entry) =>
-            @dom.resultsList.appendChild @__renderResult entry, i == 0
+            highlight = (i == 0) and (@model.selected != 0)
+            @dom.resultsList.appendChild @__renderResult entry, highlight
             i++
 
     __updateInput: =>
