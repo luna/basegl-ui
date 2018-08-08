@@ -26,9 +26,9 @@ import {HorizontalLayout}   from 'widget/HorizontalLayout'
 selectedNode = null
 
 
-
+exprOffset = 25
 nodeExprYOffset = shape.height / 3
-nodeNameYOffset = nodeExprYOffset + 25
+nodeNameYOffset = nodeExprYOffset + exprOffset
 nodeValYOffset  = -nodeNameYOffset
 
 portDistance = shape.height / 3

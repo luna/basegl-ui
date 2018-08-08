@@ -73,11 +73,12 @@ export class Searcher extends ContainerComponent
 
     __updateResults: =>
         @dom.resultsList.innerText = ''
-        i = 0
-        @model.entries.forEach (entry) =>
-            highlight = (i == 0) and (@model.selected != 0)
-            @dom.resultsList.appendChild @__renderResult entry, highlight
-            i++
+        return unless @model.entries.length > 0
+
+        firstResult = @__renderResult @model.entries[0], @model.selected != 0
+        @dom.resultsList.appendChild firstResult
+        @model.entries[1..].forEach (entry) =>
+            @dom.resultsList.appendChild @__renderResult entry, false
 
     __updateInput: =>
         inputClasses = ['searcher__input']
@@ -143,17 +144,17 @@ export class Searcher extends ContainerComponent
                 editSelectionEnd:   @dom.input.selectionEnd
                 editValue:          @dom.input.value
         @dom.input.addEventListener 'keyup', (e) =>
-            if e.code == 'Enter'
+            if e.key == 'Enter'
                 @pushEvent
                     tag: 'SearcherAcceptEvent'
                     acceptSelectionStart: @dom.input.selectionStart
                     acceptSelectionEnd:   @dom.input.selectionEnd
                     acceptValue:          @dom.input.value
-            else if e.code == 'Tab'
+            else if e.key == 'Tab'
                 @pushEvent tag: 'SeacherTabPressedEvent'
 
         @dom.input.addEventListener 'keydown', (e) =>
-            if e.code == 'ArrowUp'
+            if e.key == 'ArrowUp'
                 @pushEvent tag: 'SearcherMoveUpEvent'
-            else if e.code == 'ArrowDown'
+            else if e.key == 'ArrowDown'
                 @pushEvent tag: 'SearcherMoveDownEvent'
