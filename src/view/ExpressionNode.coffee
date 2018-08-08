@@ -154,13 +154,16 @@ export class ExpressionNode extends ContainerComponent
 
     updateInPorts: =>
         @bodyWidth = 200
-        inPortNumber = 0
-        nonSelfPortNumber = 0
-        inPortKeys = Object.keys @model.inPorts
-        for inPortKey, inPort of @model.inPorts
+        inPortNumber = 1
+        inPortsNumber = 0
+        for k, inPort of @model.inPorts
+            unless inPort.mode == 'self'
+                inPortsNumber++
+
+        portProperties = (port) =>
             values = {}
             values.locked = @model.expanded
-            if inPort.mode == 'self'
+            if port.mode == 'self'
                 values.radius = 0
                 values.angle = Math.PI/2
                 values.position = [0, 0]
@@ -168,19 +171,19 @@ export class ExpressionNode extends ContainerComponent
                 values.radius = 0
                 values.angle = Math.PI/2
                 values.position = [- shape.height/2
-                                  ,- shape.height/2 - inPortNumber * inportVDistance]
+                                  ,- shape.height/2 - (inPortNumber - 1) * inportVDistance]
                 inPortNumber++
-                nonSelfPortNumber++
             else
                 values.position = [0,0]
                 values.radius = portDistance
-                if inPortKeys.length == 1
-                    values.angle = Math.PI/2
-                else
-                    values.angle = Math.PI * (0.25 + 0.5 * inPortNumber/(inPortKeys.length-1))
+                values.angle = Math.PI * (inPortNumber/(inPortsNumber+1))
                 inPortNumber++
-            @def('in' + inPortKey).set values
-        @bodyHeight = minimalBodyHeight + inportVDistance * if nonSelfPortNumber > 0 then nonSelfPortNumber - 1 else 0
+            values
+
+        for inPortKey, inPort of @model.inPorts
+            @def('in' + inPortKey).set portProperties inPort
+        @def('phantomPort').set portProperties mode:'phantom'
+        @bodyHeight = minimalBodyHeight + inportVDistance * if inPortsNumber > 0 then inPortsNumber - 1 else 0
 
 
     updateOutPorts: =>

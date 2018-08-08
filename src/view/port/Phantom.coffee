@@ -6,9 +6,9 @@ import {PhantomPortShape}   from 'shape/port/In'
 export class PhantomPort extends ContainerComponent
     initModel: =>
         key:      null
-        expanded: false
-        radius:   0
         color:    defaultColor
+        radius:   0
+        angle:    0
         position: [0,0]
 
     prepare: =>
@@ -19,11 +19,10 @@ export class PhantomPort extends ContainerComponent
             @updateDef 'port', color: @model.color
 
     adjust: (view) =>
-        if @changed.expanded
-            if @model.expanded
-                view.rotation.z = -Math.PI/2
-        # if @changed.radius
-        #     element.position.x = @model.radius
+        if @changed.angle
+            @view('port').rotation.z = @model.angle
+        if @changed.radius
+            @view('port').position.y = @model.radius
         if @changed.position
             view.position.xy = @model.position
 
