@@ -187,15 +187,13 @@ export class ExpressionNode extends ContainerComponent
 
 
     updateOutPorts: =>
-        outPortNumber = 0
-        outPortKeys = Object.keys @model.outPorts
+        outPortNumber = 1
+        outPortsNumber = Object.keys(@model.outPorts).length
         for own outPortKey, outPort of @model.outPorts
             values = {}
+            1
             unless outPort.angle?
-                if outPortKeys.length == 1
-                    values.angle = Math.PI*3/2
-                else
-                    values.angle = Math.PI * (1.25 + 0.5 * outPortNumber/(outPortKeys.length-1))
+                values.angle = Math.PI * (1 + outPortNumber/(outPortsNumber + 1))
                 values.radius = portDistance
             @def('out' + outPortKey).set values
             outPortNumber++
