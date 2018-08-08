@@ -8,7 +8,7 @@ import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path} from
 import {Composable, fieldMixin} from "basegl/object/Property"
 
 import {InPort}             from 'view/port/In'
-import {PhantomPort}        from 'view/port/Phantom'
+import {NewPort}            from 'view/port/New'
 import {OutPort}            from 'view/port/Out'
 import {EditableText}       from 'view/EditableText'
 import * as shape           from 'shape/node/Base'
@@ -52,6 +52,7 @@ export class ExpressionNode extends ContainerComponent
         value:      null
         inPorts:    {}
         outPorts:   {}
+        newPortKey: null
         position:   [0, 0]
         selected:   false
         expanded:   false
@@ -70,12 +71,12 @@ export class ExpressionNode extends ContainerComponent
                 kind:    EditableText.EXPRESSION
             , @
         @addDef 'valueToggler', new ValueTogglerShape null, @
-        @addDef 'phantomPort', new PhantomPort null, @
+        @addDef 'newPort', new NewPort null, @
 
     update: =>
         @updateDef 'name', text: @model.name
         @updateDef 'expression', text: @model.expression
-
+        @updateDef 'newPort', key: @model.newPortKey
         if @changed.inPorts or @changed.expanded
             setInPort  = (k, inPort)  =>
                 @autoUpdateDef ('in'  + k),  InPort, inPort
@@ -119,8 +120,8 @@ export class ExpressionNode extends ContainerComponent
             expanded: @model.expanded
             body: [@bodyWidth, @bodyHeight]
 
-    outPort: (key) => @def ('out' + key)
-    inPort: (key) => @def ('in' + key)
+    outPort: (key) => @def('out' + key)
+    inPort: (key) => @def('in' + key) or if key == @model.newPortKey then @def('newPort')
 
     error: =>
         @model.value? and @model.value.tag == 'Error'
@@ -182,7 +183,7 @@ export class ExpressionNode extends ContainerComponent
 
         for inPortKey, inPort of @model.inPorts
             @def('in' + inPortKey).set portProperties inPort
-        @def('phantomPort').set portProperties mode:'phantom'
+        @def('newPort').set portProperties mode:'phantom'
         @bodyHeight = minimalBodyHeight + inportVDistance * if inPortsNumber > 0 then inPortsNumber - 1 else 0
 
 
@@ -191,7 +192,6 @@ export class ExpressionNode extends ContainerComponent
         outPortsNumber = Object.keys(@model.outPorts).length
         for own outPortKey, outPort of @model.outPorts
             values = {}
-            1
             unless outPort.angle?
                 values.angle = Math.PI * (1 + outPortNumber/(outPortsNumber + 1))
                 values.radius = portDistance

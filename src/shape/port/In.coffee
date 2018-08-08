@@ -46,13 +46,3 @@ export class InPortShape extends PortShape
     adjust: (element) =>
         super element
         element.position.xy = [-bboxWidth/2, -distanceFromCenter]
-
-export class PhantomPortShape extends InPortShape
-    adjust: (element) =>
-        super element
-        if @changed.once
-            element.variables.color_a = 0
-
-    registerEvents: (view) =>
-        view.addEventListener 'mouseover', => @getElement().variables.color_a = 1
-        view.addEventListener 'mouseout',  => @getElement().variables.color_a = 0
