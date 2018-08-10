@@ -14,9 +14,8 @@ export class Component extends EventEmitter
 
     set: (values) =>
         @updateModel values
-        @withScene =>
-            if @view?
-                @updateView()
+        if @view?
+            @updateView()
 
     attach: => @withScene (scene) =>
         if @def?
@@ -33,7 +32,7 @@ export class Component extends EventEmitter
             @updateView()
         @registerEvents?()
 
-    _detach: => @withScene (scene) =>
+    _detach: =>
         if @view?
             if @view.dispose?
                 @view.dispose()

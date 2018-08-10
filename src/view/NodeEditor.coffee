@@ -34,19 +34,7 @@ export class NodeEditor extends EventEmitter
         visCoverFamily.zIndex = -1
 
     withScene: (fun) =>
-        action = => fun @_scene if @_scene?
-        if @inTransaction
-            @pending.push action
-        else
-            action()
-
-    beginTransaction: => @inTransaction = true
-
-    commitTransaction: =>
-        @inTransaction = false
-        for pending in @pending
-            pending()
-        @pending = []
+        fun @_scene if @_scene?
 
     initialize: =>
         @withScene (scene) =>
