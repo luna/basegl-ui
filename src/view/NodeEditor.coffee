@@ -33,8 +33,7 @@ export class NodeEditor extends EventEmitter
         visCoverFamily = @_scene.register visualizationCover
         visCoverFamily.zIndex = -1
 
-    withScene: (fun) =>
-        fun @_scene if @_scene?
+    withScene: (fun) => fun @_scene if @_scene?
 
     initialize: =>
         @withScene (scene) =>
@@ -201,3 +200,9 @@ export class NodeEditor extends EventEmitter
         @openSearcher = searcher
 
     log: (msg) => console.log "[NodeEditor]", msg
+
+    nodeByName: (name) =>
+        for own k, n of @nodes
+            if n.model.name == name
+                return n
+        return undefined

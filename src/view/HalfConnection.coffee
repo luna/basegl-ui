@@ -4,6 +4,7 @@ import {ContainerComponent} from 'abstract/ContainerComponent'
 
 export class HalfConnection extends ContainerComponent
     initModel: =>
+        key: 'halfconnection'
         srcNode: null
         srcPort: null
         dstPos: [0,0]
