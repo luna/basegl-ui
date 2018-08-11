@@ -13,6 +13,7 @@ export class OutputNode extends ContainerComponent
         position: [0,0]
 
     update: =>
+        return unless @changed.inPorts
         i = 0
         keys = Object.keys @model.inPorts
         portOffset = height / keys.length

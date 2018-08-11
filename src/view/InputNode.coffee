@@ -16,6 +16,7 @@ export class InputNode extends ContainerComponent
         @addDef 'add', new AddPortShape null, @
 
     update: =>
+        return unless @changed.outPorts
         i = 0
         keys = Object.keys @model.outPorts
         portOffset = height / keys.length
@@ -42,12 +43,12 @@ export class InputNode extends ContainerComponent
 
     connectSources: =>
         # NOTE[piotrMocz] this is what impacts the performance HARD.
-        # @withScene (scene) =>
-        #     @addDisposableListener scene.camera, 'move', =>
-        #         campos = scene.camera.position
-        #         x = scene.width/2 + campos.x - scene.width/2*campos.z
-        #         y = scene.height/2 + campos.y - height/2
-        #         @align x, y
+        @withScene (scene) =>
+            @addDisposableListener scene.camera, 'move', =>
+                campos = scene.camera.position
+                x = scene.width/2 + campos.x - scene.width/2*campos.z
+                y = scene.height/2 + campos.y - height/2
+                @align x, y
 
     outPort: (key) => @def ('out' + key)
 
