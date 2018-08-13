@@ -36,12 +36,31 @@ export class Connection extends ContainerComponent
         return unless @srcPort? and @dstPort?
         @__onColorChange()
         @__onPositionChange()
-        @addDisposableListener @srcPort, 'color', => @__onColorChange()
+        # p = => @__onPositionChange()
+        # c = => @__onColorChange()
+        # r = => @__rebind()
         @addDisposableListener @srcNode, 'position', => @__onPositionChange()
+        @addDisposableListener @srcPort, 'color',    => @__onColorChange()
         @addDisposableListener @dstNode, 'position', => @__onPositionChange()
         @addDisposableListener @dstPort, 'position', => @__onPositionChange()
+        @addDisposableListener @dstNode, 'inPorts',  (e) =>
+            e.stopPropagation()
+            @__rebind()
+        @addDisposableListener @srcNode, 'outPorts', (e) =>
+            e.stopPropagation()
+            @__rebind()
         @onDispose => @srcPort.unfollow @model.key
         @onDispose => @dstPort.unfollow @model.key
+
+    __rebind: =>
+        console.log 'REBIND'
+        @srcNode = @parent.node @model.srcNode
+        @srcPort = @srcNode.outPort @model.srcPort
+        @dstNode = @parent.node @model.dstNode
+        @dstPort = @dstNode.inPort @model.dstPort
+        @__onPositionChange()
+        @__onColorChange()
+        # @connectSources()
 
     __onPositionChange: =>
         return unless @srcPort? and @dstPort?

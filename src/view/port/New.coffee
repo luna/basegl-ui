@@ -13,32 +13,27 @@ export class NewPort extends Subport
         radius:      0
         angle:       0
         angleFollow: null
-        follow:      false
         locked:      false
         position:    [0,0]
 
     follow: (key, angle) =>
-        @set
-            angleFollow: angle
-            follow: true
+        @set angleFollow: angle
 
     unfollow: =>
-        @set
-            angleFollow: null
-            follow: false
+        @set angleFollow: null
 
     prepare: =>
         @addDef 'port', new NewPortShape color: @model.color, @
 
     update: =>
-        if @changed.follow
-            @updateDef 'port', lockHover: @model.follow
+        if @changed.angleFollow
+            @updateDef 'port', lockHover: @model.angleFollow?
         if @changed.color
             @updateDef 'port', color: @model.color
 
     adjust: (view) =>
         if @changed.angle or @changed.angleFollow or @changed.locked
-            angle = unless @model.locked then @model.angleFollow or @model.angle else @model.angle
+            angle = if @model.locked then @model.angle else @model.angleFollow or @model.angle
             @view('port').rotation.z = angle
         if @changed.radius
             @view('port').position.y = @model.radius

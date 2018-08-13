@@ -29,7 +29,7 @@ export class HasModel extends EventEmitter
         @registerEvents? @__view
         @changed.once = false
 
-    withScene: (fun) => @root.withScene fun if @root?
+    withScene: (fun) => @parent.withScene fun if @parent?
 
     set: (values) =>
         return if @disposed
@@ -43,7 +43,7 @@ export class HasModel extends EventEmitter
         for own key of @model
             @changed[key] = once
             value = unArray @model[key], values[key]
-            if value? and not _.isEqual @model[key], value
+            if value != undefined and not _.isEqual @model[key], value
                 @changed[key] = true
                 @__anythingChanged = true
                 @model[key] = value
@@ -57,5 +57,4 @@ export class HasModel extends EventEmitter
         @__view.removeChild view
         @__view.updateChildrenOrigin()
 
-    log:  (msg) => console.log  "[#{@constructor.name}]", msg
-    warn: (msg) => console.warn "[#{@constructor.name}]", msg
+    warn: (msg) => console.warn "[#{@constructor.name}] #{msg}"
