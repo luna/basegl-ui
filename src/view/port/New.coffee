@@ -17,9 +17,11 @@ export class NewPort extends Subport
         position:    [0,0]
 
     follow: (key, angle) =>
+        console.log 'FOLLOW', key, angle
         @set angleFollow: angle
 
     unfollow: =>
+        console.log 'UNFOLLOW'
         @set angleFollow: null
 
     prepare: =>

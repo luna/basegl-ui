@@ -154,6 +154,7 @@ export class NodeEditor extends EventEmitter
             scene._symbolRegistry.materials.uniforms.displayMode = 0
 
     genericSetComponent: (name, constructor, value) =>
+        console.log 'SET', name, value
         if value?
             if @[name]?
                 @[name].set value
@@ -165,6 +166,7 @@ export class NodeEditor extends EventEmitter
                 @[name] = null
 
     genericSetComponents: (name, constructor, values = []) =>
+        console.log 'SETs', name, values
         @[name] ?= []
         if values.length != @[name].length
             for oldValue in @[name]

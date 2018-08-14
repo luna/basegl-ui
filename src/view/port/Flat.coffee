@@ -37,6 +37,6 @@ export class FlatPort extends Port
             @view('name').position.x = if @model.output then -shape.length else  2* shape.length
 
     connectionPosition: =>
-        [ @model.position[0] + @parent.model.position[0] + (if @model.output then -shape.length else shape.length)
-        , @model.position[1] + @parent.model.position[1]
+        [ @model.position[0] + @parent.parent.model.position[0] + (if @model.output then -shape.length else shape.length)
+        , @model.position[1] + @parent.parent.model.position[1]
         ]

@@ -53,6 +53,10 @@ export class ContainerComponent extends HasModel
         else if value?
             @addDef key, new cons value, @
 
+    deleteDefs: =>
+        for own k of @__defs
+            @deleteDef k
+
     # # implement following methods when deriving: #
     # ##############################################
     #

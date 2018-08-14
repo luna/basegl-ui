@@ -1,8 +1,9 @@
 import {ContainerComponent} from 'abstract/ContainerComponent'
-import * as portShape  from 'shape/port/Base'
-import * as basegl     from 'basegl'
-import {FlatPort}      from 'view/port/Flat'
-import {AddPortShape}  from 'shape/port/Add'
+import * as basegl          from 'basegl'
+import {AddPortShape}       from 'shape/port/Add'
+import * as portShape       from 'shape/port/Base'
+import {FlatPort}           from 'view/port/Flat'
+import {SetView}            from 'view/SetView'
 
 
 height = 100
@@ -16,6 +17,7 @@ export class InputNode extends ContainerComponent
 
     prepare: =>
         @addDef 'add', new AddPortShape null, @
+        @addDef 'outPorts', new SetView cons: FlatPort, @
 
     update: =>
         return unless @changed.outPorts
@@ -29,7 +31,7 @@ export class InputNode extends ContainerComponent
         for own k, outPort of @model.outPorts
             outPort.position = newPosition()
             outPort.output = false
-            @autoUpdateDef ('out' + k), FlatPort, outPort
+        @updateDef 'outPorts', elems: @model.outPorts
         @addPortPosition = newPosition()
 
     adjust: (view) =>
@@ -52,6 +54,6 @@ export class InputNode extends ContainerComponent
             @_align scene
             @addDisposableListener scene.camera, 'move', => @_align scene
 
-    outPort: (key) => @def ('out' + key)
+    outPort: (key) => @def('outPorts').def(key)
 
-    inPort: (key) => @def ('in' + key)
+    inPort: => undefined

@@ -15,15 +15,16 @@ export class Connection extends ContainerComponent
         @addDef 'dst', new ConnectionShape src: false, @parent
 
     update: =>
-        if @changed.srcNode or @changed.srcPort
-            @srcNode = @parent.node @model.srcNode
-            @srcPort = @srcNode.outPort @model.srcPort
-            @__onColorChange()
-        if @changed.dstNode or @changed.dstPort
-            @dstNode = @parent.node @model.dstNode
-            @dstPort = @dstNode.inPort @model.dstPort
+        # if @changed.srcNode or @changed.srcPort
+        #     @srcNode = @parent.node @model.srcNode
+        #     @srcPort = @srcNode.outPort @model.srcPort
+        #     @__onColorChange()
+        # if @changed.dstNode or @changed.dstPort
+        #     @dstNode = @parent.node @model.dstNode
+        #     @dstPort = @dstNode.inPort @model.dstPort
         if @changed.srcNode or @changed.srcPort or @changed.dstNode or @changed.dstPort
-            @__onPositionChange()
+            @__rebind()
+            # @__onPositionChange()
 
     registerEvents: (view) =>
         registerDisconnect = (target, src) => @view(target).addEventListener 'mousedown', => @pushEvent
@@ -33,40 +34,38 @@ export class Connection extends ContainerComponent
         registerDisconnect 'dst', false
 
     connectSources: =>
-        return unless @srcPort? and @dstPort?
         @__onColorChange()
         @__onPositionChange()
-        # p = => @__onPositionChange()
-        # c = => @__onColorChange()
-        # r = => @__rebind()
         @addDisposableListener @srcNode, 'position', => @__onPositionChange()
         @addDisposableListener @srcPort, 'color',    => @__onColorChange()
+        @addDisposableListener @srcPort, 'radius',   => @__onPositionChange()
         @addDisposableListener @dstNode, 'position', => @__onPositionChange()
+        @addDisposableListener @dstPort, 'radius',   => @__onPositionChange()
         @addDisposableListener @dstPort, 'position', => @__onPositionChange()
-        @addDisposableListener @dstNode, 'inPorts',  (e) =>
-            e.stopPropagation()
-            @__rebind()
-        @addDisposableListener @srcNode, 'outPorts', (e) =>
-            e.stopPropagation()
-            @__rebind()
+        @addDisposableListener @dstNode.def('inPorts'),  'modelUpdated', => @__rebind()
+        @addDisposableListener @srcNode.def('outPorts'), 'modelUpdated', => @__rebind()
         @onDispose => @srcPort.unfollow @model.key
         @onDispose => @dstPort.unfollow @model.key
 
-    __rebind: =>
+    __rebind: (srcPort, dstPort) =>
+        srcNode = @parent.node @model.srcNode
+        srcPort = srcNode.outPort @model.srcPort
+        dstNode = @parent.node @model.dstNode
+        dstPort = dstNode.inPort @model.dstPort
         console.log 'REBIND'
-        @srcNode = @parent.node @model.srcNode
-        @srcPort = @srcNode.outPort @model.srcPort
-        @dstNode = @parent.node @model.dstNode
-        @dstPort = @dstNode.inPort @model.dstPort
-        @__onPositionChange()
-        @__onColorChange()
-        # @connectSources()
+        if @srcNode != srcNode or @dstNode != dstNode or @srcPort != srcPort or @dstPort != dstPort
+            console.log 'SUCCESS'
+            @fireDisposables()
+            @srcNode = srcNode
+            @dstNode = dstNode
+            @srcPort = srcPort
+            @dstPort = dstPort
+            @connectSources()
 
     __onPositionChange: =>
-        return unless @srcPort? and @dstPort?
         srcPos = @srcPort.connectionPosition()
         dstPos = @dstPort.connectionPosition()
-        leftOffset = @srcPort.model.radius
+        leftOffset  = @srcPort.model.radius
         rightOffset = @dstPort.model.radius
 
         x = dstPos[0] - srcPos[0]
