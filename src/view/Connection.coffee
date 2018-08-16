@@ -15,16 +15,8 @@ export class Connection extends ContainerComponent
         @addDef 'dst', new ConnectionShape src: false, @parent
 
     update: =>
-        # if @changed.srcNode or @changed.srcPort
-        #     @srcNode = @parent.node @model.srcNode
-        #     @srcPort = @srcNode.outPort @model.srcPort
-        #     @__onColorChange()
-        # if @changed.dstNode or @changed.dstPort
-        #     @dstNode = @parent.node @model.dstNode
-        #     @dstPort = @dstNode.inPort @model.dstPort
         if @changed.srcNode or @changed.srcPort or @changed.dstNode or @changed.dstPort
             @__rebind()
-            # @__onPositionChange()
 
     registerEvents: (view) =>
         registerDisconnect = (target, src) => @view(target).addEventListener 'mousedown', => @pushEvent
@@ -47,7 +39,7 @@ export class Connection extends ContainerComponent
         @onDispose => @srcPort.unfollow @model.key
         @onDispose => @dstPort.unfollow @model.key
 
-    __rebind: (srcPort, dstPort) =>
+    __rebind: =>
         srcNode = @parent.node @model.srcNode
         srcPort = srcNode.outPort @model.srcPort
         dstNode = @parent.node @model.dstNode
