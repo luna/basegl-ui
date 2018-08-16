@@ -4,6 +4,9 @@ import {TextContainer}       from 'view/Text'
 import {VisualizationIFrame} from 'view/visualization/IFrame'
 import {VerticalLayout}      from 'widget/VerticalLayout'
 
+valueLeftOffset   = 50
+togglerLeftOffset = 30
+
 export class VisualizationContainer extends ContainerComponent
     initModel: =>
         visualizers : null
@@ -30,8 +33,8 @@ export class VisualizationContainer extends ContainerComponent
                 children: visualizations
 
     adjust: =>
-        @view('value')?.position.xy = [50, 0]
-        @view('valueToggler').position.xy = [30, 0]
+        @view('value')?.position.x = valueLeftOffset
+        @view('valueToggler').position.xy = togglerLeftOffset
 
     registerEvents: =>
         @view('valueToggler').addEventListener 'mousedown', (e) =>
@@ -39,6 +42,5 @@ export class VisualizationContainer extends ContainerComponent
             @pushEvent tag: 'ToggleVisualizationsEvent'
 
     __shortValue: =>
-        if @model.value? and @model.value.contents?
-            @model.value.contents.contents
+        @model.value?.contents?.contents
 

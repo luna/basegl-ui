@@ -27,5 +27,5 @@ export class ValueTogglerShape extends BasicComponent
     define: => valueTogglerSymbol
     adjust: (element) =>
         if @changed.isFolded
-            element.variables.isFolded = Number not @model.isFolded
+            element.variables.isFolded = Number @model.isFolded
         element.position.xy = [- size/2, - size/2]

@@ -14,7 +14,6 @@ export class VisualizationIFrame extends Widget
         iframeId: null
         currentVisualizer: null
         mode: null
-        selectedVisualizers: null
 
     prepare: =>
         @addDef 'menu', VisualizerMenu, null
