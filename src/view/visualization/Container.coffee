@@ -34,7 +34,7 @@ export class VisualizationContainer extends ContainerComponent
 
     adjust: =>
         @view('value')?.position.x = valueLeftOffset
-        @view('valueToggler').position.xy = togglerLeftOffset
+        @view('valueToggler').position.x = togglerLeftOffset
 
     registerEvents: =>
         @view('valueToggler').addEventListener 'mousedown', (e) =>
