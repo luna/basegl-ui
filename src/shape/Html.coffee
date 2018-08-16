@@ -10,6 +10,7 @@ export class HtmlShape extends BasicComponent
         top: true
         scalable: true
         still: false
+        clickable: true
 
     redefineRequired: =>
         @changed.id or @changed.element
@@ -18,6 +19,7 @@ export class HtmlShape extends BasicComponent
         root = document.createElement @model.element
         root.id = @model.id if @model.id?
         root.style = @model.style if @model.style?
+        root.style.pointerEvents = if @model.clickable then 'all' else 'none'
         basegl.symbol root
 
     adjust: =>
@@ -29,9 +31,9 @@ export class HtmlShape extends BasicComponent
                 @root.topDomSceneNoScale.model.add obj
             else if @model.top
                 @root.topDomScene.model.add obj
-                @__forceUpdatePosition()
             else
                 @root._scene.domModel.model.add @__element.obj
+            @__forceUpdatePosition()
 
     # FIXME: This function is needed due to bug in basegl or THREE.js
     # which causes problems with positioning when layer changed

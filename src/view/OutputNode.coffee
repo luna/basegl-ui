@@ -6,6 +6,7 @@ import {FlatPort}           from 'view/port/Flat'
 
 height = 100
 
+
 export class OutputNode extends ContainerComponent
     initModel: =>
         key:      null
@@ -13,6 +14,7 @@ export class OutputNode extends ContainerComponent
         position: [0,0]
 
     update: =>
+        return unless @changed.inPorts
         i = 0
         keys = Object.keys @model.inPorts
         portOffset = height / keys.length
@@ -26,17 +28,16 @@ export class OutputNode extends ContainerComponent
         if @changed.position
             view.position.xy = @model.position.slice()
 
-    align: (x, y) =>
-        unless x == @model.position[0] and y == @model.position[1]
-            @set position: [x, y]
+    _align: (scene) =>
+        campos = scene.camera.position
+        x = scene.width/2 + campos.x + scene.width/2*campos.z
+        y = scene.height/2 + campos.y - height/2
+        @set position: [x, y]
 
     connectSources: =>
         @withScene (scene) =>
-            @addDisposableListener scene.camera, 'move', =>
-                campos = scene.camera.position
-                x = scene.width/2 + campos.x + scene.width/2*campos.z
-                y = scene.height/2 + campos.y - height/2
-                @align x, y
+            @_align scene
+            @addDisposableListener scene.camera, 'move', => @_align scene
 
     outPort: (key) => @def ('out' + key)
 

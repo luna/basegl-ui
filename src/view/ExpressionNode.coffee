@@ -15,6 +15,7 @@ import * as shape               from 'shape/node/Base'
 import {NodeShape}              from 'shape/node/Node'
 import {NodeErrorShape}         from 'shape/node/ErrorFrame'
 import * as togglerShape        from 'shape/visualization/ValueToggler'
+import {EditableText}           from 'view/EditableText'
 import {InPort}                 from 'view/port/In'
 import {OutPort}                from 'view/port/Out'
 import {TextContainer}          from 'view/Text'
@@ -25,9 +26,9 @@ import {HorizontalLayout}       from 'widget/HorizontalLayout'
 selectedNode = null
 
 
-
+exprOffset = 25
 nodeExprYOffset = shape.height / 3
-nodeNameYOffset = nodeExprYOffset + 15
+nodeNameYOffset = nodeExprYOffset + exprOffset
 nodeValYOffset  = -nodeNameYOffset
 
 portDistance = shape.height / 3
@@ -35,6 +36,12 @@ widgetOffset = 20
 widgetHeight = 20
 inportVDistance = widgetOffset + widgetHeight
 minimalBodyHeight = 60
+
+testEntries = [
+    { name: 'bar', doc: 'bar description', className: 'Bar', highlights: [ { start: 1, end: 2 } ] },
+    { name: 'foo', doc: 'foo multiline\ndescription', className: 'Foo', highlights: [] },
+    { name: 'baz', doc:  'baz description', className: 'Test', highlights: [ { start: 1, end: 3 } ] }
+]
 
 export class ExpressionNode extends ContainerComponent
     initModel: =>
@@ -52,12 +59,14 @@ export class ExpressionNode extends ContainerComponent
 
     prepare: =>
         @addDef 'node', NodeShape, expanded: @model.expanded
-        @addDef 'name', TextContainer,
-            align: 'center'
-            text: @model.name
-        @addDef 'expression', TextContainer,
-            align: 'center'
-            text: @model.expression
+        @addDef 'name', EditableText,
+            text:     @model.name
+            entries:  []
+            kind:     EditableText.NAME
+        @addDef 'expression', EditableText,
+            text:    @model.expression
+            entries: []
+            kind:    EditableText.EXPRESSION
         @addDef 'visualization', VisualizationContainer, null
 
     update: =>
@@ -107,6 +116,9 @@ export class ExpressionNode extends ContainerComponent
 
     error: =>
         @model.value? and @model.value.tag == 'Error'
+
+    setSearcher: (searcherModel) =>
+        @def(searcherModel.targetField)?.setSearcher searcherModel
 
     adjust: (view) =>
         if @model.expanded

@@ -28,27 +28,12 @@ export class NodeEditor extends EventEmitter
         @topDomSceneStill     = @_scene.addDomModelWithNewCamera('dom-top-still')
         @topDomSceneNoScale   =
             @_scene.addDomModelWithNewCamera('dom-top-no-scale', new ZoomlessCamera @_scene._camera)
-        @topDomScene._renderer.domElement.style.pointerEvents='all'
-        @topDomSceneStill._renderer.domElement.style.pointerEvents='all'
-        @topDomSceneNoScale._renderer.domElement.style.pointerEvents='all'
 
         visCoverFamily = @_scene.register visualizationCover
         visCoverFamily.zIndex = -1
 
     withScene: (fun) =>
-        action = => fun @_scene if @_scene?
-        if @inTransaction
-            @pending.push action
-        else
-            action()
-
-    beginTransaction: => @inTransaction = true
-
-    commitTransaction: =>
-        @inTransaction = false
-        for pending in @pending
-            pending()
-        @pending = []
+        fun @_scene if @_scene?
 
     initialize: =>
         @withScene (scene) =>
@@ -101,16 +86,14 @@ export class NodeEditor extends EventEmitter
         @genericSetComponent 'inputNode', InputNode, inputNode
     setOutputNode: (outputNode) =>
         @genericSetComponent 'outputNode', OutputNode, outputNode
-    setSearcher: (searcher) =>
-        @genericSetComponent 'searcher', Searcher, searcher
-    
+
     setVisualizerLibraries: (visLib) =>
         unless _.isEqual(@visualizerLibraries, visLib)
             @emitProperty 'visualizerLibraries', visLib
-    
+
     setVisualization: (nodeVis) =>
         @node(nodeVis.nodeKey)?.set visualizations: nodeVis
-        
+
     unsetVisualization: (nodeVis) =>
         @node(nodeVis.nodeKey)?.set visualizations: null
 
@@ -168,7 +151,7 @@ export class NodeEditor extends EventEmitter
                 @[name].push newValue
         else if values.length > 0
             for i in [0..values.length - 1]
-                @[name][i].set value[i]
+                @[name][i].set values[i]
 
     destruct: =>
         @breadcrumb?.dispose()
@@ -181,3 +164,28 @@ export class NodeEditor extends EventEmitter
             @connections[connectionKey].dispose()
         for nodeKey in Object.keys @nodes
             @nodes[nodeKey].dispose()
+
+    setSearcher: (searcherModel) =>
+        unless searcherModel?
+            @unregisterSearcher()
+            return
+
+        node = @node(searcherModel.key)
+        unless node?
+            @warn "No node to attatch the Searcher to."
+            return
+
+        node.setSearcher searcherModel
+
+    unregisterSearcher: =>
+        if @openSearcher?
+            closingSearcher = @openSearcher
+            @openSearcher = null
+            closingSearcher.hideSearcher()
+
+    registerSearcher: (searcher) =>
+        if @openSearcher? and searcher.key != @openSearcher.key
+            @openSearcher.hideSearcher()
+        @openSearcher = searcher
+
+    log: (msg) => console.log "[NodeEditor]", msg

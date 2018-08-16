@@ -271,32 +271,6 @@ runExample = -> main (nodeEditor) ->
             dstNode: 4
             dstPort: 1
         ]
-    nodeEditor.setSearcher
-        key: 4
-        entries: [
-            name: 'bar'
-            doc:  'bar description'
-            className: 'Bar'
-            highlights:
-                [
-                    start: 1
-                    end: 2
-                ]
-        ,
-            name: 'foo'
-            doc:  'foo multiline\ndescription'
-            className: 'Foo'
-            highlights: []
-        ,
-            name: 'baz'
-            doc:  'baz description'
-            className: 'Test'
-            highlights:
-                [
-                    start: 1
-                    end: 3
-                ]
-        ]
 
     nodeEditor.setVisualizerLibraries
         internalVisualizersPath: ''

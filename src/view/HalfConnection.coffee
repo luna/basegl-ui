@@ -17,7 +17,7 @@ export class HalfConnection extends ContainerComponent
             @srcNode = @parent.node @model.srcNode
             @srcPort =
                 if @model.reversed
-                    @srcNode.inPort @model.dstPort
+                    @srcNode.inPort @model.srcPort
                 else
                     @srcNode.outPort @model.srcPort
             @__onPositionChange()

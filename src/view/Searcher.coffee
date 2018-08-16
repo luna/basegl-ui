@@ -7,9 +7,6 @@ import * as shape  from 'shape/node/Base'
 
 
 searcherRoot    = 'searcher-root'
-searcherWidth   = 400  # same as `@searcherWidth` in `_searcher.less`
-searcherBaseOffsetX = -searcherWidth / 8
-searcherBaseOffsetY = shape.height   / 8
 
 
 export class Searcher extends ContainerComponent
@@ -25,6 +22,7 @@ export class Searcher extends ContainerComponent
         selected: 0
         entries: []
         position: [0, 0]
+        parent: null
 
     prepare: =>
         @dom = {}
@@ -37,10 +35,14 @@ export class Searcher extends ContainerComponent
     ### Create/update the DOM ###
     #############################
 
+    __anyChanged: =>
+        @changed.entries or @changed.input or @changed.inputSelection or @changed.selected
+
     update: =>
         @__createDom() unless @dom.container?
-        @__updateResults() if @changed.entries
-        @__updateInput() if @changed.input
+        if @__anyChanged()
+            @__updateResults()
+            @__updateInput()
         @dom.input.focus()
 
     __createDom: =>
@@ -65,21 +67,24 @@ export class Searcher extends ContainerComponent
     __createInput: =>
         @dom.input = document.createElement 'input'
         @dom.input.type = 'text'
+        @dom.input.value = @model.input
         @dom.input.className = style.luna ['searcher__input']
 
     __updateResults: =>
         @dom.resultsList.innerText = ''
-        omit = Math.max(0, @model.selected - 1)
-        i = omit + 1
-        @model.entries.slice(omit).forEach (entry) =>
-            @dom.resultsList.appendChild @__renderResult entry, i == @model.selected
-            i++
+        return unless @model.entries.length > 0
+
+        firstResult = @__renderResult @model.entries[0], @model.selected != 0
+        @dom.resultsList.appendChild firstResult
+        @model.entries[1..].forEach (entry) =>
+            @dom.resultsList.appendChild @__renderResult entry, false
 
     __updateInput: =>
         inputClasses = ['searcher__input']
         inputClasses.push ['searcher__input-selected'] if @model.selected == 0
         inputClasses.push ['searcher__no-results'] if @model.entries.length == 0
         @dom.input.className = style.luna inputClasses
+        @dom.input.value = @model.input
         if @model.inputSelection?.length == 2
             @dom.input.selectionStart = @model.inputSelection[0]
             @dom.input.selectionEnd   = @model.inputSelection[1]
@@ -126,41 +131,11 @@ export class Searcher extends ContainerComponent
         nameSpan.appendChild normSpan
         return nameSpan
 
-    #######################
-    ### Adjust the view ###
-    #######################
-
-    adjust: (view) =>
-        if @changed.position
-            @__withParentNode (parentNode) =>
-                [posx, posy] = @model.position.slice()
-                exprPosY = parentNode.view('expression').position.y
-                view.position.xy = [searcherBaseOffsetX + posx, searcherBaseOffsetY + exprPosY + posy]
-
-    __withParentNode: (f) =>
-        unless @parentNode?
-            @parentNode = @parent.node @model.key
-
-        unless @parentNode?
-            @warn "Trying to perform an action on an unknown parent"
-
-        f @parentNode
-
-    __offsetFromNode: => [searcherBaseOffsetX, searcherBaseOffsetY]
-
-    __onPositionChanged: (parentNode) =>
-        @set position: parentNode.model.position
-
     ###################################
     ### Register the event handlers ###
     ###################################
 
     registerEvents: =>
-        @__withParentNode (parentNode) =>
-            @__onPositionChanged parentNode
-            @addDisposableListener parentNode, 'position', =>
-                @__onPositionChanged parentNode
-
         @dom.input.addEventListener 'input', (e) =>
             @pushEvent
                 tag: 'SearcherEditEvent'
@@ -168,9 +143,17 @@ export class Searcher extends ContainerComponent
                 editSelectionEnd:   @dom.input.selectionEnd
                 editValue:          @dom.input.value
         @dom.input.addEventListener 'keyup', (e) =>
-            if e.code == 'Enter'
+            if e.key == 'Enter'
                 @pushEvent
                     tag: 'SearcherAcceptEvent'
                     acceptSelectionStart: @dom.input.selectionStart
                     acceptSelectionEnd:   @dom.input.selectionEnd
                     acceptValue:          @dom.input.value
+            else if e.key == 'Tab'
+                @pushEvent tag: 'SeacherTabPressedEvent'
+
+        @dom.input.addEventListener 'keydown', (e) =>
+            if e.key == 'ArrowUp'
+                @pushEvent tag: 'SearcherMoveUpEvent'
+            else if e.key == 'ArrowDown'
+                @pushEvent tag: 'SearcherMoveDownEvent'

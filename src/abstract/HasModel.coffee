@@ -21,23 +21,21 @@ export class HasModel extends EventEmitter
         @__view = basegl.group []
         @model = @initModel?() or {}
         @changed = {}
-        @withScene =>
-            @__setValues values, true
-            @changed.once = true
-            @prepare?()
-            @onModelUpdate values
-            @connectSources?()
-            @registerEvents? @__view
-            @changed.once = false
+        @__setValues values, true
+        @changed.once = true
+        @prepare?()
+        @onModelUpdate values
+        @connectSources?()
+        @registerEvents? @__view
+        @changed.once = false
 
-    withScene: (fun) => @parent.withScene fun if @parent?
+    withScene: (fun) => @root.withScene fun if @root?
 
     set: (values) =>
         return if @disposed
-        @withScene =>
-            @__setValues values
-            if @__anythingChanged
-                @onModelUpdate values
+        @__setValues values
+        if @__anythingChanged
+            @onModelUpdate values
 
     __setValues: (values, once = false) =>
         values ?= {}
@@ -59,4 +57,5 @@ export class HasModel extends EventEmitter
         @__view.removeChild view
         @__view.updateChildrenOrigin()
 
-    warn: (msg) => console.warn "[#{@constructor.name}] #{msg}"
+    log:  (msg) => console.log  "[#{@constructor.name}]", msg
+    warn: (msg) => console.warn "[#{@constructor.name}]", msg

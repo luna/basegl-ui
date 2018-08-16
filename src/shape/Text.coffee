@@ -1,5 +1,6 @@
 import * as basegl from 'basegl'
 import {BasicComponent}  from 'abstract/BasicComponent'
+import {ContainerComponent}  from 'abstract/ContainerComponent'
 
 
 export class TextShape extends BasicComponent
@@ -24,8 +25,7 @@ export class TextShape extends BasicComponent
                 0
         element.position.y = - size[1]/2
 
-    size:   =>
-        getTextSize   @__element
+    size:   => getTextSize   @__element
     width:  => getTextWidth  @__element
     height: => getTextHeight @__element
 
