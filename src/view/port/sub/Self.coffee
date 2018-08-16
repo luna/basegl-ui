@@ -33,7 +33,7 @@ export class Self extends Subport
         @addDisposableListener @parent, 'typeName', => @__onTypeNameChange()
         @addDisposableListener @parent, 'radius', => @__onRadiusChange()
         @addDisposableListener @parent, 'color', => @__onColorChange()
-        @addDisposableListener @parent.parent, 'hovered', => @__onHoverChange()
+        @addDisposableListener @parent.parent.parent, 'hovered', => @__onHoverChange() #TODO: Refactor
 
     __onTypeNameChange: =>
         @set typeName: @parent.model.typeName
@@ -42,4 +42,4 @@ export class Self extends Subport
     __onColorChange: =>
         @updateDef 'port', color: @parent.model.color
     __onHoverChange: =>
-        @set hovered: @parent.parent.model.hovered
+        @set hovered: @parent.parent.parent.model.hovered

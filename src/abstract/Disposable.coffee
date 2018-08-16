@@ -7,8 +7,7 @@ export class Disposable extends Composable
         @disposed = false
 
     dispose: =>
-        @disposables.forEach (disposable) =>
-            disposable()
+        @fireDisposables()
         @destruct?()
         @disposed = true
 
@@ -18,3 +17,8 @@ export class Disposable extends Composable
 
     onDispose: (finalizer) =>
         @disposables.push finalizer
+
+    fireDisposables: =>
+        @disposables.forEach (disposable) =>
+            disposable()
+        @disposables = []

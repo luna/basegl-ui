@@ -29,13 +29,14 @@ export class HasModel extends EventEmitter
         @registerEvents? @__view
         @changed.once = false
 
-    withScene: (fun) => @root.withScene fun if @root?
+    withScene: (fun) => @parent?.withScene fun
 
     set: (values) =>
         return if @disposed
         @__setValues values
         if @__anythingChanged
             @onModelUpdate values
+            @performEmit 'modelUpdated', values
 
     __setValues: (values, once = false) =>
         values ?= {}

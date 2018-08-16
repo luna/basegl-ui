@@ -4,6 +4,7 @@ import {ContainerComponent} from 'abstract/ContainerComponent'
 
 export class HalfConnection extends ContainerComponent
     initModel: =>
+        key: 'halfconnection'
         srcNode: null
         srcPort: null
         dstPos: [0,0]
@@ -14,13 +15,7 @@ export class HalfConnection extends ContainerComponent
 
     update: =>
         if @changed.srcNode or @changed.srcPort or @changed.reversed
-            @srcNode = @parent.node @model.srcNode
-            @srcPort =
-                if @model.reversed
-                    @srcNode.inPort @model.srcPort
-                else
-                    @srcNode.outPort @model.srcPort
-            @__onPositionChange()
+            @__rebind()
         if @changed.dstPos
             @__onPositionChange()
 
@@ -30,6 +25,9 @@ export class HalfConnection extends ContainerComponent
         @addDisposableListener @srcPort, 'color', (color) => @__onColorChange()
         @addDisposableListener @srcNode, 'position', => @__onPositionChange()
         @addDisposableListener @srcPort, 'position', => @__onPositionChange()
+        ports = if @model.reversed then 'inPorts' else 'outPorts'
+        @addDisposableListener @srcNode.def(ports),  'modelUpdated', => @__rebind()
+
         @onDispose => @srcPort.unfollow @model.key
         @withScene (scene) =>
             @addDisposableListener window, 'mousemove', (e) =>
@@ -37,6 +35,20 @@ export class HalfConnection extends ContainerComponent
                 y = scene.height/2 + campos.y + (-scene.screenMouse.y + scene.height/2) * campos.z
                 x = scene.width/2  + campos.x + (scene.screenMouse.x - scene.width/2) * campos.z
                 @set dstPos: [x, y]
+
+    __rebind: =>
+        srcNode = @parent.node @model.srcNode
+        srcPort =
+            if @model.reversed
+                srcNode.inPort @model.srcPort
+            else
+                srcNode.outPort @model.srcPort
+
+        if @srcNode != srcNode or @srcPort != srcPort
+            @fireDisposables()
+            @srcNode = srcNode
+            @srcPort = srcPort
+            @connectSources()
 
     __onPositionChange: =>
         srcPos = @srcPort.connectionPosition()

@@ -22,7 +22,7 @@ export inPortExpr = basegl.expr ->
        .rotate Math.PI
        .move bboxWidth/2, distanceFromCenter
     port = c * p
-    port = port.fill color.varHover()
+    port = port.fill color.varAlphaHover()
     activeCutter = circle nodeRadius
         .move bboxWidth/2, 0
     activeArea = pie areaAngle
@@ -37,6 +37,7 @@ inPortSymbol.bbox.xy = [bboxWidth, bboxHeight]
 inPortSymbol.variables.color_r = 1
 inPortSymbol.variables.color_g = 0
 inPortSymbol.variables.color_b = 0
+inPortSymbol.variables.color_a = 1
 inPortSymbol.variables.hovered = 0
 inPortSymbol.defaultZIndex = layers.inPort
 

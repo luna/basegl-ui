@@ -23,4 +23,4 @@ export class OutPort extends Port
         else
             @autoUpdateDef 'subport', OutArrow, angle: @model.angle
 
-    connectionPosition: => @parent.model.position
+    connectionPosition: => @parent.parent.model.position

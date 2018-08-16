@@ -32,6 +32,6 @@ export class InPort extends Port
         view.position.xy = @model.position
 
     connectionPosition: =>
-        [ @model.position[0] + @parent.model.position[0]
-        , @model.position[1] + @parent.model.position[1]
+        [ @model.position[0] + @parent.parent.model.position[0]
+        , @model.position[1] + @parent.parent.model.position[1]
         ]
