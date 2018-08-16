@@ -7,8 +7,12 @@ export class SetView extends ContainerComponent
         cons: null
 
     update: =>
-        if @changed.elems or @changed.cons
+        if @changed.cons
             @deleteDefs()
+        if @changed.elems
+            for own key of @__defs
+                unless @model.elems[key]?
+                    @deleteDef key
             for k, elem of @model.elems
-                @addDef k, new @model.cons elem, @
+                @autoUpdateDef k, @model.cons, elem
 

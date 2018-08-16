@@ -152,10 +152,10 @@ export class ExpressionNode extends ContainerComponent
     updateInPorts: =>
         @bodyWidth = 200
         inPortNumber = 1
-        inPortsNumber = 0
+        inPortsCount = 0
         for k, inPort of @model.inPorts
             unless inPort.mode == 'self'
-                inPortsNumber++
+                inPortsCount++
 
         portProperties = (port) =>
             values = {}
@@ -173,14 +173,14 @@ export class ExpressionNode extends ContainerComponent
             else
                 values.position = [0,0]
                 values.radius = portDistance
-                values.angle = Math.PI * (inPortNumber/(inPortsNumber+1))
+                values.angle = Math.PI * (inPortNumber/(inPortsCount+1))
                 inPortNumber++
             values
 
         for inPortKey, inPort of @model.inPorts
             @def('inPorts').def(inPortKey).set portProperties inPort
         @def('newPort').set portProperties mode:'phantom'
-        @bodyHeight = minimalBodyHeight + inportVDistance * if inPortsNumber > 0 then inPortsNumber - 1 else 0
+        @bodyHeight = minimalBodyHeight + inportVDistance * if inPortsCount > 0 then inPortsCount - 1 else 0
 
 
     updateOutPorts: =>

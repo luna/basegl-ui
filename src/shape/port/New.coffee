@@ -9,7 +9,6 @@ export class NewPortShape extends InPortShape
 
     adjust: (element) =>
         super element
-        1
         if @changed.lockHover
             element.variables.color_a = @__alphaOnUnhover()
 

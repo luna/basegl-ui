@@ -29,7 +29,7 @@ export class HasModel extends EventEmitter
         @registerEvents? @__view
         @changed.once = false
 
-    withScene: (fun) => @parent.withScene fun if @parent?
+    withScene: (fun) => @parent?.withScene fun
 
     set: (values) =>
         return if @disposed
