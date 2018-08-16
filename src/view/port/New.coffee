@@ -17,11 +17,9 @@ export class NewPort extends Subport
         position:    [0,0]
 
     follow: (key, angle) =>
-        console.log 'FOLLOW', key, angle
         @set angleFollow: angle
 
     unfollow: =>
-        console.log 'UNFOLLOW'
         @set angleFollow: null
 
     prepare: =>
@@ -52,9 +50,3 @@ export class NewPort extends Subport
         view.addEventListener 'mousedown', (e) =>
             e.stopPropagation()
             @pushEvent e
-
-# import {NewArrow} from 'view/port/sub/NewArrow'
-# import {InPort}   from 'view/port/In'
-
-# export class NewPort extends InPort
-#     stillPortConstructor: -> NewArrow

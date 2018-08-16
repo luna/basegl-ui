@@ -56,13 +56,11 @@ export class NodeEditor extends EventEmitter
         else if @outputNode? and (@outputNode.model.key is nodeKey) then @outputNode
 
     unsetNode: (node) =>
-        console.log 'unsetNode', node
         if @nodes[node.key]?
             @nodes[node.key].dispose()
             delete @nodes[node.key]
 
     setNode: (node) =>
-        console.log 'setNode', node
         if @nodes[node.key]?
             @nodes[node.key].set node
         else
@@ -70,7 +68,6 @@ export class NodeEditor extends EventEmitter
             @nodes[node.key] = nodeView
 
     setNodes: (nodes) =>
-        console.log 'setNodes', nodes
         nodeKeys = new Set
         for node in nodes
             nodeKeys.add node.key
@@ -82,25 +79,19 @@ export class NodeEditor extends EventEmitter
         undefined
 
     setBreadcrumb: (breadcrumb) =>
-        console.log 'setBreadcrumb', breadcrumb
         @genericSetComponent 'breadcrumb', Breadcrumb, breadcrumb
     setHalfConnections: (halfConnections) =>
-        console.log 'setHalfConnections', halfConnections
         @genericSetComponents 'halfConnections', HalfConnection, halfConnections
     setInputNode: (inputNode) =>
-        console.log 'setInputNode', inputNode
         @genericSetComponent 'inputNode', InputNode, inputNode
     setOutputNode: (outputNode) =>
-        console.log 'setOutputNode', outputNode
         @genericSetComponent 'outputNode', OutputNode, outputNode
 
     setVisualizerLibraries: (visLib) =>
-        console.log 'setVisualizerLibraries', visLib
         unless _.isEqual(@visualizerLibraries, visLib)
             @emitProperty 'visualizerLibraries', visLib
 
     setVisualization: (nodeVis) =>
-        console.log 'setVisualization', nodeVis
         key = nodeVis.nodeKey
         if @visualizations[key]?
             @visualizations[key].set nodeVis
@@ -113,19 +104,16 @@ export class NodeEditor extends EventEmitter
                 delete @visualizations[key]
 
     unsetVisualization: (nodeVis) =>
-        console.log 'unsetVisualization', nodeVis
         if @visualizations[nodeVis.nodeKey]?
             @visualizations[nodeVis.nodeKey].dispose()
             delete @visualizations[nodeVis.nodeKey]
 
     unsetConnection: (connection) =>
-        console.log 'unsetConnection', connection
         if @connections[connection.key]?
             @connections[connection.key].dispose()
             delete @connections[connection.key]
 
     setConnection: (connection) =>
-        console.log 'setConnection', connection
         if @connections[connection.key]?
             @connections[connection.key].set connection
         else
@@ -133,7 +121,6 @@ export class NodeEditor extends EventEmitter
             @connections[connection.key] = connectionView
 
     setConnections: (connections) =>
-        console.log 'setConnections', connections
         connectionKeys = new Set
         for connection in connections
             connectionKeys.add connection.key
@@ -154,7 +141,6 @@ export class NodeEditor extends EventEmitter
             scene._symbolRegistry.materials.uniforms.displayMode = 0
 
     genericSetComponent: (name, constructor, value) =>
-        console.log 'SET', name, value
         if value?
             if @[name]?
                 @[name].set value
@@ -166,7 +152,6 @@ export class NodeEditor extends EventEmitter
                 @[name] = null
 
     genericSetComponents: (name, constructor, values = []) =>
-        console.log 'SETs', name, values
         @[name] ?= []
         if values.length != @[name].length
             for oldValue in @[name]
@@ -216,7 +201,7 @@ export class NodeEditor extends EventEmitter
 
     log: (msg) => console.log "[NodeEditor]", msg
 
-    nodeByName: (name) =>
+    nodeByName: (name) => #added for debug purposes
         for own k, n of @nodes
             if n.model.name == name
                 return n

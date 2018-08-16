@@ -44,9 +44,7 @@ export class HalfConnection extends ContainerComponent
             else
                 srcNode.outPort @model.srcPort
 
-        console.log 'REBIND'
         if @srcNode != srcNode or @srcPort != srcPort
-            console.log 'SUCCESS'
             @fireDisposables()
             @srcNode = srcNode
             @srcPort = srcPort

@@ -44,9 +44,7 @@ export class Connection extends ContainerComponent
         srcPort = srcNode.outPort @model.srcPort
         dstNode = @parent.node @model.dstNode
         dstPort = dstNode.inPort @model.dstPort
-        console.log 'REBIND'
         if @srcNode != srcNode or @dstNode != dstNode or @srcPort != srcPort or @dstPort != dstPort
-            console.log 'SUCCESS'
             @fireDisposables()
             @srcNode = srcNode
             @dstNode = dstNode
