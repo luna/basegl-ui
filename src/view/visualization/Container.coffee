@@ -1,8 +1,9 @@
 import {ContainerComponent}  from 'abstract/ContainerComponent'
 import {ValueTogglerShape}   from 'shape/visualization/ValueToggler'
 import {TextContainer}       from 'view/Text'
-import {VisualizationIFrame} from 'view/visualization/IFrame'
+import {Visualization}       from 'view/visualization/Visualization'
 import {VerticalLayout}      from 'widget/VerticalLayout'
+
 
 valueLeftOffset   = 50
 togglerLeftOffset = 30
@@ -27,7 +28,7 @@ export class VisualizationContainer extends ContainerComponent
             if @model.visualizations?
                 for k, visualization of @model.visualizations
                     visualization.visualizers = @model.visualizers
-                    visualization.cons = VisualizationIFrame
+                    visualization.cons = Visualization
                     visualizations.push visualization
             @autoUpdateDef 'visualizations', VerticalLayout, if visualizations.length > 0
                 children: visualizations

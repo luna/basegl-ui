@@ -20,3 +20,5 @@ export slider = widget
 
 export text = 1000
 export textFrame = text - 1
+
+export visualizationCover = -1

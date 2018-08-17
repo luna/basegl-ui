@@ -16,13 +16,13 @@ export class VisualizerMenu extends ContainerComponent
     initModel: =>
         visualizers : null
         selected: null
-        menuVisible: false
+        expanded: false
 
     prepare: =>
         @addDef 'button', VisualizerButton, null
 
     update: =>
-        if @changed.menuVisible or @changed.visualizers or @changed.selected
+        if @changed.expanded or @changed.visualizers or @changed.selected
             if @model.visualizers?
                 children = @model.visualizers.map (visualizer) =>
                     cons: TextContainer
@@ -35,8 +35,8 @@ export class VisualizerMenu extends ContainerComponent
                         @pushEvent
                             tag: 'SelectVisualizerEvent'
                             visualizerId: visualizer
-                        @set menuVisible: false
-                @autoUpdateDef 'list', VerticalLayout, if @model.menuVisible
+                        @set expanded: false
+                @autoUpdateDef 'list', VerticalLayout, if @model.expanded
                     offset: menuItemsSpacing
                     children: children
     adjust: =>
@@ -45,4 +45,4 @@ export class VisualizerMenu extends ContainerComponent
     registerEvents: =>
         @view('button').addEventListener 'mousedown', (e) =>
             e.stopPropagation()
-            @set menuVisible: not @model.menuVisible
+            @set expanded: not @model.expanded
