@@ -1,3 +1,5 @@
+import * as _ from 'underscore'
+
 import {ContainerComponent} from 'abstract/ContainerComponent'
 import {VisualizerButton}   from 'shape/visualization/Button'
 import {TextContainer}      from 'view/Text'
@@ -5,23 +7,27 @@ import {VerticalLayout}     from 'widget/VerticalLayout'
 
 
 listPosition = [10, -15]
+menuItemColor = [0, 0, 0]
+menuSelectedItemColor = [0.2, 0.2, 0.2]
 
 export class VisualizerMenu extends ContainerComponent
     initModel: =>
-        key: null
         visualizers : null
+        selected: null
         menuVisible: false
 
     prepare: =>
         @addDef 'button', VisualizerButton, null
 
     update: =>
-        if @changed.menuVisible or @changed.visualizers
+        if @changed.menuVisible or @changed.visualizers or @changed.selected
             if @model.visualizers?
                 children = @model.visualizers.map (visualizer) =>
                     cons: TextContainer
                     text: visualizer.visualizerName
                     align: 'right'
+                    frameColor: if _.isEqual visualizer, @model.selected then menuSelectedItemColor else menuItemColor
+                    frameVisible: true
                     onclick: (e) =>
                         e.stopPropagation()
                         @pushEvent

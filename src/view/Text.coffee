@@ -10,7 +10,7 @@ export class TextContainer extends Widget
         model.text = ''
         model.align = 'left'
         model.textAlign = 'left'
-        model.frameColor = [0,0,0]
+        model.frameColor = [0, 0, 0]
         model.frameVisible = false
         model.border = 3
         model.onclick = =>
@@ -26,8 +26,7 @@ export class TextContainer extends Widget
 
     update: =>
         if @changed.text
-            @updateDef 'text',
-                text: @model.text
+            @updateDef 'text', text: @model.text
         if @changed.text or @changed.border
             size = @def('text').size()
             @__minWidth = size[0] + 2 * @model.border

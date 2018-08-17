@@ -32,6 +32,9 @@ export class VisualizationIFrame extends Widget
                 while domElem.hasChildNodes()
                     domElem.removeChild domElem.firstChild
                 domElem.appendChild iframe
+            @updateDef 'menu',
+                selected: @model.currentVisualizer.visualizerId
+
     adjust: =>
         @view('root').position.xy = [width/2, -height/2]
 
@@ -55,7 +58,7 @@ export class VisualizationIFrame extends Widget
             iframe.src       = url
             iframe
 
-    registerEvents: =>
+    connectSources: =>
         updateMenu = => @updateDef 'menu',
             visualizers: @parent.parent.model.visualizers
         updateMenu()
