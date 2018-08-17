@@ -10,8 +10,7 @@ export class TextContainer extends Widget
         model.text = ''
         model.align = 'left'
         model.textAlign = 'left'
-        model.frameColor = [0, 0, 0]
-        model.frameVisible = false
+        model.frameColor = null
         model.border = 3
         model.onclick = =>
         model
@@ -21,7 +20,6 @@ export class TextContainer extends Widget
             text: @model.text
             align: 'left'
         @addDef 'box', RectangleShape,
-            visible: @model.frameVisible
             color: @model.frameColor
 
     update: =>
@@ -39,8 +37,6 @@ export class TextContainer extends Widget
             @updateDef 'box', height: @model.height
         if @changed.width
             @updateDef 'box', width: @model.width
-        if @changed.frameVisible
-            @updateDef 'box', visible: @model.frameVisible
         if @changed.frameColor
             @updateDef 'box', color: @model.frameColor
 

@@ -9,6 +9,8 @@ import {VerticalLayout}     from 'widget/VerticalLayout'
 listPosition = [10, -15]
 menuItemColor = [0, 0, 0]
 menuSelectedItemColor = [0.2, 0.2, 0.2]
+menuItemsSpacing = 0
+menuItemBorder = 5
 
 export class VisualizerMenu extends ContainerComponent
     initModel: =>
@@ -26,8 +28,8 @@ export class VisualizerMenu extends ContainerComponent
                     cons: TextContainer
                     text: visualizer.visualizerName
                     align: 'right'
+                    border: menuItemBorder
                     frameColor: if _.isEqual visualizer, @model.selected then menuSelectedItemColor else menuItemColor
-                    frameVisible: true
                     onclick: (e) =>
                         e.stopPropagation()
                         @pushEvent
@@ -35,6 +37,7 @@ export class VisualizerMenu extends ContainerComponent
                             visualizerId: visualizer
                         @set menuVisible: false
                 @autoUpdateDef 'list', VerticalLayout, if @model.menuVisible
+                    offset: menuItemsSpacing
                     children: children
     adjust: =>
         @view('list')?.position.xy = listPosition

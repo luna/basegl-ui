@@ -5,8 +5,8 @@ import {rect}           from 'basegl/display/Shape'
 import * as color       from 'shape/Color'
 import * as layers      from 'view/layers'
 
-width = 15
-height = 15
+export width = 15
+export height = 15
 
 stripeWidth    = 0.8
 stripeHeight   = 0.1

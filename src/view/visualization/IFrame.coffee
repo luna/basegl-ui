@@ -1,12 +1,14 @@
 import * as path         from 'path'
 
 import * as style        from 'style'
-import {Widget} from 'widget/Widget'
-import {HtmlShape} from 'shape/Html'
-import {VisualizerMenu}      from 'view/visualization/Menu'
+import {Widget}          from 'widget/Widget'
+import {HtmlShape}       from 'shape/Html'
+import {VisualizerMenu}  from 'view/visualization/Menu'
+import * as menuShape    from 'shape/visualization/Button'
 
 width = 300
 height = 300
+iframeYOffset = 5
 
 export class VisualizationIFrame extends Widget
     initModel: =>
@@ -20,9 +22,8 @@ export class VisualizationIFrame extends Widget
         @addDef 'root', HtmlShape,
             element: 'div'
             top: false
-            style:
-                width: width + 'px'
-                height: height + 'px'
+            width: width + 'px'
+            height: height + 'px'
 
     update: =>
         if @changed.currentVisualizer
@@ -36,7 +37,8 @@ export class VisualizationIFrame extends Widget
                 selected: @model.currentVisualizer.visualizerId
 
     adjust: =>
-        @view('root').position.xy = [width/2, -height/2]
+        if @changed.once
+            @view('root').position.xy = [width/2 - menuShape.width/2, -height/2 - menuShape.height/2 - iframeYOffset]
 
     __mkIframe: =>
         if @model.currentVisualizer?

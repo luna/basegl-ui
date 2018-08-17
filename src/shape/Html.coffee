@@ -6,19 +6,21 @@ export class HtmlShape extends BasicComponent
     initModel: =>
         id: null
         element: 'div'
-        style: null
+        width: null
+        height: null
         top: true
         scalable: true
         still: false
         clickable: true
 
     redefineRequired: =>
-        @changed.id or @changed.element
+        @changed.id or @changed.element or @changed.width or @changed.height
 
     define: =>
         root = document.createElement @model.element
         root.id = @model.id if @model.id?
-        root.style = @model.style if @model.style?
+        root.style.width = @model.width if @model.width?
+        root.style.height = @model.height if @model.height?
         root.style.pointerEvents = if @model.clickable then 'all' else 'none'
         basegl.symbol root
 
