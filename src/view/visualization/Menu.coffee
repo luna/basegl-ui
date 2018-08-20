@@ -35,7 +35,6 @@ export class VisualizerMenu extends ContainerComponent
                         @pushEvent
                             tag: 'SelectVisualizerEvent'
                             visualizerId: visualizer
-                        @set expanded: false
                 @autoUpdateDef 'list', VerticalLayout, if @model.expanded
                     offset: menuItemsSpacing
                     children: children
@@ -44,5 +43,12 @@ export class VisualizerMenu extends ContainerComponent
 
     registerEvents: =>
         @view('button').addEventListener 'mousedown', (e) =>
-            e.stopPropagation()
+            e.stopImmediatePropagation()
             @set expanded: not @model.expanded
+            setTimeout =>
+                @addDisposableListener window, 'mousedown', @__hideMenu
+
+
+    __hideMenu: =>
+        @set expanded: false
+        window.removeEventListener 'mousedown', @__hideMenu

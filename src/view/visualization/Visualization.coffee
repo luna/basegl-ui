@@ -6,7 +6,7 @@ import {HtmlShape}               from 'shape/Html'
 import {VisualizationIFrame}     from 'view/visualization/IFrame'
 import {VisualizerMenu}          from 'view/visualization/Menu'
 import * as menuShape            from 'shape/visualization/Button'
-import {VisualizationCoverShape} from 'shape/Visualization'
+import {VisualizationCoverShape} from 'shape/visualization/Cover'
 
 width = 300
 height = 300

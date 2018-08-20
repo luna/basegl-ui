@@ -12,16 +12,24 @@ export class VisualizationIFrame extends Widget
         key: null
         iframeId: null
         currentVisualizer: null
-        mode: null
+        mode: 'Default' # Default|Focused|Fullscreen
 
     prepare: =>
         @addDef 'root', HtmlShape,
             element: 'div'
-            top: false
             width: width + 'px'
             height: height + 'px'
 
+    __isModeDefault:    => @model.mode == 'Default'
+    __isModeFullscreen: => @model.mode == 'Fullscreen'
+
     update: =>
+        if @changed.mode
+            @updateDef 'root',
+                clickable: not @__isModeDefault()
+                top: not @__isModeDefault()
+                scalable: not @__isModeFullscreen()
+
         if @changed.currentVisualizer or @changed.iframeId
             iframe = @__mkIframe()
             if iframe?

@@ -14,7 +14,7 @@ export class HtmlShape extends BasicComponent
         clickable: true
 
     redefineRequired: =>
-        @changed.id or @changed.element or @changed.width or @changed.height
+        @changed.id or @changed.element or @changed.width or @changed.height or @changed.clickable
 
     define: =>
         root = document.createElement @model.element
@@ -40,6 +40,6 @@ export class HtmlShape extends BasicComponent
     # FIXME: This function is needed due to bug in basegl or THREE.js
     # which causes problems with positioning when layer changed
     __forceUpdatePosition: =>
-        if @getElement()?
-            elem = @getElement()
+        elem = @getElement()
+        if elem?
             elem.position.y = if elem.position.y == 0 then 1 else 0

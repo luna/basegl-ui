@@ -6,16 +6,15 @@ import {rect, plane}    from 'basegl/display/Shape'
 import {BasicComponent} from 'abstract/BasicComponent'
 import * as style       from 'style'
 import * as layers      from 'view/layers'
+import * as color       from 'shape/Color'
 
-
-transparent = Color.rgb [0,0,0,0]
 
 export width  = 300
 export height = 300
 
 export visualizationCoverShape = basegl.expr ->
     shape = plane()
-    shape = shape.fill transparent
+    shape = shape.fill color.activeArea
     shape = shape.move height/2, width/2
 
 visualizationCoverSymbol               = basegl.symbol visualizationCoverShape
