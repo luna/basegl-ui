@@ -17,15 +17,15 @@ export class HtmlShape extends BasicComponent
         @changed.id or @changed.element or @changed.width or @changed.height or @changed.clickable
 
     define: =>
-        root = document.createElement @model.element
-        root.id = @model.id if @model.id?
-        root.style.width = @model.width if @model.width?
-        root.style.height = @model.height if @model.height?
-        root.style.pointerEvents = if @model.clickable then 'all' else 'none'
-        basegl.symbol root
+        html = document.createElement @model.element
+        html.id = @model.id if @model.id?
+        html.style.width = @model.width if @model.width?
+        html.style.height = @model.height if @model.height?
+        html.style.pointerEvents = if @model.clickable then 'all' else 'none'
+        basegl.symbol html
 
     adjust: =>
-        if @changed.top or @changed.scalable
+        if @redefineRequired()
             obj = @getElement().obj
             if @model.still
                 @root.topDomSceneStill.model.add obj
