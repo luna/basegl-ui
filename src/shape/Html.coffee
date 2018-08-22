@@ -25,7 +25,12 @@ export class HtmlShape extends BasicComponent
         basegl.symbol html
 
     adjust: =>
-        if @redefineRequired()
+        if @changed.still
+            if @model.still
+                @parent.__removeFromGroup @__view
+            else
+                @parent.__addToGroup @__view
+        if @changed.top or @changed.scalable or @changed.still
             obj = @getElement().obj
             if @model.still
                 @root.topDomSceneStill.model.add obj

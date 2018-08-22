@@ -50,7 +50,7 @@ export class HasModel extends EventEmitter
                 @model[key] = value
                 @performEmit key, value
 
-    __addToGroup:      (view) =>
+    __addToGroup: (view) =>
         @__view.addChild view
         @__view.updateChildrenOrigin()
 

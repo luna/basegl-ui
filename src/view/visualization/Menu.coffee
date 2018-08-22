@@ -42,13 +42,13 @@ export class VisualizerMenu extends ContainerComponent
         @view('list')?.position.xy = listPosition
 
     registerEvents: =>
-        @view('button').addEventListener 'mousedown', (e) =>
+        @view('button').addEventListener 'click', (e) =>
             e.stopImmediatePropagation()
             @set expanded: not @model.expanded
             setTimeout =>
-                @addDisposableListener window, 'mousedown', @__hideMenu
+                @addDisposableListener window, 'click', @__hideMenu
 
 
     __hideMenu: =>
         @set expanded: false
-        window.removeEventListener 'mousedown', @__hideMenu
+        window.removeEventListener 'click', @__hideMenu

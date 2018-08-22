@@ -1,18 +1,18 @@
 import * as path         from 'path'
 
-import * as style        from 'style'
-import {Widget}          from 'widget/Widget'
-import {HtmlShape}       from 'shape/Html'
+import * as style           from 'style'
+import {HtmlShape}          from 'shape/Html'
+import {ContainerComponent} from 'abstract/ContainerComponent'
 
 width = 300
 height = 300
 
-export class VisualizationIFrame extends Widget
+export class VisualizationIFrame extends ContainerComponent
     initModel: =>
         key: null
         iframeId: null
         currentVisualizer: null
-        mode: 'Default' # Default|Focused|Fullscreen
+        mode: 'Preview' # Default|Focused|Preview
 
     prepare: =>
         @addDef 'root', HtmlShape,
@@ -20,15 +20,24 @@ export class VisualizationIFrame extends Widget
             width: width + 'px'
             height: height + 'px'
 
-    __isModeDefault:    => @model.mode == 'Default'
-    __isModeFullscreen: => @model.mode == 'Fullscreen'
+    __isModeDefault: => @model.mode == 'Default'
+    __isModePreview: => @model.mode == 'Preview'
+
+    __width: =>
+        if @__isModePreview() then @root._scene.width else width
+
+    __height: =>
+        if @__isModePreview() then @root._scene.height else height
 
     update: =>
         if @changed.mode
             @updateDef 'root',
                 clickable: not @__isModeDefault()
                 top: not @__isModeDefault()
-                scalable: not @__isModeFullscreen()
+                scalable: not @__isModePreview()
+                still: @__isModePreview()
+                width: @__width() + 'px'
+                height: @__height() + 'px'
 
         if @changed.currentVisualizer or @changed.iframeId
             iframe = @__mkIframe()
@@ -38,9 +47,12 @@ export class VisualizationIFrame extends Widget
                     domElem.removeChild domElem.firstChild
                 domElem.appendChild iframe
 
-    adjust: =>
-        if @changed.once
-            @view('root').position.xy = [width/2, - height/2]
+    adjust: (view) =>
+        if @changed.mode
+            if @__isModePreview()
+                @view('root').position.xy = [@__width()/2, @__height()/2]
+            else
+                @view('root').position.xy = [@__width()/2, - @__height()/2]
 
     __mkIframe: =>
         if @model.currentVisualizer?
