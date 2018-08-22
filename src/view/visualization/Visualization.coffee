@@ -8,8 +8,6 @@ import {VisualizerMenu}          from 'view/visualization/Menu'
 import * as menuShape            from 'shape/visualization/Button'
 import {VisualizationCoverShape} from 'shape/visualization/Cover'
 
-width = 300
-height = 300
 iframeYOffset = 5
 
 export class Visualization extends Widget
@@ -36,7 +34,7 @@ export class Visualization extends Widget
 
     adjust: =>
         if @changed.once
-            @view('iframe').position.xy = [- menuShape.width/2, - menuShape.height/2 - iframeYOffset]
+            # @view('iframe').position.xy = [- menuShape.width/2, - menuShape.height/2 - iframeYOffset]
             @view('cover').position.xy = [- menuShape.width/2, - menuShape.height/2 - iframeYOffset]
 
     connectSources: =>

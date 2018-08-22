@@ -14,22 +14,25 @@ export class HtmlShape extends BasicComponent
         clickable: true
 
     redefineRequired: =>
-        @changed.id or @changed.element or @changed.width or @changed.height or @changed.clickable
+        @changed.element
 
     define: =>
+        console.log 'DEFINE'
         html = document.createElement @model.element
-        html.id = @model.id if @model.id?
-        html.style.width = @model.width if @model.width?
-        html.style.height = @model.height if @model.height?
-        html.style.pointerEvents = if @model.clickable then 'all' else 'none'
+        # html.id = @model.id if @model.id?
+        # html.style.width = @model.width if @model.width?
+        # html.style.height = @model.height if @model.height?
+        # html.style.pointerEvents = if @model.clickable then 'all' else 'none'
         basegl.symbol html
 
     adjust: =>
+        console.log 'ADJUST', @changed
         if @changed.still
             if @model.still
                 @parent.__removeFromGroup @__view
-            else
+            else unless @changed.once
                 @parent.__addToGroup @__view
+        
         if @changed.top or @changed.scalable or @changed.still
             obj = @getElement().obj
             if @model.still
@@ -41,6 +44,14 @@ export class HtmlShape extends BasicComponent
             else
                 @root._scene.domModel.model.add @__element.obj
             @__forceUpdatePosition()
+        if @changed.id
+            @getElement().id = @model.id
+        if @changed.clickable
+            @getElement().style.pointerEvents = if @model.clickable then 'all' else 'none'
+        if @changed.width
+            @getElement().style.width = @model.width
+        if @changed.height
+            @getElement().style.height = @model.height
 
     # FIXME: This function is needed due to bug in basegl or THREE.js
     # which causes problems with positioning when layer changed

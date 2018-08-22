@@ -30,6 +30,7 @@ export class VisualizationIFrame extends ContainerComponent
         if @__isModePreview() then @root._scene.height else height
 
     update: =>
+        console.log 'UPDATE', @changed
         if @changed.mode
             @updateDef 'root',
                 clickable: not @__isModeDefault()
@@ -39,22 +40,23 @@ export class VisualizationIFrame extends ContainerComponent
                 width: @__width() + 'px'
                 height: @__height() + 'px'
 
-        if @changed.currentVisualizer or @changed.iframeId
-            iframe = @__mkIframe()
-            if iframe?
+        if @changed.currentVisualizer
+            @iframe = @__mkIframe()
+            if @iframe?
                 domElem = @def('root').getDomElement()
                 while domElem.hasChildNodes()
                     domElem.removeChild domElem.firstChild
-                domElem.appendChild iframe
+                domElem.appendChild @iframe
+        if @changed.iframeId
+            @iframe?.name = @model.iframeId
 
     adjust: (view) =>
         if @changed.mode
-            if @__isModePreview()
-                @view('root').position.xy = [@__width()/2, @__height()/2]
-            else
-                @view('root').position.xy = [@__width()/2, - @__height()/2]
+            yPos = @__height()/2 * if @__isModePreview() then 1 else -1
+            @view('root').position.xy = [@__width()/2, yPos]
 
     __mkIframe: =>
+        console.log '__mkIframe', @changed.currentVisualizer, @changed.iframeId, @model.currentVisualizer, @model.iframeId
         if @model.currentVisualizer?
             visPaths = @root.visualizerLibraries
             visType = @model.currentVisualizer.visualizerId.visualizerType
@@ -71,5 +73,7 @@ export class VisualizationIFrame extends ContainerComponent
             iframe           = document.createElement 'iframe'
             iframe.name      = @model.iframeId
             iframe.className = style.luna ['basegl-visualization-iframe']
+            iframe.style.width  = @__width() + 'px'
+            iframe.style.height = @__height() + 'px'
             iframe.src       = url
             iframe
