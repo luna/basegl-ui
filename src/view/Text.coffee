@@ -26,9 +26,7 @@ export class TextContainer extends Widget
 
     update: =>
         if @changed.text
-            @updateDef 'text',
-                text: @model.text
-        if @changed.text
+            @updateDef 'text', text: @model.text
             size = @def('text').size()
             @__minWidth = size[0]
             @__minHeight = size[1]
@@ -36,10 +34,7 @@ export class TextContainer extends Widget
                 @updateDef 'box', height: @__minHeight
             unless @model.width
                 @updateDef 'box', width: @__minWidth
-        if @changed.height
-            @updateDef 'box', height: @model.height
-        if @changed.width
-            @updateDef 'box', width: @model.width
+
         if @changed.frameVisible
             @updateDef 'box', visible: @model.frameVisible
         if @changed.frameColor
