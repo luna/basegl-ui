@@ -34,7 +34,7 @@ export class Visualization extends Widget
 
     adjust: =>
         if @changed.once
-            # @view('iframe').position.xy = [- menuShape.width/2, - menuShape.height/2 - iframeYOffset]
+            @view('iframe').position.xy = [- menuShape.width/2, - menuShape.height/2 - iframeYOffset]
             @view('cover').position.xy = [- menuShape.width/2, - menuShape.height/2 - iframeYOffset]
 
     connectSources: =>

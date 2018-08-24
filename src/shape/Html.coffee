@@ -13,25 +13,28 @@ export class HtmlShape extends BasicComponent
         still: false
         clickable: true
 
-    redefineRequired: =>
-        @changed.element
+    redefineRequired: => @changed.element
 
     define: =>
-        console.log 'DEFINE'
-        html = document.createElement @model.element
-        # html.id = @model.id if @model.id?
-        # html.style.width = @model.width if @model.width?
-        # html.style.height = @model.height if @model.height?
-        # html.style.pointerEvents = if @model.clickable then 'all' else 'none'
-        basegl.symbol html
+        @html = document.createElement @model.element
+        basegl.symbol @html
 
     adjust: =>
-        console.log 'ADJUST', @changed
-        if @changed.still
-            if @model.still
-                @parent.__removeFromGroup @__view
-            else unless @changed.once
-                @parent.__addToGroup @__view
+        # if @changed.still
+        #     if @model.still
+        #         console.log 'REMOVE'
+        #         @.__removeFromGroup @__element
+        #     else unless @changed.once
+        #         console.log 'ADD'
+        #         @.__addToGroup @__element
+        if @changed.id
+            @getDomElement().id = @model.id
+        if @changed.width
+            @getDomElement().style.width = @model.width
+        if @changed.height
+            @getDomElement().style.height = @model.height
+        if @changed.clickable
+            @getDomElement().style.pointerEvents = if @model.clickable then 'all' else 'none'
         
         if @changed.top or @changed.scalable or @changed.still
             obj = @getElement().obj
@@ -42,17 +45,10 @@ export class HtmlShape extends BasicComponent
             else if @model.top
                 @root.topDomScene.model.add obj
             else
-                @root._scene.domModel.model.add @__element.obj
+                @root._scene.domModel.model.add obj
             @__forceUpdatePosition()
-        if @changed.id
-            @getElement().id = @model.id
-        if @changed.clickable
-            @getElement().style.pointerEvents = if @model.clickable then 'all' else 'none'
-        if @changed.width
-            @getElement().style.width = @model.width
-        if @changed.height
-            @getElement().style.height = @model.height
 
+        console.log @__element.xform, @model, @changed
     # FIXME: This function is needed due to bug in basegl or THREE.js
     # which causes problems with positioning when layer changed
     __forceUpdatePosition: =>
