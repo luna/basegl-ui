@@ -11,6 +11,13 @@
 @borderRadius:   (@luna-searcher-border-radius + @luna-connection-width) * 1px;
 @searcherWidth:  400px;
 @searcherHeight: 11 * @entryHeight;
+// NOTE: Calculating the offset.
+// In basegl the (0, 0) (and thus the point of reference) of a component is its center,
+// in html: its top left corner. We would like the (0, 0) of the searcher to be
+// the center of the input field. This means that we do the following transform:
+// 1. move the whole searcher down by @searcherHeight
+// 2. move it up by 1/2 of the height of the input field.
+// Now we are in the middle of the input field and everything is aligned.
 @searcherCenterOffset: -10 * @entryHeight / 2;
 
 
