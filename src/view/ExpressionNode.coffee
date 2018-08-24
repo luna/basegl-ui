@@ -63,7 +63,7 @@ export class ExpressionNode extends ContainerComponent
         @addDef 'node', new NodeShape expanded: @model.expanded, @
         @addDef 'name', new EditableText
                 text:     @model.name
-                entries:  []
+                entries:  testEntries
                 kind:     EditableText.NAME
             , @
         @addDef 'expression', new EditableText
@@ -203,8 +203,8 @@ export class ExpressionNode extends ContainerComponent
         @makeSelectable view
 
     makeHoverable: (view) =>
-        view.addEventListener 'mouseenter', => @set hovered: true
-        view.addEventListener 'mouseleave', => @set hovered: false
+        view.addEventListener 'mouseenter', => @set(hovered: true)
+        view.addEventListener 'mouseleave', => @set(hovered: false)
 
     makeSelectable: (view) =>
         @withScene (scene) =>

@@ -7,7 +7,12 @@
 //         searcher        //
 /////////////////////////////
 
-@searcherWidth:      400px;
+@entryHeight:    @luna-superline-height * 1px; // calc(@ui ~'*' @luna-superline-height * 1px);
+@borderRadius:   (@luna-searcher-border-radius + @luna-connection-width) * 1px;
+@searcherWidth:  400px;
+@searcherHeight: 11 * @entryHeight;
+@searcherCenterOffset: -10 * @entryHeight / 2;
+
 
 .luna-studio-window--has-searcher {
     .luna-studio-window__center {
@@ -15,37 +20,42 @@
     }
 }
 
-.luna-searcher {
-    z-index:  @luna-zindex-searcher;
+.luna-searcher__root {
+    width:  @searcherWidth;
+    height: @searcherHeight;
     position: absolute;
 }
 
-.luna-searcher__root {
-    width:  0;
-    height: 0;
+.luna-searcher__container {
+    z-index:  @luna-zindex-searcher;
+    width:  @searcherWidth;
+    height: @searcherHeight;
+    position: relative;
+    transform: translateY(@searcherCenterOffset);
 }
 
 .luna-searcher__input {
     background:     #1d1d19;
-    border-radius:  0px 0px (@luna-searcher-border-radius + @luna-connection-width) * 1px (@luna-searcher-border-radius + @luna-connection-width) * 1px;;
+    border-radius:  0px 0px @borderRadius @borderRadius;
     color:          @luna-syntax-text-color;
     font-family:    @fontDefault;
     font-size:      calc(@ui ~'*' 12px);
     font-weight:    300;
-    height:         calc(@ui ~'*' @luna-superline-height * 1px);
-    line-height:    calc(@ui ~'*' @luna-superline-height * 1px);
+    height:         @entryHeight;
+    line-height:    @entryHeight;
     letter-spacing: 0.5px; // Matching Atom styles. TODO: Apply to the whole graph?
     overflow:       inherit;
+    position:       absolute;
+    bottom:         0px;
     text-align:     center;
-    transform:      translateX(-37%);
-    width:          calc(@ui ~'*' @searcherWidth);
+    width:          @searcherWidth;
     &:focus {
         outline: 0;
     }
 }
 
 .luna-searcher__no-results {
-    border-radius: (@luna-searcher-border-radius + @luna-connection-width) * 1px;
+    border-radius: @borderRadius;
 }
 
 .luna-searcher__input--selected {
@@ -55,26 +65,27 @@
 .luna-searcher__results {
     display:        flex;
     flex-direction: column-reverse;
-    bottom:         calc(@ui ~'*' 28px);
+    bottom:         @entryHeight;
     position:       absolute;
-    left:           calc(@ui ~'*' (-@searcherWidth/4));
-    width:          calc(@ui ~'*' @searcherWidth + 2px);
-    border:         calc(@ui ~'*' @luna-connection-width * 1px) solid transparent; //TODO: add this border to children instead (with proper color)
-    transform:      translate(@searcherWidth * -0.125px, @luna-connection-width * 2px);
-    height:         calc(@ui ~'*' @luna-superline-height * 10px);
+    width:          @searcherWidth;
+    height:         10 * @entryHeight;
     overflow:       hidden;
+    // NOTE: there used to be a (transparent) border around the results.
+    // however, it adds padding between the results and the input,
+    // which in my opinion doesn't look well. If you want it back, uncomment:
+    // border: unit(@luna-connection-width, px) solid transparent;
 }
 
 .luna-searcher__results__list {
     .background(@a);
     overflow:       hidden;
-    display:        flex;
+    display:        flex;   
     flex-direction: column-reverse;
     text-align:     center;
     border-radius:  unit(@luna-searcher-border-radius,px) unit(@luna-searcher-border-radius,px) 0 0;
     padding:        0;
-    width:          calc(@ui ~'*' @searcherWidth);
-    max-height:     calc(@ui ~'*' @luna-superline-height * 10px);  
+    width:          @searcherWidth;
+    max-height:     10 * @entryHeight;  
 }
 
 .luna-searcher__doc {
@@ -82,8 +93,8 @@
     .background(@a);
     font-size:     calc(@ui ~'*' 10px);
     border-radius: unit(@luna-searcher-border-radius, px) 
-                    unit(@luna-searcher-border-radius, px) 
-                    unit(@luna-searcher-border-radius, px) 0 !important;
+                   unit(@luna-searcher-border-radius, px) 
+                   unit(@luna-searcher-border-radius, px) 0 !important;
     box-sizing:    border-box;
     position:      absolute;
     bottom:        30px;
@@ -107,7 +118,7 @@
 }
 
 .luna-searcher__results__item {
-    line-height: calc(@ui ~'*' @luna-superline-height * 1px);
+    line-height: @entryHeight;
 }
 
 .luna-searcher__results__item--selected {

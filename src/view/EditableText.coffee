@@ -7,10 +7,6 @@ import * as style  from 'style'
 import * as shape  from 'shape/node/Base'
 
 
-searcherWidth   = 400  # same as `@searcherWidth` in `_searcher.less`
-searcherBaseOffsetX = -searcherWidth / 8
-searcherBaseOffsetY = shape.height  / 8
-
 export class EditableText extends ContainerComponent
 
     @NAME:       'editable-name'
@@ -50,11 +46,11 @@ export class EditableText extends ContainerComponent
             align: 'center'
 
     hideSearcher: =>
-        @set edited: false
+        @set(edited: false)
         @root.unregisterSearcher()
 
     showSearcher: (notify = true) =>
-        @set edited: true
+        @set(edited: true)
         @root.registerSearcher @
         tag = if (@model.kind == EditableText.NAME)
                 'EditNodeNameEvent'
@@ -72,15 +68,6 @@ export class EditableText extends ContainerComponent
             entries:        searcherModel.entries
             edited:         true
         @showSearcher false
-
-    #######################
-    ### Adjust the view ###
-    #######################
-
-    adjust: (view) =>
-        if @changed.edited
-            @view('searcher')?.position.xy = [searcherBaseOffsetX, searcherBaseOffsetY]
-            @view('text')?.position.xy = [0, 0]
 
     ###################################
     ### Register the event handlers ###

@@ -1,5 +1,5 @@
-import {BasicComponent}  from 'abstract/BasicComponent'
-import * as basegl       from 'basegl'
+import {BasicComponent} from 'abstract/BasicComponent'
+import * as basegl      from 'basegl'
 
 
 export class HtmlShape extends BasicComponent
@@ -10,6 +10,7 @@ export class HtmlShape extends BasicComponent
         scalable: true
         still: false
         clickable: true
+        cssClassName: []
 
     redefineRequired: =>
         @changed.id or @changed.element
@@ -18,6 +19,7 @@ export class HtmlShape extends BasicComponent
         root = document.createElement @model.element
         root.id = @model.id if @model.id?
         root.style.pointerEvents = if @model.clickable then 'all' else 'none'
+        root.className = @model.cssClassName
         basegl.symbol root
 
     adjust: =>
