@@ -23,7 +23,7 @@ export class NewPort extends Subport
         @set angleFollow: null
 
     prepare: =>
-        @addDef 'port', new NewPortShape color: @model.color, @
+        @addDef 'port', NewPortShape, color: @model.color
 
     update: =>
         if @changed.angleFollow

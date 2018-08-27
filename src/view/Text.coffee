@@ -6,37 +6,33 @@ import {Widget}             from 'widget/Widget'
 
 export class TextContainer extends Widget
     initModel: =>
-        s = super()
-        s.text = ''
-        s.align = 'left'
-        s.textAlign = 'left'
-        s.frameColor = [0,0,0]
-        s.frameVisible = false
-        s
+        model = super()
+        model.text = ''
+        model.align = 'left'
+        model.textAlign = 'left'
+        model.frameColor = null
+        model.border = 3
+        model.onclick = =>
+        model
 
     prepare: =>
-        @addDef 'text', new TextShape
-                text: @model.text
-                align: 'left'
-            , @
-        @addDef 'box', new RectangleShape
-                visible: @model.frameVisible
-                color: @model.frameColor
-            , @
+        @addDef 'text', TextShape,
+            text: @model.text
+            align: 'left'
+        @addDef 'box', RectangleShape,
+            color: @model.frameColor
 
     update: =>
         if @changed.text
             @updateDef 'text', text: @model.text
-        
-        if @changed.text or @changed.height or @changed.width
+
+        if @changed.text or @changed.height or @changed.width or @changed.border
             size = @def('text').size()
-            @__minWidth  = size[0]
-            @__minHeight = size[1]
+            @__minWidth  = size[0] + 2 * @model.border
+            @__minHeight = size[1] + 2 * @model.border
             @updateDef 'box', height: @model.height or @__minHeight
             @updateDef 'box', width:  @model.width  or @__minWidth
 
-        if @changed.frameVisible
-            @updateDef 'box', visible: @model.frameVisible
         if @changed.frameColor
             @updateDef 'box', color: @model.frameColor
 
@@ -57,5 +53,9 @@ export class TextContainer extends Widget
                 else
                     x
 
-            @view('text').position.x = textX
+            @view('text').position.x = textX + @model.border
             @view('box').position.xy = [x, -height/2]
+
+    registerEvents: (view) =>
+        view.addEventListener 'click', (e) =>
+            @model.onclick e

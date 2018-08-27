@@ -18,13 +18,12 @@ class Slider extends Widget
     prepare: =>
         @__minWidth = 40
         @__minHeight = 20
-        @addDef 'value', new TextShape
-                fontFamily: 'DejaVuSansMono'
-                size: 14
-                align: 'center'
-                text: '19'
-            , @
-        @addDef 'slider', new SliderShape null, @
+        @addDef 'value', TextShape,
+            fontFamily: 'DejaVuSansMono'
+            size: 14
+            align: 'center'
+            text: '19'
+        @addDef 'slider', SliderShape, null
 
     update: =>
         @updateDef 'value', text: @model.value.toString()

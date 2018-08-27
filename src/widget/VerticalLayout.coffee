@@ -1,14 +1,16 @@
-import {ContainerComponent} from 'abstract/ContainerComponent'
-import {lookupWidget}       from 'widget/WidgetDirectory'
+import {Widget}       from 'widget/Widget'
+import {lookupWidget} from 'widget/WidgetDirectory'
 
 
-export class VerticalLayout extends ContainerComponent
+export class VerticalLayout extends Widget
     initModel: =>
-        key: null
-        children: []
-        height: null
-        width: null
-        offset: 3
+        s = super()
+        s.key = null
+        s.children = []
+        s.height = null
+        s.width = null
+        s.offset = 3
+        s
 
     update: =>
         if @changed.children
@@ -30,8 +32,8 @@ export class VerticalLayout extends ContainerComponent
                 height : @def(i).minHeight()
             @__minHeight += @def(i).minHeight() or 0
             @__maxHeight += @def(i).maxHeight() or 0
-            @__minWidth = Math.min @def(i).minWidth(), @__minWidth
-            @__maxWidth = Math.max @def(i).maxWidth(), @__maxWidth
+            @__minWidth = Math.max @def(i).minWidth(), @__minWidth
+            @__maxWidth = Math.min @def(i).maxWidth(), @__maxWidth
             @updateDef i, siblings:
                 left:  ! (i == 0)
                 right: ! (i == @model.children.length - 1)
@@ -55,10 +57,10 @@ export class VerticalLayout extends ContainerComponent
             @updateDef w.index,
                 height: w.height
                 width: @__computeWidth w.widget
-            startPoint[1] += w.height + @model.offset
+            startPoint[1] -= w.height + @model.offset
 
     __computeWidth: (widget) =>
-        width = @model.width
+        width = @model.width or @minWidth()
         if width < widget.maxWidth()
             width
         else

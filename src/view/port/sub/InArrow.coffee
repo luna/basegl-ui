@@ -11,7 +11,7 @@ export class InArrow extends Subport
         radius: 0
 
     prepare: =>
-        @addDef 'port', new InPortShape angle: @model.angle, @
+        @addDef 'port', InPortShape, angle: @model.angle
 
     update: =>
         @autoUpdateDef 'name', TextContainer,

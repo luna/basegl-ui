@@ -15,7 +15,7 @@ export class OutputNode extends ContainerComponent
         position: [0,0]
 
     prepare: =>
-        @addDef 'inPorts', new SetView cons: FlatPort, @
+        @addDef 'inPorts', SetView, cons: FlatPort
 
     update: =>
         if @changed.inPorts

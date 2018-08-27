@@ -12,7 +12,7 @@ export class Self extends Subport
         color:    [0, 1, 0]
 
     prepare: =>
-        @addDef 'port', new SelfPortShape null, @
+        @addDef 'port', SelfPortShape, null
 
     update: =>
         @autoUpdateDef 'typeName', TextContainer, if @model.hovered

@@ -11,7 +11,7 @@ export class OutArrow extends Subport
         radius: 0
 
     prepare: =>
-        @addDef 'port', new OutPortShape angle: @model.angle, @
+        @addDef 'port', OutPortShape, angle: @model.angle
 
     update: =>
         @autoUpdateDef 'typeName', TextContainer, if @model.hovered

@@ -16,8 +16,8 @@ export class InputNode extends ContainerComponent
         position: [0, 0]
 
     prepare: =>
-        @addDef 'add', new AddPortShape null, @
-        @addDef 'outPorts', new SetView cons: FlatPort, @
+        @addDef 'add', AddPortShape, null
+        @addDef 'outPorts', SetView, cons: FlatPort
 
     update: =>
         return unless @changed.outPorts

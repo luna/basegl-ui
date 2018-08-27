@@ -15,11 +15,10 @@ export class FlatPort extends Port
         color: defaultColor
 
     prepare: =>
-        @addDef 'port', new FlatPortShape output: @model.output, @
-        @addDef 'name', new TextContainer
-                align: 'left'
-                text: @model.name
-            , @
+        @addDef 'port', FlatPortShape, output: @model.output
+        @addDef 'name', TextContainer,
+            align: 'left'
+            text: @model.name
 
     update: =>
         if @changed.color

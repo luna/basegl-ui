@@ -60,21 +60,19 @@ export class ExpressionNode extends ContainerComponent
         hovered:    false
 
     prepare: =>
-        @addDef 'node', new NodeShape expanded: @model.expanded, @
-        @addDef 'name', new EditableText
-                text:     @model.name
-                entries:  testEntries
-                kind:     EditableText.NAME
-            , @
-        @addDef 'expression', new EditableText
-                text:    @model.expression
-                entries: []
-                kind:    EditableText.EXPRESSION
-            , @
-        @addDef 'valueToggler', new ValueTogglerShape null, @
-        @addDef 'inPorts',  new SetView cons: InPort, @
-        @addDef 'outPorts', new SetView cons: OutPort, @
-        @addDef 'newPort', new NewPort null, @
+        @addDef 'node', NodeShape, expanded: @model.expanded
+        @addDef 'name', EditableText,
+            text:     @model.name
+            entries:  []
+            kind:     EditableText.NAME
+        @addDef 'expression', EditableText,
+            text:    @model.expression
+            entries: testEntries
+            kind:    EditableText.EXPRESSION
+        @addDef 'valueToggler', ValueTogglerShape
+        @addDef 'inPorts', SetView, cons: InPort
+        @addDef 'outPorts', SetView, cons: OutPort
+        @addDef 'newPort', NewPort
 
     update: =>
         @updateDef 'name', text: @model.name

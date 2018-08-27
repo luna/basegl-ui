@@ -325,20 +325,20 @@ runExample = -> main (nodeEditor) ->
         console.log path.join('.'), event, key
         if event.tag == 'FocusVisualizationEvent'
             nodeKey = path[2]
-            nodeEditor.setVisualization new Object
+            nodeEditor.setVisualization
                 nodeKey: nodeKey
                 visualizations: [
                     key: 900
                     mode: 'Focused'
                 ]
         if event.tag == 'MouseEvent' and event.type == 'mouseup'
-            nodeEditor.setVisualization new Object
+            nodeEditor.setVisualization
                 nodeKey: 2
                 visualizations: [
                     key: 900
                     mode: 'Default'
                 ]
-            nodeEditor.setVisualization new Object
+            nodeEditor.setVisualization
                 nodeKey: 3
                 visualizations: [
                     key: 901

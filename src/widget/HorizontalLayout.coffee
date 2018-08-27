@@ -1,14 +1,16 @@
-import {ContainerComponent} from 'abstract/ContainerComponent'
-import {lookupWidget}       from 'widget/WidgetDirectory'
+import {Widget}       from 'widget/Widget'
+import {lookupWidget} from 'widget/WidgetDirectory'
 
 
-export class HorizontalLayout extends ContainerComponent
+export class HorizontalLayout extends Widget
     initModel: =>
-        key: null
-        children: []
-        width: null
-        height: null
-        offset: 3
+        s = super()
+        s.key = null
+        s.children = []
+        s.width = null
+        s.height = null
+        s.offset = 3
+        s
 
     update: =>
         if @changed.children
@@ -30,8 +32,8 @@ export class HorizontalLayout extends ContainerComponent
                 width : @def(i).minWidth()
             @__minWidth += @def(i).minWidth() or 0
             @__maxWidth += @def(i).maxWidth() or 0
-            @__minHeight = Math.min @def(i).minHeight(), @__minHeight
-            @__maxHeight = Math.max @def(i).maxHeight(), @__maxHeight
+            @__minHeight = Math.max @def(i).minHeight(), @__minHeight
+            @__maxHeight = Math.min @def(i).maxHeight(), @__maxHeight
             @updateDef i, siblings:
                 left:  ! (i == 0)
                 right: ! (i == @model.children.length - 1)
@@ -58,7 +60,7 @@ export class HorizontalLayout extends ContainerComponent
             startPoint[0] += w.width + @model.offset
 
     __computeHeight: (widget) =>
-        height = @model.height
+        height = @model.height or @minHeight()
         if height < widget.maxHeight()
             height
         else

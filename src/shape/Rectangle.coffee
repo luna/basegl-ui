@@ -25,8 +25,7 @@ export class RectangleShape extends BasicComponent
     initModel: =>
         width: 0
         height: 0
-        visible: null
-        color: [1,0,0]
+        color: null
 
     define: =>
         rectangleSymbol
@@ -36,9 +35,9 @@ export class RectangleShape extends BasicComponent
             element.bbox.x = @model.width
         if @changed.height
             element.bbox.y = @model.height
-        if @changed.visible
-            element.variables.color_a = Number @model.visible
         if @changed.color
-            element.variables.color_r = @model.color[0]
-            element.variables.color_g = @model.color[1]
-            element.variables.color_b = @model.color[2]
+            element.variables.color_a = Number @model.color?
+            if @model.color?
+                element.variables.color_r = @model.color[0]
+                element.variables.color_g = @model.color[1]
+                element.variables.color_b = @model.color[2]

@@ -11,7 +11,7 @@ export class HalfConnection extends ContainerComponent
         reversed: false
 
     prepare: =>
-        @addDef 'connection', new ConnectionShape null, @
+        @addDef 'connection', ConnectionShape, null
 
     update: =>
         if @changed.srcNode or @changed.srcPort or @changed.reversed

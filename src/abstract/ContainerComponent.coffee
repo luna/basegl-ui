@@ -28,19 +28,20 @@ export class ContainerComponent extends HasModel
     updateDef: (key, value) =>
         @def(key).set value
 
-    addDef: (key, def) =>
+    addDef: (key, cons, value) =>
+        def = new cons value, @
         unless @__defs[key]?
             @__defs[key] = def
             @__addToGroup def.__view
         else unless _.isEqual @__defs[key], def
-            @__removeFromGroup @__defs[key]
+            @__removeFromGroup @__defs[key].__view
             @__defs[key].dispose()
             @__addToGroup def.__view
             @__defs[key] = def
 
     deleteDef: (key) =>
         if @__defs[key]?
-            @__removeFromGroup @__defs[key]
+            @__removeFromGroup @__defs[key].__view
             @__defs[key].dispose()
             delete @__defs[key]
 
@@ -51,7 +52,7 @@ export class ContainerComponent extends HasModel
             else
                 @deleteDef key
         else if value?
-            @addDef key, new cons value, @
+            @addDef key, cons, value
 
     deleteDefs: =>
         for own k of @__defs

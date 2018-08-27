@@ -26,12 +26,11 @@ export class Searcher extends ContainerComponent
 
     prepare: =>
         @dom = {}
-        @addDef 'root', new HtmlShape
-                id:           'searcher-root'
-                element:      'div'
-                scalable:     false
-                cssClassName: style.luna ['searcher__root']
-            , @
+        @addDef 'root', HtmlShape,
+            element: 'div'
+            id: 'searcher-root'
+            scalable: false
+            cssClassName: style.luna ['searcher__root']
 
     #############################
     ### Create/update the DOM ###

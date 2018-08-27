@@ -11,9 +11,7 @@ export class TextInput extends Widget
         model
 
     prepare: =>
-        @addDef 'root', new HtmlShape
-                element: 'div'
-            , @
+        @addDef 'root', HtmlShape, element: 'div'
 
     update: =>
         if @changed.once
