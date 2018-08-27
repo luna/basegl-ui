@@ -2,6 +2,7 @@ import {EventEmitter} from "abstract/EventEmitter"
 import * as basegl    from 'basegl/display/Symbol'
 import * as _         from 'underscore'
 
+
 unArray = (ref, obj) =>
     if ref? and (not Array.isArray ref) and Array.isArray obj
         ret = {}
@@ -50,7 +51,7 @@ export class HasModel extends EventEmitter
                 @model[key] = value
                 @performEmit key, value
 
-    __addToGroup:      (view) =>
+    __addToGroup: (view) =>
         @__view.addChild view
         @__view.updateChildrenOrigin()
 
