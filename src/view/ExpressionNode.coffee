@@ -67,7 +67,7 @@ export class ExpressionNode extends ContainerComponent
             kind:     EditableText.NAME
         @addDef 'expression', EditableText,
             text:    @model.expression
-            entries: testEntries
+            entries: []
             kind:    EditableText.EXPRESSION
         @addDef 'valueToggler', ValueTogglerShape
         @addDef 'inPorts', SetView, cons: InPort
