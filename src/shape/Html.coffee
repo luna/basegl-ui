@@ -20,13 +20,6 @@ export class HtmlShape extends BasicComponent
         basegl.symbol @html
 
     adjust: =>
-        # if @changed.still
-        #     if @model.still
-        #         console.log 'REMOVE'
-        #         @.__removeFromGroup @__element
-        #     else unless @changed.once
-        #         console.log 'ADD'
-        #         @.__addToGroup @__element
         if @changed.id
             @getDomElement().id = @model.id
         if @changed.width
@@ -48,7 +41,6 @@ export class HtmlShape extends BasicComponent
                 @root._scene.domModel.model.add obj
             @__forceUpdatePosition()
 
-        console.log @__element.xform, @model, @changed
     # FIXME: This function is needed due to bug in basegl or THREE.js
     # which causes problems with positioning when layer changed
     __forceUpdatePosition: =>
