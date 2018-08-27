@@ -70,10 +70,10 @@ export class ExpressionNode extends ContainerComponent
                 text:    @model.expression
                 entries: []
                 kind:    EditableText.EXPRESSION
-        @addDef 'visualization', VisualizationContainer, null
+        @addDef 'visualization', VisualizationContainer
         @addDef 'inPorts',  SetView, cons: InPort
         @addDef 'outPorts', SetView, cons: OutPort
-        @addDef 'newPort', NewPort, null
+        @addDef 'newPort', NewPort
 
     update: =>
         @updateDef 'name', text: @model.name
