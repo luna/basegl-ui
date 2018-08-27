@@ -46,11 +46,11 @@ export class EditableText extends ContainerComponent
             align: 'center'
 
     hideSearcher: =>
-        @set(edited: false)
+        @set edited: false
         @root.unregisterSearcher()
 
     showSearcher: (notify = true) =>
-        @set(edited: true)
+        @set edited: true
         @root.registerSearcher @
         tag = if (@model.kind == EditableText.NAME)
                 'EditNodeNameEvent'

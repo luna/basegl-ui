@@ -201,8 +201,8 @@ export class ExpressionNode extends ContainerComponent
         @makeSelectable view
 
     makeHoverable: (view) =>
-        view.addEventListener 'mouseenter', => @set(hovered: true)
-        view.addEventListener 'mouseleave', => @set(hovered: false)
+        view.addEventListener 'mouseenter', => @set hovered: true
+        view.addEventListener 'mouseleave', => @set hovered: false
 
     makeSelectable: (view) =>
         @withScene (scene) =>
