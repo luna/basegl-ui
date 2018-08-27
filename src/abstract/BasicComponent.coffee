@@ -1,5 +1,4 @@
 import {HasModel}  from "abstract/HasModel"
-import * as _      from 'underscore'
 import * as basegl from 'basegl/display/Symbol'
 
 
@@ -18,7 +17,7 @@ export class BasicComponent extends HasModel
     onModelUpdate: =>
         if (@redefineRequired? and @redefineRequired(@changed)) or (not @__def?)
             def = @define()
-            if def? and not _.isEqual(def, @__def)
+            if def?
                 @__undraw()
                 @__draw def
                 @__def = def
