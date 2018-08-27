@@ -1,6 +1,7 @@
 import {EventEmitter} from "abstract/EventEmitter"
 import * as basegl    from 'basegl/display/Symbol'
 import * as _         from 'underscore'
+import {mat4}         from 'gl-matrix'
 
 
 unArray = (ref, obj) =>
@@ -58,6 +59,7 @@ export class HasModel extends EventEmitter
     __removeFromGroup: (view) =>
         @__view.removeChild view
         @__view.updateChildrenOrigin()
+        view.setOrigin mat4.create()
 
     log:  (msg) => console.log  "[#{@constructor.name}]", msg
     warn: (msg) => console.warn "[#{@constructor.name}]", msg

@@ -8,6 +8,7 @@ export nodeBg         = bg.mix white, 0.04
 
 
 export valueTogglerColor = white
+export visualizationMenu = valueTogglerColor
 
 export transparent = Color.rgb [0, 0, 0, 0]
 export activeArea = transparent

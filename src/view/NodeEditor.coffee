@@ -1,17 +1,15 @@
 import {Navigator}          from 'basegl/navigation/Navigator'
 import {ZoomlessCamera}     from 'basegl/navigation/Camera'
 
+import {Disposable}         from 'abstract/Disposable'
+import {EventEmitter}       from 'abstract/EventEmitter'
 import {Breadcrumb}         from 'view/Breadcrumb'
 import {Connection}         from 'view/Connection'
-import {Disposable}         from 'abstract/Disposable'
 import {ExpressionNode}     from 'view/ExpressionNode'
-import {EventEmitter}       from 'abstract/EventEmitter'
 import {HalfConnection}     from 'view/HalfConnection'
 import {InputNode}          from 'view/InputNode'
 import {OutputNode}         from 'view/OutputNode'
 import {Searcher}           from 'view/Searcher'
-import {NodeVisualizations} from 'view/Visualization'
-import {visualizationCover} from 'view/Visualization'
 
 import * as _ from 'underscore'
 
@@ -29,9 +27,6 @@ export class NodeEditor extends EventEmitter
         @topDomSceneStill     = @_scene.addDomModelWithNewCamera('dom-top-still')
         @topDomSceneNoScale   =
             @_scene.addDomModelWithNewCamera('dom-top-no-scale', new ZoomlessCamera @_scene._camera)
-
-        visCoverFamily = @_scene.register visualizationCover
-        visCoverFamily.zIndex = -1
 
     withScene: (fun) => fun @_scene if @_scene?
 
@@ -92,21 +87,10 @@ export class NodeEditor extends EventEmitter
             @emitProperty 'visualizerLibraries', visLib
 
     setVisualization: (nodeVis) =>
-        key = nodeVis.nodeKey
-        if @visualizations[key]?
-            @visualizations[key].set nodeVis
-        else
-            visView = new NodeVisualizations nodeVis, @
-            @visualizations[key] = visView
-        @node(key).onDispose =>
-            if @visualizations[key]?
-                @visualizations[key].dispose()
-                delete @visualizations[key]
+        @node(nodeVis.nodeKey)?.set visualizations: nodeVis
 
     unsetVisualization: (nodeVis) =>
-        if @visualizations[nodeVis.nodeKey]?
-            @visualizations[nodeVis.nodeKey].dispose()
-            delete @visualizations[nodeVis.nodeKey]
+        @node(nodeVis.nodeKey)?.set visualizations: null
 
     unsetConnection: (connection) =>
         if @connections[connection.key]?

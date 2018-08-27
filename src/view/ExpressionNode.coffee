@@ -6,23 +6,23 @@ import {world}        from 'basegl/display/World'
 import {group}        from 'basegl/display/Symbol'
 import {circle, glslShape, union, grow, negate, rect, quadraticCurve, path} from 'basegl/display/Shape'
 import {Composable, fieldMixin} from "basegl/object/Property"
+import * as _         from 'underscore'
 
-import * as shape           from 'shape/node/Base'
-import * as togglerShape    from 'shape/node/ValueToggler'
-import * as _               from 'underscore'
-import {BasicComponent}     from 'abstract/BasicComponent'
-import {Component}          from 'abstract/Component'
-import {ContainerComponent} from 'abstract/ContainerComponent'
-import {NodeShape}          from 'shape/node/Node'
-import {NodeErrorShape}     from 'shape/node/ErrorFrame'
-import {ValueTogglerShape}  from 'shape/node/ValueToggler'
-import {EditableText}       from 'view/EditableText'
-import {InPort}             from 'view/port/In'
-import {NewPort}            from 'view/port/New'
-import {OutPort}            from 'view/port/Out'
-import {TextContainer}      from 'view/Text'
-import {SetView}            from 'view/SetView'
-import {HorizontalLayout}   from 'widget/HorizontalLayout'
+import {BasicComponent}         from 'abstract/BasicComponent'
+import {Component}              from 'abstract/Component'
+import {ContainerComponent}     from 'abstract/ContainerComponent'
+import * as shape               from 'shape/node/Base'
+import {NodeShape}              from 'shape/node/Node'
+import {NodeErrorShape}         from 'shape/node/ErrorFrame'
+import * as togglerShape        from 'shape/visualization/ValueToggler'
+import {EditableText}           from 'view/EditableText'
+import {InPort}                 from 'view/port/In'
+import {NewPort}                from 'view/port/New'
+import {OutPort}                from 'view/port/Out'
+import {SetView}                from 'view/SetView'
+import {TextContainer}          from 'view/Text'
+import {VisualizationContainer} from 'view/visualization/Container'
+import {HorizontalLayout}       from 'widget/HorizontalLayout'
 
 ### Utils ###
 selectedNode = null
@@ -58,19 +58,20 @@ export class ExpressionNode extends ContainerComponent
         selected:   false
         expanded:   false
         hovered:    false
+        visualizations: null
 
     prepare: =>
         @addDef 'node', NodeShape, expanded: @model.expanded
         @addDef 'name', EditableText,
-            text:     @model.name
-            entries:  []
-            kind:     EditableText.NAME
+                text:     @model.name
+                entries:  []
+                kind:     EditableText.NAME
         @addDef 'expression', EditableText,
-            text:    @model.expression
-            entries: []
-            kind:    EditableText.EXPRESSION
-        @addDef 'valueToggler', ValueTogglerShape
-        @addDef 'inPorts', SetView, cons: InPort
+                text:    @model.expression
+                entries: []
+                kind:    EditableText.EXPRESSION
+        @addDef 'visualization', VisualizationContainer
+        @addDef 'inPorts',  SetView, cons: InPort
         @addDef 'outPorts', SetView, cons: OutPort
         @addDef 'newPort', NewPort
 
@@ -103,26 +104,17 @@ export class ExpressionNode extends ContainerComponent
             @autoUpdateDef 'errorFrame', NodeErrorShape, if @error()
                 expanded: @model.expanded
                 body: [@bodyWidth, @bodyHeight]
-        if @changed.value
-            @autoUpdateDef 'value', TextContainer, if @__shortValue()?
-                align: 'center'
-                text: @__shortValue()
-                body: [@bodyWidth, @bodyHeight]
 
-        @updateDef 'valueToggler',
-            isFolded: @model.value?.contents?.tag != 'Visualization'
-            expanded: @model.expanded
-            body: [@bodyWidth, @bodyHeight]
+        @updateDef 'visualization',
+            value: @model.value
+            visualizers: @model.visualizations?.visualizers
+            visualizations: @model.visualizations?.visualizations
 
     outPort: (key) => @def('outPorts').def(key)
     inPort: (key) => @def('inPorts').def(key) or if key == @model.newPortKey then @def('newPort')
 
     error: =>
         @model.value? and @model.value.tag == 'Error'
-
-    __shortValue: =>
-        if @model.value? and @model.value.contents?
-            @model.value.contents.contents
 
     setSearcher: (searcherModel) =>
         @def(searcherModel.targetField)?.setSearcher searcherModel
@@ -135,14 +127,12 @@ export class ExpressionNode extends ContainerComponent
                     leftOffset = 50
                     startPoint = [inPort.model.position[0] + leftOffset, inPort.model.position[1]]
                     @view('widget' + inPortKey).position.xy = startPoint
-
-        if @__shortValue()?
-            @view('value').position.xy =
-                if @model.expanded
-                    [ shape.width/2
-                    , - @bodyHeight - shape.height/2 - shape.slope - togglerShape.size ]
-                else
-                    [ 0, - shape.height/2 - togglerShape.size]
+        @view('visualization').position.xy =
+            if @model.expanded
+                [ - shape.width/2
+                , - @bodyHeight - shape.height/2 - shape.slope - togglerShape.size ]
+            else
+                [ - shape.width/2, - shape.height/2 - togglerShape.size]
         @view('name').position.y = nodeNameYOffset
         @view('expression').position.y = nodeExprYOffset
         view.position.xy = @model.position.slice()
@@ -194,8 +184,6 @@ export class ExpressionNode extends ContainerComponent
 
     registerEvents: (view) =>
         view.addEventListener 'dblclick', (e) => @pushEvent e
-        @view('valueToggler').addEventListener 'mouseup', (e) => @pushEvent e,
-            tag: 'ToggleVisualizationsEvent'
         @makeHoverable view
         @makeDraggable view
         @makeSelectable view
