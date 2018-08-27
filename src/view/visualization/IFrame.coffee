@@ -6,7 +6,6 @@ import {ContainerComponent} from 'abstract/ContainerComponent'
 
 width = 300
 height = 300
-window.iframes = []
 
 export class VisualizationIFrame extends ContainerComponent
     initModel: =>
@@ -16,7 +15,6 @@ export class VisualizationIFrame extends ContainerComponent
         mode: 'Default' # Default|Focused|Preview
 
     prepare: =>
-        window.iframes.push @
         @addDef 'root', HtmlShape,
             element: 'div'
             clickable: false
