@@ -3,6 +3,7 @@ import * as basegl    from 'basegl/display/Symbol'
 import * as _         from 'underscore'
 import {mat4}         from 'gl-matrix'
 
+
 unArray = (ref, obj) =>
     if ref? and (not Array.isArray ref) and Array.isArray obj
         ret = {}

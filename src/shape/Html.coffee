@@ -28,7 +28,6 @@ export class HtmlShape extends BasicComponent
             @getDomElement().style.height = @model.height
         if @changed.clickable
             @getDomElement().style.pointerEvents = if @model.clickable then 'all' else 'none'
-        
         if @changed.top or @changed.scalable or @changed.still
             obj = @getElement().obj
             if @model.still
