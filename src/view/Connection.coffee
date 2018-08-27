@@ -29,15 +29,17 @@ export class Connection extends ContainerComponent
         @__onColorChange()
         @__onPositionChange()
         @addDisposableListener @srcNode, 'position', => @__onPositionChange()
-        @addDisposableListener @srcPort, 'color',    => @__onColorChange()
-        @addDisposableListener @srcPort, 'radius',   => @__onPositionChange()
         @addDisposableListener @dstNode, 'position', => @__onPositionChange()
-        @addDisposableListener @dstPort, 'radius',   => @__onPositionChange()
-        @addDisposableListener @dstPort, 'position', => @__onPositionChange()
         @addDisposableListener @dstNode.def('inPorts'),  'modelUpdated', => @__rebind()
         @addDisposableListener @srcNode.def('outPorts'), 'modelUpdated', => @__rebind()
-        @onDispose => @srcPort.unfollow @model.key
-        @onDispose => @dstPort.unfollow @model.key
+        @onDispose => @srcPort?.unfollow @model.key
+        @onDispose => @dstPort?.unfollow @model.key
+        if @srcPort?
+            @addDisposableListener @srcPort, 'color',    => @__onColorChange()
+            @addDisposableListener @srcPort, 'radius',   => @__onPositionChange()
+        if @dstPort?
+            @addDisposableListener @dstPort, 'radius',   => @__onPositionChange()
+            @addDisposableListener @dstPort, 'position', => @__onPositionChange()
 
     __rebind: =>
         srcNode = @parent.node @model.srcNode
@@ -53,6 +55,7 @@ export class Connection extends ContainerComponent
             @connectSources()
 
     __onPositionChange: =>
+        return unless @srcPort? and @dstPort?
         srcPos = @srcPort.connectionPosition()
         dstPos = @dstPort.connectionPosition()
         leftOffset  = @srcPort.model.radius
@@ -77,5 +80,6 @@ export class Connection extends ContainerComponent
         @dstPort.follow @model.key, rotation + Math.PI/2
 
     __onColorChange: =>
+        return unless @srcPort?
         @def('src').set color: @srcPort.model.color
         @def('dst').set color: @srcPort.model.color
