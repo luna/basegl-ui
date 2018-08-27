@@ -63,7 +63,7 @@ export class ExpressionNode extends ContainerComponent
         @addDef 'node', new NodeShape expanded: @model.expanded, @
         @addDef 'name', new EditableText
                 text:     @model.name
-                entries:  []
+                entries:  testEntries
                 kind:     EditableText.NAME
             , @
         @addDef 'expression', new EditableText
