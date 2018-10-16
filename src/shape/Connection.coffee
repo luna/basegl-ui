@@ -7,6 +7,7 @@ import * as layers      from 'view/layers'
 
 
 export width     = 30
+overlap = 1
 
 
 export connectionExpr = (style) -> basegl.expr ->
@@ -42,9 +43,9 @@ export class ConnectionShape extends BasicComponent
 
     adjust: (element, view) =>
         if @changed.length
-            element.bbox.x = @model.length
+            element.bbox.x = @model.length + overlap
         if @changed.offset
-            element.position.x = @model.offset
+            element.position.x = @model.offset - overlap/2
         if @changed.once
             element.position.y = - width/2
         if @changed.angle
