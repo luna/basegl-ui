@@ -1,41 +1,42 @@
-import {BasicComponent} from 'abstract/BasicComponent'
-import * as basegl      from 'basegl'
-import * as Color       from 'basegl/display/Color'
-import {rect}           from 'basegl/display/Shape'
-import * as color       from 'shape/Color'
-import * as layers      from 'view/layers'
+import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
+import * as basegl                      from 'basegl'
+import * as Color                       from 'basegl/display/Color'
+import {rect}                           from 'basegl/display/Shape'
+import * as color                       from 'shape/Color'
+import {shadowExpr}                     from 'shape/Shadow'
+import * as layers                      from 'view/layers'
 
-export width = 15
-export height = 15
+size = (style) -> style.visualizationControl_size
+bboxSize = (style) -> size(style) + 2*style.visualizationControl_shadow
 
-stripeWidth    = 0.8
-stripeHeight   = 0.1
-stripeDistance = 0.3
+stripeHeight   = (style) -> 0.15 * size(style)
+stripeDistance = (style) -> (size(style) - 3 * stripeHeight(style)) / 2 + stripeHeight(style)
 
-export buttonExpr = basegl.expr ->
-    stripeW = 'bbox.x' * stripeWidth
-    stripeH = 'bbox.y' * stripeHeight
-    stripeD = 'bbox.y' * stripeDistance
+buttonExpr = (style) -> basegl.expr ->
+    stripeW = size style
+    stripeH = stripeHeight style
+    stripeD = stripeDistance style
     stripe = rect stripeW, stripeH
     stripe1 = stripe
-        .move 'bbox.x'/2, 'bbox.y'/2 + stripeD
+        .moveY stripeD
     stripe2 = stripe
-        .move 'bbox.x'/2, 'bbox.y'/2
     stripe3 = stripe
-        .move 'bbox.x'/2, 'bbox.y'/2 - stripeD
+        .moveY -stripeD
+    hamburger = (stripe1 + stripe2 + stripe3)
+        .fill color.visualizationMenu
     activeArea = rect 'bbox.x', 'bbox.y'
-        .move 'bbox.x'/2, 'bbox.y'/2
         .fill color.activeArea
-    hamburger = stripe1 + stripe2 + stripe3
-    hamburger = hamburger.fill color.visualizationMenu
-    hamburger + activeArea
+    shadow = shadowExpr hamburger, style.visualizationControl_shadow, style
+    (hamburger + shadow + activeArea).move 'bbox.x'/2, 'bbox.y'/2
 
-buttonSymbol = basegl.symbol buttonExpr
-buttonSymbol.defaultZIndex = layers.textFrame
-buttonSymbol.bbox.xy = [width, height]
+buttonSymbol = memoizedSymbol (style) ->
+    symbol = basegl.symbol buttonExpr style
+    symbol.defaultZIndex = layers.textFrame
+    symbol.bbox.xy = [bboxSize(style), bboxSize(style)]
+    symbol
 
 export class VisualizerButton extends BasicComponent
     define: =>
-        buttonSymbol
+        buttonSymbol @style
     adjust: (element) =>
-        element.position.xy = [-width/2, -height/2]
+        element.position.xy = [-bboxSize(@style)/2, -bboxSize(@style)/2]

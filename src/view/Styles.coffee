@@ -93,6 +93,8 @@ presets =
         visualization_menuY: -20
         visualization_togglerX: -35
         visualization_togglerY: -20
+        visualizationControl_size: 10
+        visualizationControl_shadow: 10
     dark:
         baseColor_r: 1
         baseColor_g: 1

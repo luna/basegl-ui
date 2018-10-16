@@ -4,8 +4,8 @@ import {rect}      from 'basegl/display/Shape'
 import {BasicComponent, memoizedSymbol} from 'abstract/BasicComponent'
 import {ContainerComponent}             from 'abstract/ContainerComponent'
 import {nodeBg}                         from 'shape/Color'
-import * as baseNode                    from 'shape/node/Base'
 import * as layers                      from 'view/layers'
+import {shadowExpr}                     from 'shape/Shadow'
 
 
 baseExpr = (style) -> basegl.expr ->
@@ -21,9 +21,9 @@ backgroundExpr = (style) -> basegl.expr ->
         .moveX 'invisible' * 'bbox.x'
         .move('bbox.x'/2, 'bbox.y'/2)
 
-shadowExpr = (style) -> basegl.expr ->
+backgroundShadowExpr = (style) -> basegl.expr ->
     base = baseExpr style
-    shadow = baseNode.shadowExpr base, style
+    shadow = shadowExpr base, style.node_shadowRadius, style
         .move('bbox.x'/2, 'bbox.y'/2)
 
 backgroundBaseSymbol = (expr, zIndex) -> memoizedSymbol (style) ->
@@ -56,7 +56,7 @@ class BaseShape extends BasicComponent
             @animateVariable 'roundTop', Number @model.roundTop
 
 class ShadowShape extends BaseShape
-    define: => backgroundBaseSymbol(shadowExpr, layers.shadow)(@style)
+    define: => backgroundBaseSymbol(backgroundShadowExpr, layers.shadow)(@style)
 
 class BackgroundShape extends BaseShape
     define: => backgroundBaseSymbol(backgroundExpr, layers.expandedNode)(@style)
