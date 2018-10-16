@@ -21,7 +21,7 @@ export class InPort extends Port
     portConstructor: => if @model.mode == 'self' then Self else InArrow
 
     update: =>
-        if not @model.expanded and (Object.keys @model.subports).length
+        if (Object.keys @model.subports).length
             if @def 'subport'
                 @deleteDef 'subport'
             @updateDef 'subports',
@@ -34,6 +34,7 @@ export class InPort extends Port
                     name:      @model.name
                     radius:    @model.radius
                     typeName:  @model.typeName
+                    locked:    @model.locked
         else
             @updateDef 'subports', elems: []
             @autoUpdateDef 'subport', @portConstructor(),

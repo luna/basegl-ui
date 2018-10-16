@@ -14,6 +14,7 @@ export class InArrow extends Subport
         name: ''
         typeName: ''
         radius: 0
+        locked: false
 
     prepare: =>
         @addDef 'port', InPortShape, angle: @model.angle
@@ -43,7 +44,7 @@ export class InArrow extends Subport
             namePosition = [- subport.nameXOffset(@style) - @model.radius, 0]
             @view('name')?.position.xy = namePosition
         if @changed.angle
-            @view('port').rotation.z = @model.angle
+            @view('port').rotation.z = if @model.locked then Math.PI/2 else @model.angle
             @view('name')?.rotation.z = @model.angle - Math.PI/2
         @view('typeName')?.rotation.z = @model.angle - Math.PI/2
         typeNamePosition = [- subport.typeNameXOffset(@style) - @model.radius, - subport.typeNameYOffset(@style)]

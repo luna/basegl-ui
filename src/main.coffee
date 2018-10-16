@@ -68,7 +68,7 @@ runExample = -> main (nodeEditor) ->
                 2:
                     typeName: 'B'
             icon: 'rect'
-            position: [200, 300]
+            position: [200, 600]
             expanded: false
             selected: false
             # error: true
@@ -79,7 +79,7 @@ runExample = -> main (nodeEditor) ->
             #         contents: 'Another error description'
         ,
             key: 2
-            name: 'bar'
+            name: 'bar2'
             expression: '54'
             inPorts:
                 0:
@@ -102,7 +102,7 @@ runExample = -> main (nodeEditor) ->
                 1:
                     typeName: 'A'
             icon: 'rect'
-            position: [200, 600]
+            position: [300, 300]
             expanded: false
             selected: false
             value:
@@ -111,7 +111,7 @@ runExample = -> main (nodeEditor) ->
                     tag: 'Visualization'
         ,
             key: 3
-            name: 'baz'
+            name: 'baz3'
             expression: 'foo bar baz'
             inPorts:
                 0:
@@ -195,7 +195,7 @@ runExample = -> main (nodeEditor) ->
             outPorts:
                 1: {}
             icon: 'stripes'
-            position: [500, 300]
+            position: [600, 500]
             expanded: true
             # error: true
             # value:
@@ -205,7 +205,7 @@ runExample = -> main (nodeEditor) ->
             selected: false
         ,
             key: 4
-            name: 'node1'
+            name: 'node4'
             inPorts:
                 1:
                     name: 'ooo'
@@ -213,7 +213,7 @@ runExample = -> main (nodeEditor) ->
             outPorts:
                 1: {}
             icon: 'stripes'
-            position: [500, 600]
+            position: [800, 500]
             expanded: false
             selected: false
         ]
