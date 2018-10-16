@@ -1,4 +1,4 @@
-import {BackgroundShape}      from 'shape/node/Background'
+import {Background}       from 'shape/node/Background'
 import {Widget}           from 'widget/Widget'
 import {VerticalLayout}   from 'widget/VerticalLayout'
 import {HorizontalLayout} from 'widget/HorizontalLayout'
@@ -21,7 +21,7 @@ export class Parameters extends Widget
                     offset: @style.node_widgetSeparation
             @__minHeight = @def('widgets').height() + @style.node_widgetOffset_v
 
-            @autoUpdateDef 'background', BackgroundShape,
+            @autoUpdateDef 'background', Background,
                 height: @__minHeight
                 width: @style.node_bodyWidth
         if @changed.siblings

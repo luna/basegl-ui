@@ -5,6 +5,7 @@ export expandedNodeError = error
 export node = 100
 export compactNode = node
 export expandedNode = node
+export shadow = -100
 
 export port = 200
 export flatPort = port

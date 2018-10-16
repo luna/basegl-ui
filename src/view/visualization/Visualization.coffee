@@ -3,7 +3,7 @@ import * as path         from 'path'
 import * as style                from 'style'
 import {Widget}                  from 'widget/Widget'
 import {HtmlShape}               from 'shape/Html'
-import {BackgroundShape}             from 'shape/node/Background'
+import {Background}              from 'shape/node/Background'
 import * as menuShape            from 'shape/visualization/Button'
 import {VisualizationCoverShape} from 'shape/visualization/Cover'
 import {VisualizationIFrame}     from 'view/visualization/IFrame'
@@ -24,7 +24,7 @@ export class Visualization extends Widget
         @addDef 'menu', VisualizerMenu
         @addDef 'cover', VisualizationCoverShape
         @addDef 'iframe', VisualizationIFrame
-        @addDef 'background', BackgroundShape,
+        @addDef 'background', Background,
             height: @style.visualization_height
             width: @style.visualization_width
             invisible: true
