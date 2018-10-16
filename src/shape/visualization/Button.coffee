@@ -29,7 +29,7 @@ buttonExpr = (style) -> basegl.expr ->
 
 buttonSymbol = memoizedSymbol (style) ->
     symbol = basegl.symbol buttonExpr style
-    symbol.defaultZIndex = layers.textFrame
+    symbol.defaultZIndex = layers.visualizationControl
     symbol.bbox.xy = [bboxSize(style), bboxSize(style)]
     symbol
 

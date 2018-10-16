@@ -24,7 +24,7 @@ valueTogglerExpr = (style) -> basegl.expr ->
 
 valueTogglerSymbol = memoizedSymbol (style) ->
     symbol = basegl.symbol valueTogglerExpr style
-    symbol.defaultZIndex = layers.valueToggler
+    symbol.defaultZIndex = layers.visualizationControl
     symbol.bbox.xy = [bboxSize(style), bboxSize(style)]
     symbol.variables.isFolded = 0
     symbol

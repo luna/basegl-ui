@@ -59,7 +59,7 @@ class ShadowShape extends BaseShape
     define: => backgroundBaseSymbol(backgroundShadowExpr, layers.shadow)(@style)
 
 class BackgroundShape extends BaseShape
-    define: => backgroundBaseSymbol(backgroundExpr, layers.expandedNode)(@style)
+    define: => backgroundBaseSymbol(backgroundExpr, layers.nodeModule)(@style)
 
 export class Background extends ContainerComponent
     initModel: =>
