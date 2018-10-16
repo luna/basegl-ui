@@ -45,6 +45,7 @@ class Slider extends Widget
         @withScene (scene) =>
             canvas = scene.symbolModel._renderer.domElement
             view.addEventListener 'mousedown', (e) =>
+                return unless e.button == 0
                 e.stopPropagation()
                 canvas.requestPointerLock()
                 onMouseMove = (e) =>
