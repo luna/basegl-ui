@@ -28,8 +28,8 @@ removeChildren = (name) =>
 export install = (name, fontRootPath = '', callback) ->
     removeChildren name
     scene = basegl.scene {domElement: name}
-    basegl.fontManager.register 'DejaVuSansMono', fontRootPath + 'DejaVuSansMono.ttf'
-    basegl.fontManager.load('DejaVuSansMono').then (atlas) =>
+    basegl.fontManager.register 'SourceCodePro', fontRootPath + 'SourceCodeVariable-Roman.ttf'
+    basegl.fontManager.load('SourceCodePro').then (atlas) =>
         atlas._letterDef.defaultZIndex = layers.text
         nodeEditor = new NodeEditor scene
         window.n = nodeEditor

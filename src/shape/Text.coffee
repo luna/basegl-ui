@@ -76,6 +76,6 @@ export class TextShape extends BasicComponent
         addToScene: (scene) =>
             attrs.scene = scene
             attrs.str        ?= ''
-            attrs.fontFamily ?= 'DejaVuSansMono'
+            attrs.fontFamily ?= 'SourceCodePro'
             attrs.size       ?= @style.text_size
             basegl.text attrs

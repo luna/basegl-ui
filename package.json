@@ -1,7 +1,7 @@
 {
   "name": "luna-basegl-ui",
   "license": "AGPL-3.0",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Luna node editor using basegl.",
   "homepage": "https://github.com/luna/basegl-ui",
   "author": "The Luna Team <contact@luna-lang.org>",

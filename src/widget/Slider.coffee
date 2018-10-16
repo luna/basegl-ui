@@ -19,7 +19,7 @@ class Slider extends Widget
         @__minWidth = 40
         @__minHeight = 20
         @addDef 'value', TextShape,
-            fontFamily: 'DejaVuSansMono'
+            fontFamily: 'SourceCodePro'
             color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b]
             size: 14
             align: 'center'
