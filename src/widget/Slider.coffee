@@ -61,10 +61,21 @@ class Slider extends Widget
                 @addDisposableListener document, 'mouseup', onMouseUp
                 @addDisposableListener document, 'mousemove', onMouseMove
 
+contPrec = 100
+mousePrec = 5
+
 export class DiscreteSlider extends Slider
-    nextValue: (delta) => Math.round(@model.value + delta/2)
+    nextValue: (delta) =>
+        if Math.round(@__internalValue / mousePrec) != @model.value
+            @__internalValue = @model.value * mousePrec
+        @__internalValue += delta
+        Math.round(@__internalValue / mousePrec)
     cls: 'Int'
 
 export class ContinousSlider extends Slider
-    nextValue: (delta) => Math.round(@model.value * 100 + delta/2)/100
+    nextValue: (delta) =>
+        if Math.round(@__internalValue / mousePrec) / contPrec != @model.value
+            @__internalValue = @model.value * mousePrec * contPrec
+        @__internalValue += delta
+        Math.round(@__internalValue / mousePrec) / contPrec
     cls: 'Real'
