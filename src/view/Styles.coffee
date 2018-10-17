@@ -63,7 +63,6 @@ presets =
         node_widgetOffset_v: 6.65
         node_widgetHeight: 20
         node_widgetSeparation: 3
-        node_moveX: 75
         node_valueOffset: 25
         port_length: 10
         port_selfRadius: 18.75
