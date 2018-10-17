@@ -36,8 +36,8 @@ backgroundBaseSymbol = (expr, zIndex) -> memoizedSymbol (style) ->
 
 class BaseShape extends BasicComponent
     initModel: =>
-        width: 100
-        height: 100
+        width: null
+        height: null
         invisible: false
         roundTop: null
         roundBottom: null
@@ -63,8 +63,8 @@ class BackgroundShape extends BaseShape
 
 export class Background extends ContainerComponent
     initModel: =>
-        width: 100
-        height: 100
+        width: null
+        height: null
         invisible: false
         roundTop: null
         roundBottom: null
