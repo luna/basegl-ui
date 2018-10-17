@@ -10,6 +10,7 @@ export class TextContainer extends Widget
         model.text = ''
         model.color = null
         model.align = 'left'
+        model.valign = 'center'
         model.textAlign = 'left'
         model.frameColor = null
         model.border = 3
@@ -57,9 +58,15 @@ export class TextContainer extends Widget
                     x + (width - @__minWidth)/2
                 else
                     x
-
-            @view('text').position.x = textX + @model.border
-            @view('box').position.xy = [x, -height/2]
+            textY =
+                if @model.valign == 'top'
+                    -height/2
+                else if @model.valign == 'center'
+                    0
+                else
+                    height/2
+            @view('text').position.xy = [textX + @model.border, textY]
+            @view('box').position.xy = [x, textY - height/2]
 
     registerEvents: (view) =>
         view.addEventListener 'click', (e) =>

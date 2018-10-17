@@ -22,13 +22,9 @@ export class NodeBody extends ContainerComponent
 
     update: =>
         if @changed.value
-            @autoUpdateDef 'value', TextContainer, if @__shortValue()?
-                text: @__shortValue()
-                align: 'center'
-                color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
             @updateDef 'valueToggler',
                 isFolded: @model.value?.contents?.tag != 'Visualization'
-        if @changed.visualizations or @changed.visualizers or @changed.inPorts or @changed.expanded
+        if @changed.visualizations or @changed.visualizers or @changed.inPorts or @changed.expanded or @changed.value
             modules = []
             if @model.expanded
                 modules.push
@@ -39,6 +35,15 @@ export class NodeBody extends ContainerComponent
                 visualization.cons = Visualization
                 visualization.visualizers = @model.visualizers
                 modules.push visualization
+            if @__shortValue()?
+                modules.push
+                    id: 'value'
+                    cons: TextContainer
+                    textAlign: 'center'
+                    valign: 'top'
+                    color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
+                    text: @__shortValue()
+
             @updateDef 'modules', children: modules
 
     adjust: =>

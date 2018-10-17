@@ -21,6 +21,8 @@ export class Visualization extends Widget
         model
 
     prepare: =>
+        @__minHeight = @style.visualization_height
+        @__minWidth  = @style.visualization_width
         @addDef 'menu', VisualizerMenu
         @addDef 'cover', VisualizationCoverShape
         @addDef 'iframe', VisualizationIFrame
