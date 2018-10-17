@@ -15,6 +15,7 @@ export class TextContainer extends Widget
         model.frameColor = null
         model.border = 3
         model.onclick = =>
+        model.roundFrame = 0
         model
 
     prepare: =>
@@ -41,6 +42,15 @@ export class TextContainer extends Widget
 
         if @changed.frameColor
             @updateDef 'box', color: @model.frameColor
+
+        if @changed.roundFrame or @changed.siblings
+            @updateDef 'box',
+                corners:
+                    topLeft    : @model.siblings.top    or @model.siblings.left
+                    topRight   : @model.siblings.top    or @model.siblings.right
+                    bottomLeft : @model.siblings.bottom or @model.siblings.left
+                    bottomRight: @model.siblings.bottom or @model.siblings.right
+                    round: @model.roundFrame
 
     adjust: =>
         if @changed.text or @changed.align or @changed.width or @changed.height

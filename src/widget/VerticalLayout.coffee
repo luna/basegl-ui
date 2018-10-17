@@ -1,4 +1,4 @@
-import {FlatLayout}       from 'abstract/Layout'
+import {FlatLayout}   from 'abstract/Layout'
 import {lookupWidget} from 'widget/WidgetDirectory'
 
 
