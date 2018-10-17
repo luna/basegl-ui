@@ -17,11 +17,9 @@ buttonExpr = (style) -> basegl.expr ->
     stripeH = stripeHeight style
     stripeD = stripeDistance style
     stripe = rect stripeW, stripeH
-    stripe1 = stripe
-        .moveY stripeD
+    stripe1 = stripe.moveY stripeD
     stripe2 = stripe
-    stripe3 = stripe
-        .moveY -stripeD
+    stripe3 = stripe.moveY -stripeD
     hamburger = (stripe1 + stripe2 + stripe3)
         .fill color.visualizationMenu
     activeArea = rect 'bbox.x', 'bbox.y'
