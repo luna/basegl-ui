@@ -44,6 +44,9 @@ presets =
         bgColor_h: 0
         bgColor_s: 0.00001
         bgColor_l: 0.93
+        breadcrumb_color_r: 1
+        breadcrumb_color_g: 1
+        breadcrumb_color_b: 1
         node_radius: 18.75
         node_headerOffset: 10.23
         node_slope: 20

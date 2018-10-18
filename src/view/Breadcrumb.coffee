@@ -7,52 +7,60 @@ import {TextContainer}      from 'view/Text'
 breadcrumbId = 'breadcrumbs'
 nullModuleNameError = 'No file selected'
 
-breadcrumbHeigth = 20
+breadcrumbHeight = 20
 
 export class Breadcrumb extends ContainerComponent
     initModel: =>
+        position: [0,0]
+        scale: 1
         moduleName: null
         items: []
 
     prepare: =>
         @addDef 'items', HorizontalLayout,
-            height: breadcrumbHeigth
-            offset: 0
+            height: breadcrumbHeight
+            offset: -1
 
     update: =>
         if @changed.once or @changed.items or @changed.moduleName
-            items = for item in @model.items
+            breadcrumbItem = (item) =>
                 cons: TextContainer
-                text: item.name
-                valign: 'top'
-                align: 'left'
-                color: [0,0,0]
-                frameColor: [1,1,1]
-                roundFrame: breadcrumbHeigth/2
+                align:      'left'
+                border:     10
+                color:      [@style.text_color_r, @style.text_color_g, @style.text_color_b]
+                frameColor: [@style.breadcrumb_color_r, @style.breadcrumb_color_g, @style.breadcrumb_color_b]
+                roundFrame: breadcrumbHeight/2
+                size:       @style.text_size
+                text:       item.name
+                valign:     'top'
+                onclick: if item.breadcrumb? then => @pushEvent
+                    tag: 'NavigateEvent'
+                    to: item.breadcrumb
+            items = []
+            if @model.items.length == 0
+                items.push breadcrumbItem name: nullModuleNameError
+            for item, i in @model.items
+                items.push breadcrumbItem if i == 0 and item == ''
+                                              name: @model.moduleName
+                                          else
+                                              item
             @updateDef 'items', children: items
 
-            # domElem = @def('root').getDomElement()
-            # domElem.innerHTML = ''
-            # container = document.createElement 'div'
-            # container.className = style.luna ['breadcrumbs', 'noselect']
-            # @model.items[0] ?= name: nullModuleNameError
-            # if @model.items[0].name == ''
-            #     @model.items[0].name = @model.moduleName
-            # @model.items.forEach (item) =>
-            #     container.appendChild @__renderItem item
-            # domElem.appendChild container
-
     adjust: (view) =>
-        if @changed.once
-            @withScene (scene) =>
-                view.position.y = scene.height
+        if @changed.position
+            view.position.xy = @model.position.slice()
+        if @changed.scale
+            view.scale.xy = [@model.scale, @model.scale]
 
-    # __renderItem: (item) =>
-    #     div = document.createElement 'div'
-    #     div.className = style.luna ['breadcrumbs__item', 'breadcrumbs__item--home']
-    #     div.innerHTML = item.name
-    #     if item.breadcrumb?
-    #         div.addEventListener 'click', => @pushEvent
-    #             tag: 'NavigateEvent'
-    #             to: item.breadcrumb
-    #     return div
+    __align: (scene) =>
+        campos = scene.camera.position
+        x = (campos.x + scene.width  / 2) / campos.z - scene.width/2
+        y = (campos.y + scene.height / 2) / campos.z + scene.height/2
+        @set
+            position: [x, y]
+            scale: campos.z
+
+    connectSources: =>
+        @withScene (scene) =>
+            @__align scene
+            @addDisposableListener scene.camera, 'move', => @__align scene
