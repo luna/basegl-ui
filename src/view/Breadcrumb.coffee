@@ -10,6 +10,7 @@ breadcrumbId = 'breadcrumbs'
 nullModuleNameError = 'No file selected'
 
 breadcrumbHeight = 20
+overlap = -1
 
 export class Breadcrumb extends ContainerComponent
     initModel: =>
@@ -21,7 +22,7 @@ export class Breadcrumb extends ContainerComponent
     prepare: =>
         @addDef 'items', HorizontalLayout,
             height: breadcrumbHeight
-            offset: -1
+            offset: overlap
 
     update: =>
         if @changed.once or @changed.items or @changed.moduleName
