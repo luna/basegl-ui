@@ -29,7 +29,6 @@ export class BreadcrumbArrowShape extends BasicComponent
         if @changed.once
             element.position.y = -@style.breadcrumb_arrowHeight/2
         if @changed.color
-            console.log 'arrow color:', @model.color
             element.variables.color_r = @model.color[0]
             element.variables.color_g = @model.color[1]
             element.variables.color_b = @model.color[2]
