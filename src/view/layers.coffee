@@ -10,7 +10,6 @@ export visualizationControl = widget
 export node = 300
 export compactNode = node
 export shadow = -100
-
 export port = 400
 export flatPort = port
 export inPort  = port
@@ -22,5 +21,6 @@ export connection = node - 1
 
 export text = 1000
 export textFrame = text - 1
+export breadcrumbArrow = text
 
 export visualizationCover = -1

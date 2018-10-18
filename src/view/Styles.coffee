@@ -47,6 +47,13 @@ presets =
         breadcrumb_color_r: 1
         breadcrumb_color_g: 1
         breadcrumb_color_b: 1
+        breadcrumb_offset: 3
+        breadcrumb_border: 10
+        breadcrumb_arrowWidth: 7
+        breadcrumb_arrowHeight: 7
+        breadcrumb_arrowColor_r: 0.8
+        breadcrumb_arrowColor_g: 0.8
+        breadcrumb_arrowColor_b: 0.8
         node_radius: 18.75
         node_headerOffset: 10.23
         node_slope: 20
