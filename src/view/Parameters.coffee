@@ -2,6 +2,18 @@ import {Background}       from 'shape/node/Background'
 import {Widget}           from 'widget/Widget'
 import {VerticalLayout}   from 'widget/VerticalLayout'
 import {HorizontalLayout} from 'widget/HorizontalLayout'
+import {TextContainer}       from 'view/Text'
+
+controls = (name, portControls) =>
+    x = if portControls?.length and false
+        portControls
+    else 
+        [
+            cls: 'Real'
+            value: name
+        ]
+    x
+    
 
 export class Parameters extends Widget
     initModel: =>
@@ -17,9 +29,9 @@ export class Parameters extends Widget
                 children: for own key, inPort of @model.inPorts
                     key: key
                     cons: HorizontalLayout
-                    children: inPort.controls
+                    children: controls(key, inPort.controls)
                     offset: @style.node_widgetSeparation
-            @__minHeight = @def('widgets').height() + @style.node_widgetOffset_v
+            @__minHeight = @def('widgets').height() + 2*@style.node_widgetOffset_v
 
             @autoUpdateDef 'background', Background,
                 height: @__minHeight
@@ -28,20 +40,21 @@ export class Parameters extends Widget
             @updateDef 'background',
                 roundBottom: not @model.siblings.bottom
                 roundTop:    not @model.siblings.top
-    adjustSrc: (view) =>
-        view.position.xy = [@style.node_bodyWidth/2, 2 * @style.node_radius + @style.node_headerOffset]
-        @view('widgets').scale.xy = [0,0]
-        @view('background').scale.xy = [0,0]
-        # @setPosition view, [@style.node_widgetOffset_h, 0]
-        # @setPosition view, [0, 100]
-    adjustDst: (view) =>
-        @setPosition view, [@style.node_bodyWidth/2, 2 * @style.node_radius + @style.node_headerOffset]
-        @setScale @view('widgets'), [0,0]
-        @setScale @view('background'), [0, 0]
+    # adjustSrc: (view) =>
+    #     view.position.xy = [@style.node_bodyWidth/2, 2 * @style.node_radius + @style.node_headerOffset]
+    #     @view('widgets').scale.xy = [0,0]
+    #     @view('background').scale.xy = [0,0]
+    #     # @setPosition view, [@style.node_widgetOffset_h, 0]
+    #     # @setPosition view, [0, 100]
+    # adjustDst: (view) =>
+    #     @setPosition view, [@style.node_bodyWidth/2, 2 * @style.node_radius + @style.node_headerOffset]
+    #     @setScale @view('widgets'), [0,0]
+    #     @setScale @view('background'), [0, 0]
 
     adjust: (view) =>
         if @changed.once
             @setPosition view, [0, 0]
-            @setScale @view('widgets'), [1, 1]
-            @setScale @view('background'), [1, 1]
-            @view('widgets').position.xy = [@style.node_widgetOffset_h, - @style.node_widgetHeight/2]
+            # @setScale @view('widgets'), [1, 1]
+            # @setScale @view('background'), [1, 1]
+            @view('widgets').position.xy =
+                [@style.node_widgetOffset_h, - @style.node_widgetOffset_v - @style.node_widgetHeight/2]

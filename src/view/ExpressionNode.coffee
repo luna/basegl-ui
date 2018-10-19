@@ -85,6 +85,13 @@ export class ExpressionNode extends ContainerComponent
                 , @style.port_borderColor_l, @style.port_borderColor_a
                 ]
 
+        @updateDef 'body',
+            inPorts: @model.inPorts
+            expanded: @model.expanded
+            value: @model.value
+            visualizers: @model.visualizations?.visualizers
+            visualizations: @model.visualizations?.visualizations
+
         @updateDef 'newPort', key: @model.newPortKey
         if @changed.inPorts or @changed.expanded
             @updateInPorts()
@@ -97,12 +104,6 @@ export class ExpressionNode extends ContainerComponent
         if @changed.value
             @autoUpdateDef 'errorFrame', NodeErrorShape, if @error() then {}
 
-        @updateDef 'body',
-            inPorts: @model.inPorts
-            expanded: @model.expanded
-            value: @model.value
-            visualizers: @model.visualizations?.visualizers
-            visualizations: @model.visualizations?.visualizations
 
     outPort: (key) => @def('outPorts').def(key)
     inPort: (key) => @def('inPorts').def(key) or if key == @model.newPortKey then @def('newPort')
@@ -129,7 +130,7 @@ export class ExpressionNode extends ContainerComponent
             unless inPort.mode == 'self'
                 inPortsCount++
 
-        portProperties = (port) =>
+        portProperties = (key, port) =>
             values = {}
             values.expanded = @model.expanded
             if port.mode == 'self'
@@ -139,8 +140,12 @@ export class ExpressionNode extends ContainerComponent
             else if @model.expanded
                 values.radius = 0
                 values.angle = Math.PI/2
+                console.log port
                 values.position = [ - @style.node_bodyWidth/2 - portBase.distanceFromCenter(@style) + @style.node_radius
-                                  , bodyTop(@style) - (inPortNumber - 1) * inportVDistance]
+                                  , -@def('body').portPosition(key)
+                                  ]
+                # values.position = [ - @style.node_bodyWidth/2 - portBase.distanceFromCenter(@style) + @style.node_radius
+                #                   , bodyTop(@style) - (inPortNumber - 1) * inportVDistance]
                 inPortNumber++
             else
                 values.position = [0,0]
@@ -150,8 +155,8 @@ export class ExpressionNode extends ContainerComponent
             values
 
         for inPortKey, inPort of @model.inPorts
-            @def('inPorts').def(inPortKey).set portProperties inPort
-        @def('newPort').set portProperties mode:'phantom'
+            @def('inPorts').def(inPortKey).set portProperties inPortKey, inPort
+        @def('newPort').set portProperties 1, mode:'phantom'
         @bodyHeight = minimalBodyHeight(@style) + inportVDistance * if inPortsCount > 0 then inPortsCount - 1 else 0
 
 

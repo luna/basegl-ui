@@ -65,3 +65,7 @@ export class NodeBody extends ContainerComponent
     __shortValue: =>
         @model.value?.contents?.contents
 
+    portPosition: (key) =>
+        x = @def('body').def('modules').def('parameters').def('widgets').def(key).__view.position.x
+        console.log key, x, @def('body').def('modules').def('parameters').def('widgets').def(key)
+        x
