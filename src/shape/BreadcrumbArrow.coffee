@@ -23,7 +23,7 @@ arrowSymbol = memoizedSymbol (style) ->
 
 export class BreadcrumbArrowShape extends BasicComponent
     initModel: =>
-        color: [1, 0, 0]
+        color: color.placeholder
     define: => arrowSymbol @style
     adjust: (element) =>
         if @changed.once

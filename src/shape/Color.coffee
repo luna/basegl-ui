@@ -37,3 +37,5 @@ export sliderBgColor = (style) -> basegl.expr ->
     bg(style).mix base(style), style.sliderBg
 export activeGreen = (style) -> basegl.expr ->
     Color.rgb [style.colorActiveGreen_r, style.colorActiveGreen_g, style.colorActiveGreen_b, style.colorActiveGreen_a]
+
+export placeholder = [1, 0, 0]

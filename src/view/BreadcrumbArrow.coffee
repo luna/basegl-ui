@@ -7,8 +7,8 @@ import {Widget}               from 'widget/Widget'
 export class BreadcrumbArrow extends Widget
     initModel: =>
         model = super()
-        model.frameColor = undefined
-        model.arrowColor = undefined
+        model.frameColor = color.placeholder
+        model.arrowColor = color.placeholder
         model.roundFrame = 0
         model
 
