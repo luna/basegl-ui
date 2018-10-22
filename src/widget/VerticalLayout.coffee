@@ -38,7 +38,9 @@ export class VerticalLayout extends FlatLayout
             children.sort (a, b) -> a.index - b.index
 
         startPoint = [0,0]
+        @positions = {}
         children.forEach (w) =>
+            @positions[w.key] = startPoint.slice()
             @setPosition @view(w.key), startPoint
             @updateDef w.key,
                 height: w.height
