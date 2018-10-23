@@ -18,6 +18,7 @@ export class Parameters extends Widget
     initModel: =>
         model = super()
         model.inPorts = {}
+        model.controls = {}
         model.newPortKey = null
         model
 
@@ -26,8 +27,15 @@ export class Parameters extends Widget
             children = for own key, inPort of @model.inPorts
                 key: key
                 cons: HorizontalLayout
-                children: controls(key, inPort.controls)
+                children: controls(key, @model.controls[key])
                 offset: @style.node_widgetSeparation
+            for own key, controls of @model.controls
+                unless @model.inPorts[key]?
+                    children.push
+                        key: key
+                        cons: HorizontalLayout
+                        children: controls
+                        offset: @style.node_widgetSeparation
             children.push
                 key: @model.newPortKey
                 cons: HorizontalLayout

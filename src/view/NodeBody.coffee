@@ -11,6 +11,7 @@ export class NodeBody extends ContainerComponent
     initModel: =>
         expanded: false
         inPorts: {}
+        controls: {}
         newPortKey: null
         visualizers : null
         visualizations: {}
@@ -25,7 +26,7 @@ export class NodeBody extends ContainerComponent
         if @changed.value
             @updateDef 'valueToggler',
                 isFolded: @model.value?.contents?.tag != 'Visualization'
-        if @changed.visualizations or @changed.visualizers or @changed.inPorts or @changed.newPortKey or @changed.expanded or @changed.value
+        if @changed.visualizations or @changed.visualizers or @changed.inPorts or @changed.controls or @changed.newPortKey or @changed.expanded or @changed.value
             body = []
             modules = []
             if @model.expanded
@@ -33,6 +34,7 @@ export class NodeBody extends ContainerComponent
                     id: 'parameters'
                     cons: Parameters
                     inPorts: @model.inPorts
+                    controls: @model.controls
                     newPortKey: @model.newPortKey
             for own k, visualization of @model.visualizations
                 visualization.cons = Visualization

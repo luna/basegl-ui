@@ -41,6 +41,7 @@ export class ExpressionNode extends ContainerComponent
         icon:       null
         inPorts:    {}
         outPorts:   {}
+        controls:   {}
         newPortKey: null
         position:   [0, 0]
         selected:   false
@@ -86,6 +87,7 @@ export class ExpressionNode extends ContainerComponent
 
         @updateDef 'body',
             inPorts: @model.inPorts
+            controls: @model.controls
             newPortKey: @model.newPortKey
             expanded: @model.expanded
             value: @model.value
