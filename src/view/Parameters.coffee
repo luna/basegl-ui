@@ -23,11 +23,11 @@ export class Parameters extends Widget
         model
 
     update: =>
-        if @changed.inPorts or @changed.newPortKey
+        if @changed.inPorts or @changed.controls or @changed.newPortKey
             children = for own key, inPort of @model.inPorts
                 key: key
                 cons: HorizontalLayout
-                children: controls(key, @model.controls[key])
+                children: controls(key, @model.controls[key]?.controls)
                 offset: @style.node_widgetSeparation
             for own key, controls of @model.controls
                 unless @model.inPorts[key]?
