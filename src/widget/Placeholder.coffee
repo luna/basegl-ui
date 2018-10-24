@@ -3,8 +3,8 @@ import {Widget}  from 'widget/Widget'
 
 export class Placeholder extends Widget
     initModel: =>
-        constWidth: undefined
-        constHeight: undefined
+        constWidth: null
+        constHeight: null
 
     update: =>
         if @changed.constHeight
