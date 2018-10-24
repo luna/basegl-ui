@@ -15,8 +15,14 @@ export class HorizontalLayout extends FlatLayout
                 index  : i
                 widget : def
                 width  : def.minWidth()
-            @__minWidth += def.minWidth() or 0
-            @__maxWidth += def.maxWidth() or 0
+            defMinWidth = def.minWidth() or 0
+            if defMinWidth > 0 && @__minWidth > 0
+                defMinWidth += @model.offset
+            defMaxWidth = def.maxWidth() or 0
+            if defMaxWidth > 0 && @__maxWidth > 0
+                defMaxWidth += @model.offset
+            @__minWidth += defMinWidth
+            @__maxWidth += defMaxWidth
             @__minHeight = Math.max def.minHeight(), @__minHeight
             @__maxHeight = Math.min def.maxHeight(), @__maxHeight
             @updateDef key, siblings:
@@ -37,12 +43,15 @@ export class HorizontalLayout extends FlatLayout
             children.sort (a, b) -> a.index - b.index
 
         startPoint = [0,0]
+        @positions = {}
         children.forEach (w) =>
+            @positions[w.key] = startPoint.slice()
             @setPosition @view(w.key), startPoint
             @updateDef w.key,
                 width: w.width
                 height: @__computeHeight w.widget
-            startPoint[0] += w.width + @model.offset
+            if w.width > 0
+                startPoint[0] += w.width + @model.offset
 
     __computeHeight: (widget) =>
         height = @model.height or @minHeight()

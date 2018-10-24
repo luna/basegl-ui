@@ -6,7 +6,7 @@ export class VerticalLayout extends FlatLayout
     __updateChildren: =>
         return unless @model.children.length > 0
         children = []
-        @__minHeight = @model.offset * (@model.children.length - 1)
+        @__minHeight = 0
         @__maxHeight = 0
         @__minWidth = 0
         @__maxWidth = Infinity
@@ -16,8 +16,14 @@ export class VerticalLayout extends FlatLayout
                 index  : i
                 widget : def
                 height : def.minHeight()
-            @__minHeight += def.minHeight() or 0
-            @__maxHeight += def.maxHeight() or 0
+            defMinHeight = def.minHeight() or 0
+            if defMinHeight > 0 && @__minHeight > 0
+                defMinHeight += @model.offset
+            defMaxHeight = def.maxHeight() or 0
+            if defMaxHeight > 0 && @__maxHeight > 0
+                defMaxHeight += @model.offset
+            @__minHeight += defMinHeight
+            @__maxHeight += defMaxHeight
             @__minWidth = Math.max def.minWidth(), @__minWidth
             @__maxWidth = Math.min def.maxWidth(), @__maxWidth
             @updateDef key, siblings:
@@ -45,7 +51,8 @@ export class VerticalLayout extends FlatLayout
             @updateDef w.key,
                 height: w.height
                 width: @__computeWidth w.widget
-            startPoint[1] -= w.height + @model.offset
+            if w.height > 0
+                startPoint[1] -= w.height + @model.offset
 
     __computeWidth: (widget) =>
         width = @model.width or @minWidth()

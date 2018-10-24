@@ -58,6 +58,7 @@ runExample = -> main (nodeEditor) ->
             key: 1
             name: 'number1'
             expression: '12'
+            newPortKey: 'new'
             inPorts:
                 1:
                     name: 'onlyPort'
@@ -113,6 +114,7 @@ runExample = -> main (nodeEditor) ->
             key: 3
             name: 'baz3'
             expression: 'foo bar baz'
+            newPortKey: 'new'
             inPorts:
                 0:
                     name: 'self'
@@ -128,17 +130,25 @@ runExample = -> main (nodeEditor) ->
                     name: 'port3'
                     typeName: 'D'
                 4:
-                    name: 'port2'
-                    typeName: 'C'
+                    name: 'port4'
+                    typeName: 'E'
                 5:
-                    name: 'port2'
-                    typeName: 'C'
+                    name: 'port5'
+                    typeName: 'F'
                 6:
-                    name: 'port2'
-                    typeName: 'C'
+                    name: 'port6'
+                    typeName: 'G'
             outPorts:
                 1: {}
             controls:
+                'a':
+                    controls:
+                        [
+                            cls: 'Int'
+                            min: 0
+                            max: 100
+                            value: 49
+                        ]
                 1:
                     controls:
                         [
@@ -205,11 +215,6 @@ runExample = -> main (nodeEditor) ->
             icon: 'stripes'
             position: [600, 500]
             expanded: true
-            # error: true
-            # value:
-            #     tag: 'Error'
-            #     contents:
-            #         tag: 'Visualization'
             selected: false
         ,
             key: 4

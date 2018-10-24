@@ -65,7 +65,6 @@ export class ExpressionNode extends ContainerComponent
         @addDef 'body', NodeBody
         @addDef 'inPorts',  SetView, cons: InPort
         @addDef 'outPorts', SetView, cons: OutPort
-        @addDef 'newPort', NewPort
         @addDef 'icon', IconLoader
 
     update: =>
