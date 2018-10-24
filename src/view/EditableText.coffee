@@ -59,6 +59,9 @@ export class EditableText extends ContainerComponent
         if notify
             @pushEvent tag: tag
 
+    height: =>
+        20 # TODO implement Widget
+
     setSearcher: (searcherModel) =>
         @set
             key:            searcherModel.key

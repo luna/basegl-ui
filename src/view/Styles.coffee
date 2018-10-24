@@ -59,6 +59,7 @@ presets =
         node_slope: 20
         node_bodyWidth: 200
         node_moduleOffset: 10
+        node_nameOffset: 35
         node_selection_size: 12.27
         node_selection_h: 50
         node_selection_s: 1

@@ -19,11 +19,6 @@ import * as portBase        from 'shape/port/Base'
 
 selectedNode = null
 
-
-exprOffset = 25
-nodeExprYOffset = (style) -> shape.height(style) / 3
-nodeNameYOffset = (style) -> nodeExprYOffset(style) + exprOffset
-
 bodyTop = (style) -> - style.node_radius - style.node_widgetHeight/2 -
     style.node_headerOffset - style.node_widgetOffset_v
 testEntries = [
@@ -59,9 +54,6 @@ export class ExpressionNode extends ContainerComponent
                 [ @style.port_borderColor_h, @style.port_borderColor_s
                 , @style.port_borderColor_l, @style.port_borderColor_a
                 ]
-        @addDef 'expression', EditableText,
-            entries: []
-            kind:    EditableText.EXPRESSION
         @addDef 'body', NodeBody
         @addDef 'inPorts',  SetView, cons: InPort
         @addDef 'outPorts', SetView, cons: OutPort
@@ -71,13 +63,6 @@ export class ExpressionNode extends ContainerComponent
         @updateDef 'icon', icon: @model.icon
         @updateDef 'name',
             text:     @model.name
-            color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b, @model.hovered]
-            frameColor:
-                [ @style.port_borderColor_h, @style.port_borderColor_s
-                , @style.port_borderColor_l, @style.port_borderColor_a * Number @model.hovered
-                ]
-        @updateDef 'expression',
-            text:    @model.expression
             color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b]
             frameColor:
                 [ @style.port_borderColor_h, @style.port_borderColor_s
@@ -85,6 +70,7 @@ export class ExpressionNode extends ContainerComponent
                 ]
 
         @updateDef 'body',
+            expression: @model.expression
             inPorts: @model.inPorts
             controls: @model.controls
             newPortKey: @model.newPortKey
@@ -105,7 +91,6 @@ export class ExpressionNode extends ContainerComponent
         if @changed.value
             @autoUpdateDef 'errorFrame', NodeErrorShape, if @error() then {}
 
-
     outPort: (key) => @def('outPorts').def(key)
     inPort: (key) => @def('inPorts').def(key) or if key == @model.newPortKey then @def('newPort')
 
@@ -118,8 +103,7 @@ export class ExpressionNode extends ContainerComponent
     adjust: (view) =>
         if @changed.once
             @view('body').position.xy = [-@style.node_bodyWidth/2, -@style.node_radius - @style.node_headerOffset]
-            @view('name').position.y = nodeNameYOffset @style
-            @view('expression').position.y = nodeExprYOffset @style
+            @view('name').position.y = @style.node_nameOffset
         view.position.xy = @model.position.slice()
 
     updateInPorts: =>

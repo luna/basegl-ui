@@ -1,14 +1,15 @@
 import {ContainerComponent}  from 'abstract/ContainerComponent'
 import {ValueTogglerShape}   from 'shape/visualization/ValueToggler'
+import {Expression}          from 'view/node/Expression'
+import {Parameters}          from 'view/Parameters'
 import {TextContainer}       from 'view/Text'
 import {Visualization}       from 'view/visualization/Visualization'
 import {VerticalLayout}      from 'widget/VerticalLayout'
-import {Parameters}         from 'view/Parameters'
-
 
 
 export class NodeBody extends ContainerComponent
     initModel: =>
+        expression: null
         expanded: false
         inPorts: {}
         controls: {}
@@ -30,6 +31,10 @@ export class NodeBody extends ContainerComponent
             body = []
             modules = []
             if @model.expanded
+                modules.push
+                    id: 'expression'
+                    cons: Expression
+                    expression: @model.expression
                 modules.push
                     id: 'parameters'
                     cons: Parameters
