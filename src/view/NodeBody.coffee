@@ -70,4 +70,6 @@ export class NodeBody extends ContainerComponent
         @model.value?.contents?.contents
 
     portPosition: (key) =>
-        @__defs.body.__defs.modules.__defs.parameters.__defs.widgets.positions[key][1]
+        @__defs.body.positions['modules'][1] \
+        + @__defs.body.__defs.modules.positions['parameters'][1] \
+        + @__defs.body.__defs.modules.__defs.parameters.__defs.widgets.positions[key][1]
