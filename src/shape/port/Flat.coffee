@@ -34,6 +34,7 @@ flatPortSymbol = memoizedSymbol (style) ->
     symbol.variables.color_g = 0
     symbol.variables.color_b = 0
     symbol.variables.hovered = 0
+    symbol.variables.connected = 0
     symbol.variables.is_output = 0
     symbol.defaultZIndex = layers.flatPort
     symbol

@@ -84,6 +84,7 @@ presets =
         port_borderColor_s: 0.00001
         port_borderColor_l: 0.93
         port_borderColor_a: 1
+        port_bgSize: 2
         connection_lineWidth: 2
         colorActiveGreen_r: 0
         colorActiveGreen_g: 1

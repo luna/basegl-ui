@@ -7,6 +7,7 @@ import {TextContainer} from 'view/Text'
 export class OutArrow extends Subport
     initModel: =>
         angle: 0
+        connected: false
         color: [1, 0, 0]
         hovered: false
         typeName: ''
@@ -24,6 +25,8 @@ export class OutArrow extends Subport
                 [ @style.port_borderColor_h, @style.port_borderColor_s
                 , @style.port_borderColor_l, @style.port_borderColor_a * Number @model.hovered
                 ]
+        if @changed.connected
+            @updateDef 'port', connected: @model.connected
         if @changed.color
             @updateDef 'port', color: @model.color
 

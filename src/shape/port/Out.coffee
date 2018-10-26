@@ -18,9 +18,11 @@ export outPortExpr = (style) -> basegl.expr ->
     h2 = style.port_length - r + r * Math.cos Math.asin ((2*style.port_length*Math.tan (style.port_angle/2))/r )
     p = pie style.port_angle
        .move bboxWidth(style)/2, h2 + r
-    port = p - c
-    port = port.move 0, - r + style.port_length - h2 + portBase.distanceFromCenter(style)
-        .fill color.varHover style
+    port = (p - c)
+        .move 0, - r + style.port_length - h2 + portBase.distanceFromCenter(style)
+    background = port.grow style.port_bgSize*(1-'connected')
+        .fill color.bg style
+    port = port.fill color.varHover style
     activeCutter = circle style.node_radius
         .move bboxWidth(style)/2, 0
     activeArea = pie areaAngle
@@ -28,7 +30,7 @@ export outPortExpr = (style) -> basegl.expr ->
         .move bboxWidth(style)/2, 0
         .fill color.activeArea
     activeArea = activeArea - activeCutter
-    activeArea + port
+    activeArea + background + port
 
 outPortSymbol = memoizedSymbol (style) ->
     symbol = basegl.symbol outPortExpr style
@@ -37,12 +39,12 @@ outPortSymbol = memoizedSymbol (style) ->
     symbol.variables.color_g = 0
     symbol.variables.color_b = 0
     symbol.variables.hovered = 0
+    symbol.variables.connected = 0
     symbol.defaultZIndex = layers.outPort
     symbol
 
 export class OutPortShape extends PortShape
     define: => outPortSymbol @style
-
     adjust: (element) =>
         super element
         element.position.xy = [-bboxWidth(@style)/2, -portBase.distanceFromCenter(@style) - portBase.offset(@style)]

@@ -35,6 +35,8 @@ export class InArrow extends Subport
             border: @style.port_typeBorder
             color: [@model.color[0], @model.color[1],
                     @model.color[2], @model.hovered]
+        if @changed.connected
+            @updateDef 'port', connected: @model.connected
         if @changed.color
             @updateDef 'port', color: @model.color
 

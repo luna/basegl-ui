@@ -1,4 +1,3 @@
-import {FlatPortShape}      from 'shape/port/Flat'
 import {Port, defaultColor} from 'view/port/Base'
 import {OutArrow}           from 'view/port/sub/OutArrow'
 
@@ -21,20 +20,22 @@ export class OutPort extends Port
                 @deleteDef 'subport'
             @updateDef 'subports',
                 elems: for own k, subport of @model.subports
-                    angle:    subport
-                    color:    @model.color
-                    hovered:  @model.hovered
-                    key:      k
-                    radius:   @model.radius
-                    typeName: @model.typeName
+                    angle:     subport
+                    connected: true
+                    color:     @model.color
+                    hovered:   @model.hovered
+                    key:       k
+                    radius:    @model.radius
+                    typeName:  @model.typeName
         else
             @updateDef 'subports', elems: []
             @autoUpdateDef 'subport', OutArrow,
-                angle:    @model.angle
-                color:    @model.color
-                hovered:  @model.hovered
-                radius:   @model.radius
-                typeName: @model.typeName
+                angle:     @model.angle
+                connected: (Object.keys @model.subports).length > 0
+                color:     @model.color
+                hovered:   @model.hovered
+                radius:    @model.radius
+                typeName:  @model.typeName
 
     connectionPosition: => @parent.parent.model.position
 

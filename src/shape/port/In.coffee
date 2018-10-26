@@ -22,6 +22,8 @@ inPortExpr = (style) -> basegl.expr ->
        .rotate Math.PI
        .move bboxWidth(style)/2, portBase.distanceFromCenter(style)
     port = c * p
+    background = port.grow style.port_bgSize*(1-'connected')
+        .fill color.bg style
     port = port.fill color.varAlphaHover style
     activeCutter = circle style.node_radius
         .move bboxWidth(style)/2, 0
@@ -30,7 +32,7 @@ inPortExpr = (style) -> basegl.expr ->
         .move bboxWidth(style)/2, 0
         .fill color.activeArea
     activeArea = activeArea - activeCutter
-    activeArea + port
+    activeArea + background + port
 
 inPortSymbol = memoizedSymbol (style) ->
     symbol = basegl.symbol inPortExpr style
@@ -40,6 +42,7 @@ inPortSymbol = memoizedSymbol (style) ->
     symbol.variables.color_b = 0
     symbol.variables.color_a = 1
     symbol.variables.hovered = 0
+    symbol.variables.connected = 0
     symbol.defaultZIndex = layers.inPort
     symbol
 

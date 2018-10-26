@@ -9,8 +9,13 @@ export offset = (style) -> style.port_length - 2
 
 
 export class PortShape extends BasicComponent
-    initModel: => color: [1,0,0]
+    initModel: =>
+        color: [1,0,0]
+        connected: false
+
     adjust: (element) =>
+        if @changed.connected
+            element.variables.connected = Number @model.connected
         if @changed.color
             element.variables.color_r = @model.color[0]
             element.variables.color_g = @model.color[1]

@@ -23,6 +23,8 @@ export class Self extends Subport
             color: [@style.text_color_r, @style.text_color_g, @style.text_color_b, @model.hovered]
         if @changed.color
             @updateDef 'port', color: @model.color
+        if @changed.connected
+            @updateDef 'port', connected: @model.connected
 
     adjust: (view) =>
         if @view('typeName')?
