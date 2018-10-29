@@ -1,0 +1,12 @@
+.json-formatter-dark.json-formatter-row {
+    font-family: 'hasklig-regular', 'hasklig', monospace !important;
+}
+
+div {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    background-color: aquamarine;
+}

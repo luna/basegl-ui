@@ -16,7 +16,7 @@ import * as _ from 'underscore'
 
 
 export class NodeEditor extends EventEmitter
-    constructor: (@_scene) ->
+    constructor: (@scene) ->
         super()
         @nodes               ?= {}
         @connections         ?= {}
@@ -24,12 +24,12 @@ export class NodeEditor extends EventEmitter
         @visualizerLibraries ?= {}
         @inTransaction        = false
         @pending              = []
-        @topDomScene          = @_scene.addDomModel('dom-top')
-        @topDomSceneStill     = @_scene.addDomModelWithNewCamera('dom-top-still')
+        @topDomScene          = @scene.addDomModel('dom-top')
+        @topDomSceneStill     = @scene.addDomModelWithNewCamera('dom-top-still')
         @topDomSceneNoScale   =
-            @_scene.addDomModelWithNewCamera('dom-top-no-scale', new ZoomlessCamera @_scene._camera)
+            @scene.addDomModelWithNewCamera('dom-top-no-scale', new ZoomlessCamera @scene._camera)
 
-    withScene: (fun) => fun @_scene if @_scene?
+    withScene: (fun) => fun @scene if @scene?
 
     initialize: =>
         @withScene (scene) =>
@@ -46,6 +46,8 @@ export class NodeEditor extends EventEmitter
         x = (scene.screenMouse.x - scene.width/2) * campos.z + campos.x + scene.width/2
         y = (scene.height/2 - scene.screenMouse.y) * campos.z + campos.y + scene.height/2
         [x, y]
+
+    getCamera: () => @scene._camera
 
     node: (nodeKey) =>
         node = @nodes[nodeKey]
@@ -186,9 +188,13 @@ export class NodeEditor extends EventEmitter
             @openSearcher.hideSearcher()
         @openSearcher = searcher
 
-    log: (msg) => console.log "[NodeEditor]", msg
+    log: (msg) =>
+        if window.DEBUG
+            console.log "[NodeEditor]", msg
 
     nodeByName: (name) => #added for debug purposes
+        return unless window.DEBUG
+
         for own k, n of @nodes
             if n.model.name == name
                 return n

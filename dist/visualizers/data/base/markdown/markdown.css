@@ -1,0 +1,12 @@
+body {
+	font-family: Droid, sans-serif;
+    overflow: scroll;
+}
+p {
+	margin-top:    0;
+	margin-bottom: 8px;
+}
+code {
+	font-family: 'hasklig-regular', 'hasklig', monospace;
+	color:       #bbb;
+}

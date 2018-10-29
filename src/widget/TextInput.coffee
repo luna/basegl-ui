@@ -24,15 +24,12 @@ export class TextInput extends Widget
         @addDef 'background', RectangleShape,
             color: @model.frameColor
     update: =>
-        @updateDef 'background',
-            height: @model.height
-            width: @model.width
-            corners:
-                topLeft    : not (@model.siblings.top    or @model.siblings.left)
-                topRight   : not (@model.siblings.top    or @model.siblings.right)
-                bottomLeft : not (@model.siblings.bottom or @model.siblings.left)
-                bottomRight: not (@model.siblings.bottom or @model.siblings.right)
-                round: @model.height/2
+        if @changed.once
+            @input = document.createElement 'input'
+            @input.className = 'native-key-bindings ' + style.luna ['ctrl--text']
+            @def('root').getDomElement().appendChild @input
+        
+        return unless @input?
         if @changed.width
             @input.style.width = @model.width + 'px'
         if @changed.height

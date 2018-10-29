@@ -21,22 +21,25 @@ export class HtmlShape extends BasicComponent
         basegl.symbol @html
 
     adjust: =>
+        domElem = @getDomElement()
+        return unless domElem?
+
         if @changed.id
             if @model.id?
-                @getDomElement().id = @model.id
+                domElem.id = @model.id
             else
-                delete @getDomElement().id
+                delete domElem.id
         if @changed.width
-            @getDomElement().style.width = @model.width
+            domElem.style.width = @model.width
         if @changed.height
-            @getDomElement().style.height = @model.height
+            domElem.style.height = @model.height
         if @changed.clickable
-            @getDomElement().style.pointerEvents = if @model.clickable then 'all' else 'none'
+            domElem.style.pointerEvents = if @model.clickable then 'all' else 'none'
         if @changed.cssClassName
-            @getDomElement().className = @model.cssClassName
+            domElem.className = @model.cssClassName
 
         if @changed.top or @changed.scalable or @changed.still
-            obj = @getElement().obj
+            obj = domElem.obj
             if @model.still
                 @root.topDomSceneStill.model.add obj
             else if not @model.scalable
@@ -44,7 +47,7 @@ export class HtmlShape extends BasicComponent
             else if @model.top
                 @root.topDomScene.model.add obj
             else
-                @root._scene.domModel.model.add obj
+                @root.scene.domModel.model.add obj
             @__forceUpdatePosition()
 
     # FIXME: This function is needed due to bug in basegl or THREE.js
@@ -53,3 +56,24 @@ export class HtmlShape extends BasicComponent
         elem = @getElement()
         if elem?
             elem.position.y = if elem.position.y == 0 then 1 else 0
+
+
+export class HtmlShapeWithScene extends HtmlShape
+    define: =>
+        @dom    = document.createElement @model.element
+        @camera = @root.getCamera()
+        @stillCamera = @root.topDomSceneStill.camera
+        @sceneId = @model.id
+        @withScene (scene) => scene.addDomModelWithNewCamera(@sceneId, @camera) 
+        basegl.symbol @dom
+
+    adjust: =>
+        if @scene? and (not @addedToScene)
+            @scene.model.add @getElement().obj
+            @addedToScene = true
+
+    makeStill: =>
+        @scene._camera = @stillCamera
+    
+    makeMovable: =>
+        @scene._camera = @camera

@@ -281,9 +281,9 @@ runExample = -> main (nodeEditor) ->
         ]
 
     nodeEditor.setVisualizerLibraries
-        internalVisualizersPath: ''
-        lunaVisualizersPath:     ''
-        projectVisualizersPath:  ''
+        internalVisualizersPath: 'visualizers/internal'
+        lunaVisualizersPath:     'visualizers/data'
+        projectVisualizersPath:  'visualizers'
 
 
     nodeEditor.setVisualization
@@ -314,8 +314,8 @@ runExample = -> main (nodeEditor) ->
             currentVisualizer:
                 visualizerId:
                     visualizerName: 'internal: error'
-                    visualizerType: '"InternalVisualizer"'
-                visualizerPath: '"internal/error/error.html"'
+                    visualizerType: 'InternalVisualizer'
+                visualizerPath: 'error/error.html'
             iframeId: '2'
             mode: 'Default'
             selectedVisualizer:

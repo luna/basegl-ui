@@ -74,5 +74,10 @@ export class HasModel extends EventEmitter
         @__view.updateChildrenOrigin()
         # view.setOrigin mat4.create()
 
-    log:  (msg) => console.log  "[#{@constructor.name}]", msg
-    warn: (msg) => console.warn "[#{@constructor.name}]", msg
+    log:  (msg) =>
+        if window.DEBUG
+            console.log  "[#{@constructor.name}]", msg
+
+    warn: (msg) =>
+        if window.DEBUG
+            console.warn "[#{@constructor.name}]", msg
