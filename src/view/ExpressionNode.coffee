@@ -140,8 +140,11 @@ export class ExpressionNode extends ContainerComponent
             else if @model.expanded
                 values.radius = 0
                 values.angle = Math.PI/2
-                values.position = [ - @style.node_bodyWidth/2 - portBase.distanceFromCenter(@style) + @style.node_radius
-                                  , @def('body').portPosition(key) - @style.node_radius - @style.node_headerOffset - @style.node_widgetHeight/2 - @style.node_widgetOffset_v
+                values.position = [ - @style.node_bodyWidth/2 - portBase.distanceFromCenter(@style)
+                                    + @style.node_radius
+                                  , @def('body').portPosition(key) - @style.node_radius
+                                    - @style.node_headerOffset - @style.node_widgetHeight/2
+                                    - @style.node_widgetOffset_v
                                   ]
                 inPortNumber++
             else
