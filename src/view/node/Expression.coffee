@@ -21,10 +21,6 @@ export class Expression extends Widget
             @updateDef 'expression',
                 text:    @model.expression
                 color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b]
-                # frameColor:
-                #     [ @style.port_borderColor_h, @style.port_borderColor_s
-                #     , @style.port_borderColor_l, @style.port_borderColor_a
-                #     ]
 
             @__minHeight = @def('expression').height() + 2*@style.node_widgetOffset_v
 
@@ -33,20 +29,19 @@ export class Expression extends Widget
             @updateDef 'background',
                 roundBottom: not @model.siblings.bottom
                 roundTop:    not @model.siblings.top
-    # adjustSrc: (view) =>
-    #     view.position.xy = [@style.node_bodyWidth/2, 2 * @style.node_radius + @style.node_headerOffset]
-    #     @view('widgets').scale.xy = [0,0]
-    #     @view('background').scale.xy = [0,0]
-    #     # @setPosition view, [@style.node_widgetOffset_h, 0]
-    #     # @setPosition view, [0, 100]
-    # adjustDst: (view) =>
-    #     @setPosition view, [@style.node_bodyWidth/2, 2 * @style.node_radius + @style.node_headerOffset]
-    #     @setScale @view('widgets'), [0,0]
-    #     @setScale @view('background'), [0, 0]
+    adjustSrc: (view) =>
+        view.position.xy = [@style.node_bodyWidth/2, 2 * @style.node_radius + @style.node_headerOffset]
+        @view('expression').scale.xy = [0,0]
+        @view('background').scale.xy = [0,0]
+
+    adjustDst: (view) =>
+        @setPosition view, [@style.node_bodyWidth/2, 2 * @style.node_radius + @style.node_headerOffset]
+        @setScale @view('expression'), [0,0]
+        @setScale @view('background'), [0, 0]
 
     adjust: (view) =>
         if @changed.once
-            # @setPosition view, [0, 0]
-            # @setScale @view('widgets'), [1, 1]
-            # @setScale @view('background'), [1, 1]
+            @setPosition view, [0, 0]
+            @setScale @view('expression'), [1, 1]
+            @setScale @view('background'), [1, 1]
             @view('expression').position.xy = [@style.node_bodyWidth/2, - @__minHeight/2]
