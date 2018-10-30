@@ -12,10 +12,10 @@ export compactNode = node
 export shadow = -100
 export port = 100
 export flatPort = port
-export inPort  = port
-export outPort  = port
+export inPort = port
+export outPort = port
 export selfPort = node + 1
-export icon     = node + 2
+export icon = node + 2
 
 export connection = port - 1
 

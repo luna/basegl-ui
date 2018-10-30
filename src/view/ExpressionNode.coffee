@@ -24,7 +24,7 @@ bodyTop = (style) -> - style.node_radius - style.node_widgetHeight/2 -
 testEntries = [
     { name: 'bar', doc: 'bar description', className: 'Bar', highlights: [ { start: 1, end: 2 } ] },
     { name: 'foo', doc: 'foo multiline\ndescription', className: 'Foo', highlights: [] },
-    { name: 'baz', doc:  'baz description', className: 'Test', highlights: [ { start: 1, end: 3 } ] }
+    { name: 'baz', doc: 'baz description', className: 'Test', highlights: [ { start: 1, end: 3 } ] }
 ]
 
 export class ExpressionNode extends ContainerComponent

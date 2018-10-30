@@ -19,8 +19,8 @@ export class Expression extends Widget
     update: =>
         if @changed.expression
             @updateDef 'expression',
-                text:    @model.expression
-                color:    [@style.text_color_r, @style.text_color_g, @style.text_color_b]
+                text:  @model.expression
+                color: [@style.text_color_r, @style.text_color_g, @style.text_color_b]
 
             @__minHeight = @def('expression').height() + 2*@style.node_widgetOffset_v
 
