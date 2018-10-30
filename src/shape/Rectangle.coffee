@@ -69,11 +69,11 @@ export class RectangleShape extends BasicComponent
         if @changed.corners
             corners = @model.corners.round
             corners *= 2
-            corners += @model.corners.topLeft
-            corners *= 2
-            corners += @model.corners.topRight
+            corners += @model.corners.bottomRight
             corners *= 2
             corners += @model.corners.bottomLeft
             corners *= 2
-            corners += @model.corners.bottomRight
+            corners += @model.corners.topRight
+            corners *= 2
+            corners += @model.corners.topLeft
             element.variables.corners = corners

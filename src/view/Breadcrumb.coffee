@@ -50,12 +50,10 @@ export class Breadcrumb extends ContainerComponent
             for item, i in @model.items
                 if i == 0
                     if item.name == ''
-                        items.push breadcrumbItem name: @model.moduleName
-                    else
-                        items.push breadcrumbItem item
+                        item.name = @model.moduleName
                 else
                     items.push breadcrumbArrow
-                    items.push breadcrumbItem item
+                items.push breadcrumbItem item
             @updateDef 'items', children: items
 
     adjust: (view) =>

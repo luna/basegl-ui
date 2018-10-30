@@ -46,10 +46,10 @@ export class TextContainer extends Widget
         if @changed.roundFrame or @changed.siblings
             @updateDef 'box',
                 corners:
-                    topLeft    : @model.siblings.top    or @model.siblings.left
-                    topRight   : @model.siblings.top    or @model.siblings.right
-                    bottomLeft : @model.siblings.bottom or @model.siblings.left
-                    bottomRight: @model.siblings.bottom or @model.siblings.right
+                    topLeft    : not (@model.siblings.top    or @model.siblings.left)
+                    topRight   : not (@model.siblings.top    or @model.siblings.right)
+                    bottomLeft : not (@model.siblings.bottom or @model.siblings.left)
+                    bottomRight: not (@model.siblings.bottom or @model.siblings.right)
                     round: @model.roundFrame
 
     adjust: =>
